@@ -407,13 +407,22 @@ document.getElementById('hamburger').onclick = ()=>document.getElementById('mobi
 document.querySelector('#mobile-menu .close-btn').onclick = ()=>document.getElementById('mobile-menu').style.display='none';
 overlay.querySelector('.close-btn').onclick = resetZoom;
 
-// ================= GIROSCOPIO MOBILE ==================
+// ================= GIROSCOPIO MOBILE E BOTTONE AUTO-HIDE ==================
 if(isMobile){
   const gyroBtn = document.createElement('button');
   gyroBtn.id = 'enableGyro';
   gyroBtn.innerText = 'Attiva Giroscopio';
-  gyroBtn.style.cssText = "position:fixed;bottom:20px;right:20px;z-index:9999;padding:10px;background:#b22222;color:#fff;border:none;border-radius:5px;";
+  gyroBtn.style.cssText = `
+    position:fixed;bottom:20px;right:20px;
+    z-index:9999;padding:10px 15px;
+    background:#b22222;color:#fff;
+    border:none;border-radius:5px;
+    font-size:1rem;
+  `;
   document.body.appendChild(gyroBtn);
+
+  // Scompare automaticamente dopo 3 secondi
+  setTimeout(()=>{gyroBtn.style.display='none'},3000);
 
   gyroBtn.addEventListener('click', () => {
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -435,8 +444,8 @@ if(isMobile){
 
 function handleOrientation(e){
   if(isZoomed) return;
-  const x = (e.gamma||0)/30; // normalizzato
-  const y = (e.beta||0)/30;
+  const x = (e.gamma||0)/30; // normalizzato gamma
+  const y = (e.beta||0)/30;  // normalizzato beta
   mouseX = Math.max(-1, Math.min(1, x));
   mouseY = Math.max(-1, Math.min(1, y));
   updateParallax(mouseX, mouseY);
