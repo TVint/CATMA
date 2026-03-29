@@ -165,7 +165,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
  display:none;
  position:fixed;
  width:100%;height:100%;
- background:rgba(0,0,0,.75);
+ background:rgba(0,0,0,.85);
  justify-content:center;
  align-items:center;
  z-index:700;
@@ -230,13 +230,14 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 #gyroOverlay.active {
   opacity: 1;
 }
-  
+
 /* FILTRI TEMPO CON EFFETTO GRADUALE */
 body[data-time="giorno"] #hero {
   filter: brightness(1.2) saturate(0.35) hue-rotate(-5deg);
   transition: filter 2s ease; /* transizione graduale */
   /* luce più fredda e meno saturata per effetto naturale */
 }
+
 
 body[data-time="sera"] #hero {
   filter: brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2);
@@ -282,7 +283,14 @@ body[data-time="chiuso"] #hero {
 
 <body>
 
-  <!-- MENU DESKTOP -->
+  <!-- HOTSPOTS -->
+<div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
+<div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
+<div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50"></div>
+<div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
+<div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
+
+<!-- MENU DESKTOP -->
 <div id="menu">
 <a href="#" data-key="chi">CHI SIAMO</a>
 <a href="#" data-key="mescita">MESCITA</a>
@@ -323,13 +331,6 @@ body[data-time="chiuso"] #hero {
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 </div>
 </div>
-
-<!-- HOTSPOTS -->
-<div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
-<div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
-<div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50"></div>
-<div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
-<div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
   
 <div id="hero">
 
@@ -601,6 +602,7 @@ if('ontouchstart' in window){
   });
 }
 
+
 // --- TIME OF DAY LOGIC ---
 function setTimeOfDay(hour) {
   const body = document.body;
@@ -657,6 +659,13 @@ setLayers();
 const now = new Date();
 setTimeOfDay(now.getHours());
 
+  
+// --- INIT ---
+applyTimeFilter();
+
+
+// --- INIT ---
+setLayers();
 window.addEventListener('resize', setLayers);
 </script>
 </body>
