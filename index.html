@@ -54,10 +54,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 /* LAYERS */
 .layer {
   position: absolute;
-  width: 120%;     /* aumentato dal 110% */
-  height: 120%;    /* aumentato dal 110% */
-  top: -10%;       /* spostato un po’ più in alto per compensare */
-  left: -10%;      /* spostato un po’ più a sinistra */
+  width: 120%;
+  height: 120%;
+  top: -10%;
+  left: -10%;
   object-fit: cover;
   pointer-events: none;
   transition: transform 0.5s ease;
@@ -401,13 +401,31 @@ function updateHotspots() {
 }
 
 function updateParallax(x, y) {
-  const maxOffset = {background:{x:40,y:20}, midground:{x:60,y:30}, foreground:{x:80,y:40}};
-  layers.background.style.transform = `translate(${x*maxOffset.background.x}px,${y*maxOffset.background.y}px)`;
-  layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px,${y*maxOffset.midground.y}px)`;
-  layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px,${y*maxOffset.foreground.y}px)`;
+  const maxOffset = {
+    background:{x:40,y:20},
+    midground:{x:60,y:30},
+    foreground:{x:80,y:40}
+  };
 
   const isMobile = 'ontouchstart' in window;
-  const hotspotFactor = isMobile ? 0.6 : 1; // riduce movimento hotspot su mobile
+  const scaleFix = isMobile ? 1.08 : 1; // 👈 zoom leggero solo su mobile
+
+  layers.background.style.transform = `
+    translate(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px)
+    scale(${scaleFix})
+  `;
+
+  layers.midground.style.transform = `
+    translate(${x*maxOffset.midground.x}px, ${y*maxOffset.midground.y}px)
+    scale(${scaleFix})
+  `;
+
+  layers.foreground.style.transform = `
+    translate(${x*maxOffset.foreground.x}px, ${y*maxOffset.foreground.y}px)
+    scale(${scaleFix})
+  `;
+
+  const hotspotFactor = isMobile ? 0.6 : 1;
 
   hotspots.forEach(h => {
     if(h.classList.contains('hidden')) return;
