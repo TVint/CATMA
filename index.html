@@ -232,9 +232,22 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 }
 
 /* FILTRI TEMPO */
-body[data-time="giorno"] #hero { filter: brightness(1) saturate(1); transition: filter 1s ease; }
-body[data-time="sera"] #hero { filter: brightness(0.6) saturate(0.8) sepia(0.2); transition: filter 1s ease; }
-body[data-time="chiuso"] #hero { filter: brightness(0.2) saturate(0.5); transition: filter 1s ease; }
+body[data-time="giorno"] #hero {
+  filter: brightness(1.2) saturate(0.35) hue-rotate(-5deg);
+  transition: filter 2s ease; /* transizione graduale */
+  /* luce più fredda e meno saturata per effetto naturale */
+}
+
+body[data-time="sera"] #hero {
+  filter: brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2);
+  transition: filter 2s ease;
+  /* luce calda tipo candele */
+}
+
+body[data-time="chiuso"] #hero {
+  filter: brightness(0.2) saturate(0.5);
+  transition: filter 2s ease;
+}
 
 /* Pulsanti controllo tempo */
 #timeControls {
