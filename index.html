@@ -316,7 +316,22 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 const hero = document.getElementById('hero');
 let isMobile = window.innerWidth <= 768;
 let layers = {};
+let mouseX = 0, mouseY = 0, isZoomed = false;
 
+const hotspots = document.querySelectorAll('.hotspot');
+const overlay = document.getElementById('content-overlay');
+const contentBox = overlay.querySelector('.content-box');
+const title = document.getElementById('title');
+
+const map = {
+  chi:{label:'CHI SIAMO',key:'chi'},
+  mescita:{label:'MESCITA',key:'mescita'},
+  prenota:{label:'PRENOTA',key:'prenota'},
+  eventi:{label:'EVENTI',key:'eventi'},
+  bar:{label:'BAR',key:'bar'}
+};
+
+// ================== FUNZIONI ==================
 function setLayers(){
   isMobile = window.innerWidth <= 768;
   layers = isMobile ? {
@@ -328,20 +343,9 @@ function setLayers(){
     midground:hero.querySelector('.desktop-layer.midground'),
     foreground:hero.querySelector('.desktop-layer.foreground')
   };
-  // Aggiorna posizione hotspot
   updateHotspots();
 }
-window.addEventListener('resize', setLayers);
 
-/* HOTSPOTS */
-const hotspots = document.querySelectorAll('.hotspot');
-const overlay = document.getElementById('content-overlay');
-const contentBox = overlay.querySelector('.content-box');
-const title = document.getElementById('title');
-
-let mouseX=0, mouseY=0, isZoomed=false;
-
-/* PARALLAX + HOTSPOTS POSITION */
 function updateHotspots(){
   hotspots.forEach(h=>{
     const ox = isMobile ? h.dataset.xMobile/100*hero.clientWidth : h.dataset.xDesktop/100*hero.clientWidth;
@@ -352,43 +356,20 @@ function updateHotspots(){
   updateParallax(mouseX, mouseY);
 }
 
-function updateParallax(x,y){
+function updateParallax(x, y){
   const maxOffset = {background:{x:40,y:20},midground:{x:60,y:30},foreground:{x:80,y:40}};
   layers.background.style.transform=`translate(${x*maxOffset.background.x}px,${y*maxOffset.background.y}px)`;
   layers.midground.style.transform=`translate(${x*maxOffset.midground.x}px,${y*maxOffset.midground.y}px)`;
   layers.foreground.style.transform=`translate(${x*maxOffset.foreground.x}px,${y*maxOffset.foreground.y}px)`;
 
   hotspots.forEach(h=>{
-    h.style.left = parseFloat(h.dataset.ox) + x*50 + 'px';
-    h.style.top  = parseFloat(h.dataset.oy) + y*30 + 'px';
+    if(h.classList.contains('hidden')) return;
+    const ox = parseFloat(h.dataset.ox);
+    const oy = parseFloat(h.dataset.oy);
+    h.style.left = ox + x*50 + 'px';
+    h.style.top  = oy + y*30 + 'px';
   });
-  
-  hotspots.forEach(h=>{
-  if(h.classList.contains('hidden')) return; // ignora gli hotspot nascosti
-  const ox = h.dataset.x/100 * hero.clientWidth;
-  const oy = h.dataset.y/100 * hero.clientHeight;
-  h.style.left = ox + x*50 + 'px';
-  h.style.top = oy + y*30 + 'px';
-});
-
 }
-
-/* MOUSE MOVE PARALLAX */
-hero.addEventListener('mousemove',e=>{
-  const r = hero.getBoundingClientRect();
-  mouseX = (e.clientX-r.left)/r.width - 0.5;
-  mouseY = (e.clientY-r.top)/r.height - 0.5;
-  if(!isZoomed) updateParallax(mouseX, mouseY);
-});
-
-/* ZOOM DIREZIONALE */
-const map = {
- chi:{label:'CHI SIAMO',key:'chi'},
- mescita:{label:'MESCITA',key:'mescita'},
- prenota:{label:'PRENOTA',key:'prenota'},
- eventi:{label:'EVENTI',key:'eventi'},
- bar:{label:'BAR',key:'bar'}
-};
 
 function zoomTo(key){
   const h = Array.from(hotspots).find(el=>el.dataset.key===key);
@@ -420,23 +401,62 @@ function resetZoom(){
   updateParallax(mouseX,mouseY);
 }
 
-/* HOTSPOTS & MENU CLICK */
+// ================== EVENTI ==================
+
+// MOUSE MOVE (desktop)
+hero.addEventListener('mousemove', e=>{
+  if(isMobile) return;
+  const r = hero.getBoundingClientRect();
+  mouseX = (e.clientX - r.left)/r.width - 0.5;
+  mouseY = (e.clientY - r.top)/r.height - 0.5;
+  if(!isZoomed) updateParallax(mouseX, mouseY);
+});
+
+// DEVICE ORIENTATION (mobile)
+function enableGyroParallax(){
+  if(typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
+    // iOS / alcuni Android moderni richiedono permesso
+    DeviceOrientationEvent.requestPermission()
+      .then(response=>{
+        if(response==='granted'){
+          window.addEventListener('deviceorientation', handleOrientation);
+        }
+      }).catch(console.error);
+  } else {
+    // normale
+    window.addEventListener('deviceorientation', handleOrientation);
+  }
+}
+
+function handleOrientation(e){
+  if(isZoomed) return;
+  // Normalizziamo gamma (-90 / 90) e beta (-180 / 180) in -0.5..0.5
+  const x = (e.gamma || 0)/90; // sx/dx
+  const y = (e.beta || 0)/180; // avanti/indietro
+  mouseX = x;
+  mouseY = y;
+  updateParallax(mouseX, mouseY);
+}
+
+// HOTSPOTS & MENU
 hotspots.forEach(h=>h.addEventListener('click',()=>zoomTo(h.dataset.key)));
 document.querySelectorAll('#menu a, #mobile-menu a').forEach(a=>{
-  a.addEventListener('click',e=>{
+  a.addEventListener('click', e=>{
     e.preventDefault();
     zoomTo(a.dataset.key);
     document.getElementById('mobile-menu').style.display='none';
   });
 });
 
-/* HAMBURGER MOBILE */
+// HAMBURGER MOBILE
 document.getElementById('hamburger').onclick = ()=>document.getElementById('mobile-menu').style.display='flex';
 document.querySelector('#mobile-menu .close-btn').onclick = ()=>document.getElementById('mobile-menu').style.display='none';
 overlay.querySelector('.close-btn').onclick = resetZoom;
 
-// inizializza
+// INIT
 setLayers();
+enableGyroParallax();
+window.addEventListener('resize', setLayers);
 </script>
 </body>
 </html>
