@@ -669,6 +669,12 @@ function setTimeManually(state) {
       <h1 class="title-big">CATMA BAR SIA CHIUSO</h1>
       <p class="subtitle">Torna domani per bere un'altra ombra!</p>
     `;
+  if(state === 'giorno') {
+    heroText.innerHTML = `
+      <h1 class="title">È UN BUONGIORNO AL</h1>
+      <h1 class="title-big">CATMA BAR</h1>
+      <p class="subtitle">Via delle Sirene, 13 <br> Lido di Jesolo (VE)</p>
+    `;
   } else {
     heroText.innerHTML = `
       <h1 class="title">BENVENUTI</h1>
