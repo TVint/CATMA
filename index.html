@@ -381,31 +381,6 @@ hero.addEventListener('mousemove',e=>{
   if(!isZoomed) updateParallax(mouseX, mouseY);
 });
 
-// PARALLAX CON GIROSCOPIO
-if (window.DeviceOrientationEvent) {
-  window.addEventListener('deviceorientation', e => {
-    // e.beta -> inclinazione avanti/indietro (-180 / 180)
-    // e.gamma -> inclinazione sx/dx (-90 / 90)
-    const maxTilt = 30; // quanto vuoi che il layer si muova
-    const x = e.gamma / maxTilt; // -1 a 1
-    const y = e.beta / maxTilt;  // -1 a 1
-
-    if(!isZoomed) updateParallax(x, y);
-  });
-} else {
-  console.log("DeviceOrientation non supportato");
-}
-
-if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-  DeviceOrientationEvent.requestPermission()
-    .then(response => {
-      if(response === 'granted'){
-        window.addEventListener('deviceorientation', e => { ... });
-      }
-    })
-    .catch(console.error);
-}
-
 /* ZOOM DIREZIONALE */
 const map = {
  chi:{label:'CHI SIAMO',key:'chi'},
