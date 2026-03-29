@@ -608,6 +608,30 @@ if('ontouchstart' in window){
   });
 }
 
+// --- ELEMENTO HERO ---
+const hero = document.getElementById('hero');
+
+// --- FILTRI TEMPO ---
+const filters = {
+  giorno: 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)',
+  sera: 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)',
+  chiuso: 'brightness(0.2) saturate(0.5)'
+};
+
+// --- CONTROLLO TEMPO MANUALE ---
+function setTimeManually(state) {
+  // Aggiorna attributo data-time
+  document.body.setAttribute('data-time', state);
+
+  // Forza il browser a leggere il filtro corrente
+  void hero.offsetWidth;
+
+  // Applica il nuovo filtro con requestAnimationFrame per transizione affidabile
+  requestAnimationFrame(() => {
+    hero.style.filter = filters[state];
+  });
+}
+
 // --- CONTROLLO TEMPO AUTOMATICO ---
 function applyTimeFilter() {
   const hour = new Date().getHours();
@@ -618,22 +642,6 @@ function applyTimeFilter() {
   else state = 'chiuso';
 
   setTimeManually(state);
-}
-
-// --- CONTROLLO TEMPO MANUALE ---
-function setTimeManually(state) {
-  // Aggiorna attributo data-time per eventuali altri stili
-  document.body.setAttribute('data-time', state);
-
-  // Filtro corrispondente
-  const filters = {
-    giorno: 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)',
-    sera: 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)',
-    chiuso: 'brightness(0.2) saturate(0.5)'
-  };
-
-  // Applica filtro con transizione
-  hero.style.filter = filters[state];
 }
 
 // --- CREAZIONE PULSANTI ---
@@ -652,6 +660,9 @@ controls.querySelectorAll('button').forEach(btn => {
 
 // --- INIT ---
 applyTimeFilter();
+
+// --- OPZIONALE: aggiorna automaticamente ogni ora ---
+setInterval(applyTimeFilter, 60*60*1000); // ogni ora
 
 // --- INIT ---
 setLayers();
