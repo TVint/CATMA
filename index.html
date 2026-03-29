@@ -388,19 +388,29 @@ function setLayers() {
   updateHotspots();
 }
 
-// --- HOTSPOTS ---
+// --- HOTSPOTS BASE POSITION ---
 function updateHotspots() {
   const isMobile = 'ontouchstart' in window;
+
   hotspots.forEach(h => {
-    const ox = isMobile ? h.dataset.xMobile/100*hero.clientWidth : h.dataset.xDesktop/100*hero.clientWidth;
-    const oy = isMobile ? h.dataset.yMobile/100*hero.clientHeight : h.dataset.yDesktop/100*hero.clientHeight;
+    const ox = isMobile 
+      ? h.dataset.xMobile/100 * hero.clientWidth
+      : h.dataset.xDesktop/100 * hero.clientWidth;
+
+    const oy = isMobile 
+      ? h.dataset.yMobile/100 * hero.clientHeight
+      : h.dataset.yDesktop/100 * hero.clientHeight;
+
     h.dataset.ox = ox;
     h.dataset.oy = oy;
   });
+
   updateParallax(mouseX, mouseY);
 }
 
+// --- PARALLAX ---
 function updateParallax(x, y) {
+
   const maxOffset = {
     background:{x:40,y:20},
     midground:{x:60,y:30},
@@ -408,8 +418,9 @@ function updateParallax(x, y) {
   };
 
   const isMobile = 'ontouchstart' in window;
-  const scaleFix = isMobile ? 1.08 : 1; // 👈 zoom leggero solo su mobile
+  const scaleFix = isMobile ? 1.08 : 1;
 
+  // LAYERS
   layers.background.style.transform = `
     translate(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px)
     scale(${scaleFix})
@@ -425,14 +436,18 @@ function updateParallax(x, y) {
     scale(${scaleFix})
   `;
 
-  const hotspotFactor = isMobile ? 0.6 : 1;
+  // 👇 HOTSPOT LEGATI AL MIDGROUND (FIX DEFINITIVO)
+  const refX = x * maxOffset.midground.x;
+  const refY = y * maxOffset.midground.y;
 
   hotspots.forEach(h => {
     if(h.classList.contains('hidden')) return;
+
     const ox = parseFloat(h.dataset.ox);
     const oy = parseFloat(h.dataset.oy);
-    h.style.left = ox + x*50*hotspotFactor + 'px';
-    h.style.top  = oy + y*30*hotspotFactor + 'px';
+
+    h.style.left = ox + refX + 'px';
+    h.style.top  = oy + refY + 'px';
   });
 }
 
@@ -440,9 +455,15 @@ function updateParallax(x, y) {
 function zoomTo(key) {
   const h = Array.from(hotspots).find(el => el.dataset.key === key);
   if(!h) return;
-  const tx = parseFloat(h.dataset.ox), ty = parseFloat(h.dataset.oy);
-  const cx = hero.clientWidth/2, cy = hero.clientHeight/2;
-  const dx = cx - tx, dy = cy - ty;
+
+  const tx = parseFloat(h.dataset.ox);
+  const ty = parseFloat(h.dataset.oy);
+
+  const cx = hero.clientWidth/2;
+  const cy = hero.clientHeight/2;
+
+  const dx = cx - tx;
+  const dy = cy - ty;
 
   layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
   layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
@@ -450,6 +471,7 @@ function zoomTo(key) {
 
   isZoomed = true;
   title.innerText = map[key].label;
+
   overlay.style.display = 'flex';
   hotspots.forEach(h => h.classList.add('hidden'));
   contentBox.style.transform = 'scale(1)';
@@ -457,23 +479,30 @@ function zoomTo(key) {
 
 function resetZoom() {
   isZoomed = false;
+
   overlay.style.display = 'none';
   contentBox.style.transform = 'scale(0)';
+
   hotspots.forEach(h => h.classList.remove('hidden'));
   updateParallax(mouseX, mouseY);
 }
 
-// --- EVENTI MOUSE ---
+// --- MOUSE DESKTOP ---
 hero.addEventListener('mousemove', e => {
   if('ontouchstart' in window) return;
+
   const r = hero.getBoundingClientRect();
   mouseX = (e.clientX - r.left)/r.width - 0.5;
   mouseY = (e.clientY - r.top)/r.height - 0.5;
+
   if(!isZoomed) updateParallax(mouseX, mouseY);
 });
 
-// --- HOTSPOTS CLICK ---
-hotspots.forEach(h => h.addEventListener('click', () => zoomTo(h.dataset.key)));
+// --- CLICK HOTSPOTS ---
+hotspots.forEach(h => {
+  h.addEventListener('click', () => zoomTo(h.dataset.key));
+});
+
 document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
@@ -483,51 +512,52 @@ document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
 });
 
 // --- HAMBURGER ---
-document.getElementById('hamburger').onclick = () => document.getElementById('mobile-menu').style.display='flex';
-document.querySelector('#mobile-menu .close-btn').onclick = () => document.getElementById('mobile-menu').style.display='none';
+document.getElementById('hamburger').onclick = () =>
+  document.getElementById('mobile-menu').style.display='flex';
+
+document.querySelector('#mobile-menu .close-btn').onclick = () =>
+  document.getElementById('mobile-menu').style.display='none';
+
 overlay.querySelector('.close-btn').onclick = resetZoom;
 
-// --- GIROSCOPIO MOBILE + OVERLAY ---
+// --- GIROSCOPIO MOBILE ---
 if('ontouchstart' in window){
-  // overlay scuro
+
   const gyroOverlay = document.createElement('div');
   gyroOverlay.id = 'gyroOverlay';
   document.body.appendChild(gyroOverlay);
 
-  // pulsante
   const gyroBtn = document.createElement('button');
   gyroBtn.id = 'gyroBtn';
   gyroBtn.innerText = 'Attiva Giroscopio';
   document.body.appendChild(gyroBtn);
 
-  // mostra overlay subito
   setTimeout(()=>gyroOverlay.classList.add('active'), 10);
 
-  // timeout automatico pulsante e overlay
   setTimeout(()=>{
     gyroBtn.classList.add('hidden');
     gyroOverlay.classList.remove('active');
-  }, 4000);
+  }, 10000);
 
-  // click sul pulsante
   gyroBtn.addEventListener('click', ()=>{
-    layers.background.style.transform += ' scale(1.05)';
-    layers.midground.style.transform += ' scale(1.05)';
-    layers.foreground.style.transform += ' scale(1.05)';
     gyroBtn.classList.add('hidden');
     gyroOverlay.classList.remove('active');
+
     window.addEventListener('deviceorientation', e => {
       if(isZoomed) return;
+
       mouseX += ((e.gamma||0)/30 - mouseX)*0.1;
       mouseY += ((e.beta||0)/30 - mouseY)*0.1;
+
       mouseX = Math.max(-1, Math.min(1, mouseX));
       mouseY = Math.max(-1, Math.min(1, mouseY));
+
       updateParallax(mouseX, mouseY);
     });
   });
 }
 
-// --- INIZIALIZZAZIONE ---
+// --- INIT ---
 setLayers();
 window.addEventListener('resize', setLayers);
 </script>
