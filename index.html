@@ -52,15 +52,16 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
     top: 80px; /* leggermente più vicino al top su mobile */
   }
   #hero-text .title-big{
-    font-size: 10vw;
+    font-size: 12vw;
+  }
+
+  }
+  #hero-text .title{
+    font-size: 6vw;
   }
   
   #hero-text .subtitle{
     font-size: 3vw;
-  }
-  #hero-text .title{
-    font-size: 8vw;
-  }
 }
 
 /* LAYERS */
@@ -320,8 +321,8 @@ body[data-time="chiuso"] #hero {
 
 <!-- SCRITTA FISSA CENTRALE -->
 <div id="hero-text">
-  <h2 class="title">BENVENUTI</h2>
-  <h1 class="title-big">AL CATMA BAR</h1>
+  <h2 class="title">BENVENUTI AL</h2>
+  <h1 class="title-big">CATMA BAR</h1>
   <p class="subtitle">Via delle Sirene, 13 - Lido di Jesolo (VE)</p>
 </div>
 
@@ -473,13 +474,13 @@ const filters = {
 // --- TESTI PER OGNI STATO ---
 const heroTexts = {
   giorno: {
-    title: "È UN BUONGIORNO",
-    titleBig: "AL CATMA BAR",
+    title: "È UN BUONGIORNO AL",
+    titleBig: "CATMA BAR",
     subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)"
   },
   sera: {
-    title: "BENVENUTI",
-    titleBig: "AL CATMA BAR",
+    title: "BENVENUTI AL",
+    titleBig: "CATMA BAR",
     subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)"
   },
   chiuso: {
