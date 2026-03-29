@@ -212,6 +212,23 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
   transform: translate(-50%, -50%) scale(0.8);
 }
 
+#gyroOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5); /* scurisce la scena */
+  z-index: 99998;               /* subito sotto il pulsante */
+  pointer-events: none;         /* clic passano al pulsante */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+  
+#gyroOverlay.active {
+  opacity: 1;
+}
+
 @media(min-width:769px){
  .mobile-layer{display:none}
 }
@@ -449,13 +466,29 @@ overlay.querySelector('.close-btn').onclick = resetZoom;
 
 // --- GIROSCOPIO MOBILE ---
 if('ontouchstart' in window){
+  // crea overlay
+  const gyroOverlay = document.createElement('div');
+  gyroOverlay.id = 'gyroOverlay';
+  document.body.appendChild(gyroOverlay);
+
+  // crea pulsante
   const gyroBtn = document.createElement('button');
   gyroBtn.id = 'gyroBtn';
   gyroBtn.innerText = 'Attiva Giroscopio';
   document.body.appendChild(gyroBtn);
 
+  // mostra overlay quando pulsante appare
+  setTimeout(()=>gyroOverlay.classList.add('active'), 10); // subito visibile
+  // scompare dopo 10 secondi se non cliccato
+  setTimeout(()=>{
+    gyroBtn.classList.add('hidden');
+    gyroOverlay.classList.remove('active');
+  }, 10000);
+
+  // click sul pulsante
   gyroBtn.addEventListener('click', ()=>{
-    gyroBtn.classList.add('hidden'); // scompare subito al click
+    gyroBtn.classList.add('hidden');
+    gyroOverlay.classList.remove('active'); // overlay scompare
     window.addEventListener('deviceorientation', e => {
       if(isZoomed) return;
       mouseX += ((e.gamma||0)/30 - mouseX)*0.1;
@@ -465,9 +498,6 @@ if('ontouchstart' in window){
       updateParallax(mouseX, mouseY);
     });
   });
-
-  // scompare automaticamente dopo 10 secondi se non cliccato
-  setTimeout(()=>gyroBtn.classList.add('hidden'), 10000);
 }
 
 // --- INIZIALIZZAZIONE ---
