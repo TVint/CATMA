@@ -231,54 +231,53 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
   opacity: 1;
 }
 
-/* transizione morbida */
-body {
-  transition: filter 1.2s ease, background 1.2s ease;
+/* HERO LAYER - TRANSIZIONE MORBIDA */
+#hero {
+  position: relative;
+  overflow: hidden;
+  transition: filter 1.2s ease;
 }
 
-/* ☀️ GIORNO */
-body[data-time="day"] {
+/* OVERLAY HERO LUCE */
+#hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: all 1.2s ease;
+}
+
+/* 🌞 GIORNO */
+body[data-time="day"] #hero {
   filter: brightness(1.15) saturate(1.1) contrast(1.05);
 }
 
-/* 🕯 SERA / NOTTE */
-body[data-time="night"] {
+body[data-time="day"] #hero::after {
+  background: radial-gradient(circle at 50% 20%, rgba(255,220,150,0.25), transparent 60%);
+}
+
+/* 🕯 NOTTE / SERA */
+body[data-time="night"] #hero {
   filter: brightness(0.75) saturate(1.2) contrast(1.1) hue-rotate(-10deg);
 }
 
+body[data-time="night"] #hero::after {
+  background: radial-gradient(circle at 50% 60%, rgba(255,160,80,0.2), transparent 70%);
+}
+
 /* 🌑 CHIUSO */
-body[data-time="closed"] {
+body[data-time="closed"] #hero {
   filter: brightness(0.35) saturate(0.7) contrast(1.2);
 }
 
-  /* luce giorno */
-body[data-time="day"]::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at 50% 20%, rgba(255,220,150,0.25), transparent 60%);
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* luce candele */
-body[data-time="night"]::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at 50% 60%, rgba(255,160,80,0.2), transparent 70%);
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* chiuso (quasi buio totale) */
-body[data-time="closed"]::after {
-  content: "";
-  position: fixed;
-  inset: 0;
+body[data-time="closed"] #hero::after {
   background: rgba(0,0,0,0.6);
-  pointer-events: none;
-  z-index: 2;
+}
+
+/* Assicuriamo che testi e menu restino sempre leggibili */
+#menu, #content-overlay, footer {
+  filter: none !important;
 }
 
 #gyroOverlay,
