@@ -52,13 +52,15 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 }
 
 /* LAYERS */
-.layer{
- position:absolute;
- width:110%;height:110%;
- top:-5%;left:-5%;
- object-fit:cover;
- pointer-events:none;
- transition:transform .5s ease;
+.layer {
+  position: absolute;
+  width: 120%;     /* aumentato dal 110% */
+  height: 120%;    /* aumentato dal 110% */
+  top: -10%;       /* spostato un po’ più in alto per compensare */
+  left: -10%;      /* spostato un po’ più a sinistra */
+  object-fit: cover;
+  pointer-events: none;
+  transition: transform 0.5s ease;
 }
 
 /* HOTSPOTS */
@@ -491,6 +493,9 @@ if('ontouchstart' in window){
 
   // click sul pulsante
   gyroBtn.addEventListener('click', ()=>{
+    layers.background.style.transform += ' scale(1.05)';
+    layers.midground.style.transform += ' scale(1.05)';
+    layers.foreground.style.transform += ' scale(1.05)';
     gyroBtn.classList.add('hidden');
     gyroOverlay.classList.remove('active');
     window.addEventListener('deviceorientation', e => {
