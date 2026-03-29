@@ -399,17 +399,27 @@ function updateHotspots() {
 }
 
 function updateParallax(x, y) {
-  const maxOffset = {background:{x:40,y:20}, midground:{x:60,y:30}, foreground:{x:80,y:40}};
+  const maxOffset = {
+    background:{x:40,y:20},
+    midground:{x:60,y:30},
+    foreground:{x:80,y:40}
+  };
+
   layers.background.style.transform = `translate(${x*maxOffset.background.x}px,${y*maxOffset.background.y}px)`;
   layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px,${y*maxOffset.midground.y}px)`;
   layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px,${y*maxOffset.foreground.y}px)`;
+
+  const isMobile = 'ontouchstart' in window;
 
   hotspots.forEach(h => {
     if(h.classList.contains('hidden')) return;
     const ox = parseFloat(h.dataset.ox);
     const oy = parseFloat(h.dataset.oy);
-    h.style.left = ox + x*50 + 'px';
-    h.style.top = oy + y*30 + 'px';
+    
+    // ridimensiona l'effetto sugli hotspot in mobile
+    const hotspotFactor = isMobile ? 0.6 : 1; // meno movimento sugli hotspot
+    h.style.left = ox + x*50*hotspotFactor + 'px';
+    h.style.top  = oy + y*30*hotspotFactor + 'px';
   });
 }
 
