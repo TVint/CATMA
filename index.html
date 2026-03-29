@@ -13,7 +13,6 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
   height:100vh;
   position:relative;
   overflow:hidden;
-  transition: filter 2s ease;
 }
 
 
@@ -632,21 +631,36 @@ function applyTimeFilter() {
   setTimeManually(state);
 }
 
+// --- CONTROLLO TEMPO AUTOMATICO ---
+function applyTimeFilter() {
+  const hour = new Date().getHours();
+  let state = 'giorno';
+
+  if(hour >= 9 && hour < 18) state = 'giorno';
+  else if(hour >= 18 || hour < 2) state = 'sera';
+  else state = 'chiuso';
+
+  document.body.setAttribute('data-time', state);
+}
+
 // --- CONTROLLO TEMPO MANUALE ---
 function setTimeManually(state) {
-  // Aggiorna attributo data-time per eventuali altri stili
   document.body.setAttribute('data-time', state);
-
-  // Filtro corrispondente
-  const filters = {
-    giorno: 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)',
-    sera: 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)',
-    chiuso: 'brightness(0.2) saturate(0.5)'
-  };
-
-  // Applica filtro con transizione
-  hero.style.filter = filters[state];
 }
+
+// --- CREAZIONE PULSANTI ---
+const controls = document.createElement('div');
+controls.id = 'timeControls';
+controls.innerHTML = `
+  <button data-time="giorno">Giorno</button>
+  <button data-time="sera">Sera</button>
+  <button data-time="chiuso">Chiuso</button>
+`;
+document.body.appendChild(controls);
+
+controls.querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => setTimeManually(btn.dataset.time));
+});
 
 // --- CREAZIONE PULSANTI ---
 const controls = document.createElement('div');
