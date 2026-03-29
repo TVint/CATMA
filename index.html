@@ -399,25 +399,18 @@ function updateHotspots() {
 }
 
 function updateParallax(x, y) {
-  const maxOffset = {
-    background:{x:40,y:20},
-    midground:{x:60,y:30},
-    foreground:{x:80,y:40}
-  };
-
+  const maxOffset = {background:{x:40,y:20}, midground:{x:60,y:30}, foreground:{x:80,y:40}};
   layers.background.style.transform = `translate(${x*maxOffset.background.x}px,${y*maxOffset.background.y}px)`;
   layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px,${y*maxOffset.midground.y}px)`;
   layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px,${y*maxOffset.foreground.y}px)`;
 
   const isMobile = 'ontouchstart' in window;
+  const hotspotFactor = isMobile ? 0.6 : 1; // riduce movimento hotspot su mobile
 
   hotspots.forEach(h => {
     if(h.classList.contains('hidden')) return;
     const ox = parseFloat(h.dataset.ox);
     const oy = parseFloat(h.dataset.oy);
-    
-    // ridimensiona l'effetto sugli hotspot in mobile
-    const hotspotFactor = isMobile ? 0.6 : 1; // meno movimento sugli hotspot
     h.style.left = ox + x*50*hotspotFactor + 'px';
     h.style.top  = oy + y*30*hotspotFactor + 'px';
   });
@@ -474,31 +467,32 @@ document.getElementById('hamburger').onclick = () => document.getElementById('mo
 document.querySelector('#mobile-menu .close-btn').onclick = () => document.getElementById('mobile-menu').style.display='none';
 overlay.querySelector('.close-btn').onclick = resetZoom;
 
-// --- GIROSCOPIO MOBILE ---
+// --- GIROSCOPIO MOBILE + OVERLAY ---
 if('ontouchstart' in window){
-  // crea overlay
+  // overlay scuro
   const gyroOverlay = document.createElement('div');
   gyroOverlay.id = 'gyroOverlay';
   document.body.appendChild(gyroOverlay);
 
-  // crea pulsante
+  // pulsante
   const gyroBtn = document.createElement('button');
   gyroBtn.id = 'gyroBtn';
   gyroBtn.innerText = 'Attiva Giroscopio';
   document.body.appendChild(gyroBtn);
 
-  // mostra overlay quando pulsante appare
-  setTimeout(()=>gyroOverlay.classList.add('active'), 10); // subito visibile
-  // scompare dopo 10 secondi se non cliccato
+  // mostra overlay subito
+  setTimeout(()=>gyroOverlay.classList.add('active'), 10);
+
+  // timeout automatico pulsante e overlay
   setTimeout(()=>{
     gyroBtn.classList.add('hidden');
     gyroOverlay.classList.remove('active');
-  }, 10000);
+  }, 4000);
 
   // click sul pulsante
   gyroBtn.addEventListener('click', ()=>{
     gyroBtn.classList.add('hidden');
-    gyroOverlay.classList.remove('active'); // overlay scompare
+    gyroOverlay.classList.remove('active');
     window.addEventListener('deviceorientation', e => {
       if(isZoomed) return;
       mouseX += ((e.gamma||0)/30 - mouseX)*0.1;
