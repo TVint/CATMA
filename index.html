@@ -602,15 +602,30 @@ if('ontouchstart' in window){
 }
 
 // --- CONTROLLO TEMPO AUTOMATICO ---
-function applyTimeFilter() {
-  const hour = new Date().getHours();
-  let state = 'giorno';
+function setTimeOfDay(hour) {
+  let filter = '';
+  const heroTextTitle = document.querySelector('#hero-text .title');
+  const heroTextSubtitle = document.querySelector('#hero-text .subtitle');
 
-  if(hour >= 9 && hour < 18) state = 'giorno';
-  else if(hour >= 18 || hour < 2) state = 'sera';
-  else state = 'chiuso';
+  if(hour >= 9 && hour < 18) {
+    // GIORNO freddo
+    filter = 'brightness(1.2) saturate(0.85) hue-rotate(-20deg)';
+    heroTextTitle.innerText = 'BENVENUTI';
+    heroTextSubtitle.innerHTML = 'Via delle Sirene, 13 <br> Lido di Jesolo (VE)';
+  } else if(hour >= 18 || hour < 2) {
+    // SERA / NOTTE
+    filter = 'brightness(0.8) saturate(1) hue-rotate(10deg)';
+    heroTextTitle.innerText = 'BENVENUTI';
+    heroTextSubtitle.innerHTML = 'Via delle Sirene, 13 <br> Lido di Jesolo (VE)';
+  } else {
+    // CHIUSO
+    filter = 'brightness(0.2) saturate(0.5)'; 
+    heroTextTitle.innerText = 'SEMBRA CHE IL CATMA SIA CHIUSO';
+    heroTextSubtitle.innerHTML = 'Ci vediamo domani! <br> Grazie per la visita.';
+  }
 
-  document.body.setAttribute('data-time', state);
+  // Applica a tutti i layer
+  Object.values(layers).forEach(l => l.style.filter = filter);
 }
 
 // --- CONTROLLO TEMPO MANUALE ---
