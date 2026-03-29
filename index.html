@@ -5,8 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catma Bar</title>
 <style>
+
 html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-serif;}
-#hero{width:100%;height:100vh;position:relative;overflow:hidden}
+  
+#hero{
+  width:100%;
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+  transition: filter 2s ease;
+}
+
 
 #hero-text{
   position: absolute;
@@ -233,10 +242,6 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 
 /* FILTRI TEMPO */
 
-#hero {
-  transition: filter 2s ease; /* transizione graduale */
-}
-  
 body[data-time="giorno"] #hero {
   filter: brightness(1.2) saturate(0.35) hue-rotate(-5deg);
   /* luce più fredda e meno saturata per effetto naturale */
@@ -615,17 +620,31 @@ function applyTimeFilter() {
   document.body.setAttribute('data-time', state);
 }
 
-// --- CONTROLLO TEMPO MANUALE ---
+// --- CONTROLLO TEMPO AUTOMATICO ---
+function applyTimeFilter() {
+  const hour = new Date().getHours();
+  let state = 'giorno';
 
+  if(hour >= 9 && hour < 18) state = 'giorno';
+  else if(hour >= 18 || hour < 2) state = 'sera';
+  else state = 'chiuso';
+
+  setTimeManually(state);
+}
+
+// --- CONTROLLO TEMPO MANUALE ---
 function setTimeManually(state) {
+  // Aggiorna attributo data-time per eventuali altri stili
   document.body.setAttribute('data-time', state);
 
+  // Filtro corrispondente
   const filters = {
     giorno: 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)',
     sera: 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)',
     chiuso: 'brightness(0.2) saturate(0.5)'
   };
 
+  // Applica filtro con transizione
   hero.style.filter = filters[state];
 }
 
