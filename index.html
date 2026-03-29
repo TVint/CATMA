@@ -231,23 +231,22 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
   opacity: 1;
 }
   
-/* FILTRI TEMPO */
+/* FILTRI TEMPO CON EFFETTO GRADUALE */
 body[data-time="giorno"] #hero {
-  filter: brightness(1.3) contrast(1.05) saturate(1.1); 
-  transition: filter 1s ease;
-  /* più chiaro, come luce solare */
+  filter: brightness(1.25) contrast(1.05) saturate(0.85) hue-rotate(-10deg);
+  transition: filter 2s ease; /* transizione graduale */
+  /* luce più fredda e meno saturata per effetto naturale */
 }
 
 body[data-time="sera"] #hero {
-  filter: brightness(0.65) contrast(0.95) sepia(0.3) saturate(1.2); 
-  transition: filter 1s ease;
-  /* luce calda, tipo candele/soffusa */
+  filter: brightness(0.65) contrast(0.95) sepia(0.3) saturate(1.2);
+  transition: filter 2s ease;
+  /* luce calda tipo candele */
 }
 
 body[data-time="chiuso"] #hero {
-  filter: brightness(0.2) saturate(0.5); 
-  transition: filter 1s ease;
-  /* rimane invariato */
+  filter: brightness(0.2) saturate(0.5);
+  transition: filter 2s ease;
 }
 
 /* Pulsanti controllo tempo */
