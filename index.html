@@ -313,57 +313,52 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 </style>
 
 <script>
-// --- ELEMENTI PRINCIPALI ---
+// ELEMENTI
 const hero = document.getElementById('hero');
-let isMobile = window.innerWidth <= 768;
 let layers = {};
-let mouseX = 0, mouseY = 0, isZoomed = false;
+let mouseX=0, mouseY=0, isZoomed=false;
 
 const hotspots = document.querySelectorAll('.hotspot');
 const overlay = document.getElementById('content-overlay');
 const contentBox = overlay.querySelector('.content-box');
 const title = document.getElementById('title');
 
-const map = {
-  chi:{label:'CHI SIAMO',key:'chi'},
-  mescita:{label:'MESCITA',key:'mescita'},
-  prenota:{label:'PRENOTA',key:'prenota'},
-  eventi:{label:'EVENTI',key:'eventi'},
-  bar:{label:'BAR',key:'bar'}
-};
+const map = {chi:{label:'CHI SIAMO',key:'chi'}, mescita:{label:'MESCITA',key:'mescita'}, prenota:{label:'PRENOTA',key:'prenota'}, eventi:{label:'EVENTI',key:'eventi'}, bar:{label:'BAR',key:'bar'}};
 
-// --- FUNZIONI LAYER & HOTSPOT ---
-function setLayers() {
-  isMobile = window.innerWidth <= 768;
+// LAYERS
+function setLayers(){
+  const isMobile = 'ontouchstart' in window; // qualsiasi touch device
   layers = isMobile ? {
-    background: hero.querySelector('.mobile-layer.background'),
-    midground: hero.querySelector('.mobile-layer.midground'),
-    foreground: hero.querySelector('.mobile-layer.foreground')
+    background:hero.querySelector('.mobile-layer.background'),
+    midground:hero.querySelector('.mobile-layer.midground'),
+    foreground:hero.querySelector('.mobile-layer.foreground')
   } : {
-    background: hero.querySelector('.desktop-layer.background'),
-    midground: hero.querySelector('.desktop-layer.midground'),
-    foreground: hero.querySelector('.desktop-layer.foreground')
+    background:hero.querySelector('.desktop-layer.background'),
+    midground:hero.querySelector('.desktop-layer.midground'),
+    foreground:hero.querySelector('.desktop-layer.foreground')
   };
   updateHotspots();
 }
 
-function updateHotspots() {
-  hotspots.forEach(h => {
+// HOTSPOTS
+function updateHotspots(){
+  hotspots.forEach(h=>{
+    const isMobile = 'ontouchstart' in window;
     const ox = isMobile ? h.dataset.xMobile/100*hero.clientWidth : h.dataset.xDesktop/100*hero.clientWidth;
     const oy = isMobile ? h.dataset.yMobile/100*hero.clientHeight : h.dataset.yDesktop/100*hero.clientHeight;
     h.dataset.ox = ox;
     h.dataset.oy = oy;
   });
-  updateParallax(mouseX, mouseY);
+  updateParallax(mouseX,mouseY);
 }
 
-function updateParallax(x, y) {
+function updateParallax(x,y){
   const maxOffset = {background:{x:40,y:20}, midground:{x:60,y:30}, foreground:{x:80,y:40}};
-  layers.background.style.transform = `translate(${x*maxOffset.background.x}px,${y*maxOffset.background.y}px)`;
-  layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px,${y*maxOffset.midground.y}px)`;
-  layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px,${y*maxOffset.foreground.y}px)`;
+  layers.background.style.transform=`translate(${x*maxOffset.background.x}px,${y*maxOffset.background.y}px)`;
+  layers.midground.style.transform=`translate(${x*maxOffset.midground.x}px,${y*maxOffset.midground.y}px)`;
+  layers.foreground.style.transform=`translate(${x*maxOffset.foreground.x}px,${y*maxOffset.foreground.y}px)`;
 
-  hotspots.forEach(h => {
+  hotspots.forEach(h=>{
     if(h.classList.contains('hidden')) return;
     const ox = parseFloat(h.dataset.ox);
     const oy = parseFloat(h.dataset.oy);
@@ -372,110 +367,82 @@ function updateParallax(x, y) {
   });
 }
 
-// --- ZOOM HOTSPOTS ---
-function zoomTo(key) {
-  const h = Array.from(hotspots).find(el => el.dataset.key === key);
+// ZOOM
+function zoomTo(key){
+  const h = Array.from(hotspots).find(el=>el.dataset.key===key);
   if(!h) return;
-  const tx = parseFloat(h.dataset.ox);
-  const ty = parseFloat(h.dataset.oy);
-  const cx = hero.clientWidth/2;
-  const cy = hero.clientHeight/2;
-  const dx = cx - tx;
-  const dy = cy - ty;
+  const tx = parseFloat(h.dataset.ox), ty = parseFloat(h.dataset.oy);
+  const cx = hero.clientWidth/2, cy = hero.clientHeight/2;
+  const dx = cx - tx, dy = cy - ty;
 
-  layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
-  layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
-  layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
+  layers.background.style.transform=`translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
+  layers.midground.style.transform=`translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
+  layers.foreground.style.transform=`translate(${dx}px,${dy}px) scale(1.5)`;
 
-  isZoomed = true;
-  const item = map[key];
-  title.innerText = item.label;
-  overlay.style.display = 'flex';
-  hotspots.forEach(h => h.classList.add('hidden'));
-  contentBox.style.transform = 'scale(1)';
+  isZoomed=true;
+  title.innerText = map[key].label;
+  overlay.style.display='flex';
+  hotspots.forEach(h=>h.classList.add('hidden'));
+  contentBox.style.transform='scale(1)';
 }
 
-function resetZoom() {
-  isZoomed = false;
-  overlay.style.display = 'none';
-  contentBox.style.transform = 'scale(0)';
-  hotspots.forEach(h => h.classList.remove('hidden'));
-  updateParallax(mouseX, mouseY);
+function resetZoom(){
+  isZoomed=false;
+  overlay.style.display='none';
+  contentBox.style.transform='scale(0)';
+  hotspots.forEach(h=>h.classList.remove('hidden'));
+  updateParallax(mouseX,mouseY);
 }
 
-// --- EVENTI ---
-hero.addEventListener('mousemove', e => {
-  if(isMobile) return;
+// EVENTI MOUSE
+hero.addEventListener('mousemove',e=>{
+  if('ontouchstart' in window) return;
   const r = hero.getBoundingClientRect();
-  mouseX = (e.clientX - r.left)/r.width - 0.5;
-  mouseY = (e.clientY - r.top)/r.height - 0.5;
-  if(!isZoomed) updateParallax(mouseX, mouseY);
+  mouseX = (e.clientX-r.left)/r.width-0.5;
+  mouseY = (e.clientY-r.top)/r.height-0.5;
+  if(!isZoomed) updateParallax(mouseX,mouseY);
 });
 
-// Hotspot click
-hotspots.forEach(h => h.addEventListener('click', () => zoomTo(h.dataset.key)));
-
-// Menu click
-document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
-  a.addEventListener('click', e => {
+// HOTSPOTS CLICK
+hotspots.forEach(h=>h.addEventListener('click',()=>zoomTo(h.dataset.key)));
+document.querySelectorAll('#menu a, #mobile-menu a').forEach(a=>{
+  a.addEventListener('click',e=>{
     e.preventDefault();
     zoomTo(a.dataset.key);
     document.getElementById('mobile-menu').style.display='none';
   });
 });
 
-// Hamburger
-document.getElementById('hamburger').onclick = () => document.getElementById('mobile-menu').style.display='flex';
-document.querySelector('#mobile-menu .close-btn').onclick = () => document.getElementById('mobile-menu').style.display='none';
+// HAMBURGER
+document.getElementById('hamburger').onclick = ()=>document.getElementById('mobile-menu').style.display='flex';
+document.querySelector('#mobile-menu .close-btn').onclick = ()=>document.getElementById('mobile-menu').style.display='none';
 overlay.querySelector('.close-btn').onclick = resetZoom;
 
-// --- GIROSCOPIO MOBILE ---
-if(isMobile){
+// GIROSCOPIO TOUCH
+if('ontouchstart' in window){
   const gyroBtn = document.createElement('button');
-  gyroBtn.id = 'enableGyro';
   gyroBtn.innerText = 'Attiva Giroscopio';
-  gyroBtn.style.cssText = `
-    position:fixed;bottom:20px;right:20px;
-    z-index:9999;padding:10px 15px;
-    background:#b22222;color:#fff;
-    border:none;border-radius:5px;
-    font-size:1rem;
-  `;
+  gyroBtn.style.cssText = "position:fixed;bottom:20px;right:20px;padding:10px 15px;background:#b22222;color:#fff;border:none;border-radius:5px;z-index:9999;";
   document.body.appendChild(gyroBtn);
 
-  // Scompare automaticamente dopo 3 secondi
-  setTimeout(() => { gyroBtn.style.display='none' }, 3000);
+  setTimeout(()=>gyroBtn.style.display='none',3000);
 
-  gyroBtn.addEventListener('click', () => {
-    if(typeof DeviceOrientationEvent.requestPermission === 'function'){
-      DeviceOrientationEvent.requestPermission()
-        .then(response => {
-          if(response === 'granted'){
-            window.addEventListener('deviceorientation', handleOrientation);
-            gyroBtn.style.display='none';
-          } else {
-            alert('Permesso giroscopio negato');
-          }
-        }).catch(console.error);
-    } else {
-      window.addEventListener('deviceorientation', handleOrientation);
-      gyroBtn.style.display='none';
-    }
+  gyroBtn.addEventListener('click',()=>{
+    window.addEventListener('deviceorientation', e=>{
+      if(isZoomed) return;
+      mouseX += ((e.gamma||0)/30 - mouseX)*0.1; // smorzamento
+      mouseY += ((e.beta||0)/30 - mouseY)*0.1;
+      mouseX = Math.max(-1,Math.min(1,mouseX));
+      mouseY = Math.max(-1,Math.min(1,mouseY));
+      updateParallax(mouseX,mouseY);
+    });
+    gyroBtn.style.display='none';
   });
 }
 
-function handleOrientation(e){
-  if(isZoomed) return;
-  const x = (e.gamma||0)/30;
-  const y = (e.beta||0)/30;
-  mouseX = Math.max(-1, Math.min(1, x));
-  mouseY = Math.max(-1, Math.min(1, y));
-  updateParallax(mouseX, mouseY);
-}
-
-// --- INIZIALIZZAZIONE ---
+// INIZIALIZZAZIONE
 setLayers();
-window.addEventListener('resize', setLayers);
+window.addEventListener('resize',setLayers);
 </script>
 </body>
 </html>
