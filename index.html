@@ -231,15 +231,22 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
   opacity: 1;
 }
 
-/* HERO LAYER - TRANSIZIONE MORBIDA */
+/* HERO LAYERS */
 #hero {
   position: relative;
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
+}
+
+#hero-layers {
+  position: relative;
+  width: 100%;
+  height: 100%;
   transition: filter 1.2s ease;
 }
 
-/* OVERLAY HERO LUCE */
-#hero::after {
+#hero-layers::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -248,43 +255,54 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
   transition: all 1.2s ease;
 }
 
-/* 🌞 GIORNO */
-body[data-time="day"] #hero {
-  filter: brightness(1.15) saturate(1.1) contrast(1.05);
+/* LAYER BASE */
+.layer {
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  top: -5%;
+  left: -5%;
+  object-fit: cover;
+  pointer-events: none;
 }
 
-body[data-time="day"] #hero::after {
+/* BOTTONI TEST LUCE */
+.time-buttons {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 999;
+}
+.time-buttons button {
+  margin-right: 5px;
+  padding: 8px 15px;
+  background: #b22222;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* FILTRI LUCE PER ORA DEL GIORNO */
+body[data-time="day"] #hero-layers {
+  filter: brightness(1.15) saturate(1.1) contrast(1.05);
+}
+body[data-time="day"] #hero-layers::after {
   background: radial-gradient(circle at 50% 20%, rgba(255,220,150,0.25), transparent 60%);
 }
 
-/* 🕯 NOTTE / SERA */
-body[data-time="night"] #hero {
+body[data-time="night"] #hero-layers {
   filter: brightness(0.75) saturate(1.2) contrast(1.1) hue-rotate(-10deg);
 }
-
-body[data-time="night"] #hero::after {
+body[data-time="night"] #hero-layers::after {
   background: radial-gradient(circle at 50% 60%, rgba(255,160,80,0.2), transparent 70%);
 }
 
-/* 🌑 CHIUSO */
-body[data-time="closed"] #hero {
+body[data-time="closed"] #hero-layers {
   filter: brightness(0.35) saturate(0.7) contrast(1.2);
 }
-
-body[data-time="closed"] #hero::after {
+body[data-time="closed"] #hero-layers::after {
   background: rgba(0,0,0,0.6);
-}
-
-/* Assicuriamo che testi e menu restino sempre leggibili */
-#menu, #content-overlay, footer {
-  filter: none !important;
-}
-
-#gyroOverlay,
-#gyroBtn,
-.hotspot,
-{
-  z-index: 10;
 }
 
 @media(min-width:769px){
@@ -303,16 +321,17 @@ body[data-time="closed"] #hero::after {
 
 <div id="hero">
 
-<!-- DESKTOP LAYERS -->
-<img class="layer desktop-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp">
-<img class="layer desktop-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774819342/Catma-midground_zjbznb.webp">
-<img class="layer desktop-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp">
-
-<!-- MOBILE LAYERS -->
-<img class="layer mobile-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
-<img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774819115/Catma-midground-mobile_xvwur8.webp">
-<img class="layer mobile-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
-
+<div id="hero-layers">
+    <!-- DESKTOP LAYERS -->
+    <img class="layer desktop-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp">
+    <img class="layer desktop-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774819342/Catma-midground_zjbznb.webp">
+    <img class="layer desktop-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp">
+    <!-- MOBILE LAYERS -->
+    <img class="layer mobile-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
+    <img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774819115/Catma-midground-mobile_xvwur8.webp">
+    <img class="layer mobile-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
+</div>
+  
 <!-- HOTSPOTS -->
 <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
 <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
@@ -589,19 +608,33 @@ document.querySelector('#mobile-menu .close-btn').onclick = () =>
 
 overlay.querySelector('.close-btn').onclick = resetZoom;
 
-//LUCE
-function getTimeState() {
-  const hour = new Date().getHours();
+// Funzione per aggiornare il tempo della scena
+function updateSceneByTime(hour = null) {
+  // Usa ora locale se non passata
+  const now = hour !== null ? hour : new Date().getHours();
+  let timeClass = "day";
 
-  if (hour >= 9 && hour < 18) return 'day';
-  if (hour >= 18 || hour < 2) return 'night';
-  return 'closed';
+  if (now >= 9 && now < 18) {
+    timeClass = "day";
+  } else if ((now >= 18 && now <= 23) || (now >= 0 && now < 2)) {
+    timeClass = "night";
+  } else {
+    timeClass = "closed";
+  }
+
+  document.body.dataset.time = timeClass;
 }
 
-function applyTimeState() {
-  const state = getTimeState();
-  document.body.setAttribute('data-time', state);
-}
+// Aggiorna automaticamente all'avvio
+updateSceneByTime();
+
+// Pulsanti di test luce
+document.querySelectorAll(".time-buttons button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const t = btn.dataset.time;
+    document.body.dataset.time = t;
+  });
+});
 
 
   
@@ -622,7 +655,7 @@ if('ontouchstart' in window){
   setTimeout(()=>{
     gyroBtn.classList.add('hidden');
     gyroOverlay.classList.remove('active');
-  }, 4000);
+  }, 10000);
 
   gyroBtn.addEventListener('click', ()=>{
     gyroBtn.classList.add('hidden');
