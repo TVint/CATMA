@@ -196,10 +196,6 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 </head>
 
 <body>
-
-<!-- Bottone per abilitare giroscopio -->
-<button id="enableGyro" style="position:fixed;bottom:20px;right:20px;z-index:9999;">Attiva Giroscopio</button>
-  
 <div id="hero">
 
 <!-- DESKTOP LAYERS -->
@@ -293,6 +289,30 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 </footer>
 
 <script>
+  // Aggiorna anno dinamicamente
+  document.getElementById('year').innerText = new Date().getFullYear();
+</script>
+
+<style>
+.footer-social {
+  display: inline-flex;      /* icone in fila */
+  align-items: center;
+  gap: 10px;                 /* spazio tra icone */
+}
+
+.footer-social a {
+  display: inline-block;
+}
+
+.footer-social img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+</style>
+
+<script>
 const hero = document.getElementById('hero');
 let isMobile = window.innerWidth <= 768;
 let layers = {};
@@ -371,6 +391,52 @@ const map = {
 };
 
 function zoomTo(key){
-  con
+  const h = Array.from(hotspots).find(el=>el.dataset.key===key);
+  if(!h) return;
+  const tx = parseFloat(h.dataset.ox);
+  const ty = parseFloat(h.dataset.oy);
+  const cx = hero.clientWidth/2;
+  const cy = hero.clientHeight/2;
+  const dx = cx - tx;
+  const dy = cy - ty;
+
+  layers.background.style.transform=`translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
+  layers.midground.style.transform=`translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
+  layers.foreground.style.transform=`translate(${dx}px,${dy}px) scale(1.5)`;
+
+  isZoomed = true;
+  const item = map[key];
+  title.innerText = item.label;
+  overlay.style.display='flex';
+  hotspots.forEach(h => h.classList.add('hidden'));
+  contentBox.style.transform='scale(1)';
+}
+
+function resetZoom(){
+  isZoomed=false;
+  overlay.style.display='none';
+  contentBox.style.transform='scale(0)';
+  hotspots.forEach(h => h.classList.remove('hidden'));
+  updateParallax(mouseX,mouseY);
+}
+
+/* HOTSPOTS & MENU CLICK */
+hotspots.forEach(h=>h.addEventListener('click',()=>zoomTo(h.dataset.key)));
+document.querySelectorAll('#menu a, #mobile-menu a').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    zoomTo(a.dataset.key);
+    document.getElementById('mobile-menu').style.display='none';
+  });
+});
+
+/* HAMBURGER MOBILE */
+document.getElementById('hamburger').onclick = ()=>document.getElementById('mobile-menu').style.display='flex';
+document.querySelector('#mobile-menu .close-btn').onclick = ()=>document.getElementById('mobile-menu').style.display='none';
+overlay.querySelector('.close-btn').onclick = resetZoom;
+
+// inizializza
+setLayers();
+</script>
 </body>
 </html>
