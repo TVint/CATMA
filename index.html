@@ -616,8 +616,17 @@ function applyTimeFilter() {
 }
 
 // --- CONTROLLO TEMPO MANUALE ---
+
 function setTimeManually(state) {
   document.body.setAttribute('data-time', state);
+
+  const filters = {
+    giorno: 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)',
+    sera: 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)',
+    chiuso: 'brightness(0.2) saturate(0.5)'
+  };
+
+  hero.style.filter = filters[state];
 }
 
 // --- CREAZIONE PULSANTI ---
