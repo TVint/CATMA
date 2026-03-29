@@ -650,9 +650,12 @@ controls.querySelectorAll('button').forEach(btn => {
 // --- INIT ---
 applyTimeFilter();
 
-
 // --- INIT ---
 setLayers();
+
+const now = new Date();
+setTimeOfDay(now.getHours());
+
 window.addEventListener('resize', setLayers);
 </script>
 </body>
