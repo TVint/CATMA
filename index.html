@@ -188,6 +188,26 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
  pointer-events:none;
 }
 
+#gyroBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  background: #b22222;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  z-index: 9999;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: opacity 0.3s ease;
+}
+
+#gyroBtn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 
 @media(min-width:769px){
  .mobile-layer{display:none}
@@ -313,52 +333,58 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 </style>
 
 <script>
-// ELEMENTI
+// ELEMENTI PRINCIPALI
 const hero = document.getElementById('hero');
 let layers = {};
-let mouseX=0, mouseY=0, isZoomed=false;
+let mouseX = 0, mouseY = 0, isZoomed = false;
 
 const hotspots = document.querySelectorAll('.hotspot');
 const overlay = document.getElementById('content-overlay');
 const contentBox = overlay.querySelector('.content-box');
 const title = document.getElementById('title');
 
-const map = {chi:{label:'CHI SIAMO',key:'chi'}, mescita:{label:'MESCITA',key:'mescita'}, prenota:{label:'PRENOTA',key:'prenota'}, eventi:{label:'EVENTI',key:'eventi'}, bar:{label:'BAR',key:'bar'}};
+const map = {
+  chi: {label:'CHI SIAMO', key:'chi'},
+  mescita: {label:'MESCITA', key:'mescita'},
+  prenota: {label:'PRENOTA', key:'prenota'},
+  eventi: {label:'EVENTI', key:'eventi'},
+  bar: {label:'BAR', key:'bar'}
+};
 
-// LAYERS
-function setLayers(){
-  const isMobile = 'ontouchstart' in window; // qualsiasi touch device
+// --- LAYERS ---
+function setLayers() {
+  const isMobile = 'ontouchstart' in window;
   layers = isMobile ? {
-    background:hero.querySelector('.mobile-layer.background'),
-    midground:hero.querySelector('.mobile-layer.midground'),
-    foreground:hero.querySelector('.mobile-layer.foreground')
+    background: hero.querySelector('.mobile-layer.background'),
+    midground: hero.querySelector('.mobile-layer.midground'),
+    foreground: hero.querySelector('.mobile-layer.foreground')
   } : {
-    background:hero.querySelector('.desktop-layer.background'),
-    midground:hero.querySelector('.desktop-layer.midground'),
-    foreground:hero.querySelector('.desktop-layer.foreground')
+    background: hero.querySelector('.desktop-layer.background'),
+    midground: hero.querySelector('.desktop-layer.midground'),
+    foreground: hero.querySelector('.desktop-layer.foreground')
   };
   updateHotspots();
 }
 
-// HOTSPOTS
-function updateHotspots(){
-  hotspots.forEach(h=>{
-    const isMobile = 'ontouchstart' in window;
+// --- HOTSPOTS ---
+function updateHotspots() {
+  const isMobile = 'ontouchstart' in window;
+  hotspots.forEach(h => {
     const ox = isMobile ? h.dataset.xMobile/100*hero.clientWidth : h.dataset.xDesktop/100*hero.clientWidth;
     const oy = isMobile ? h.dataset.yMobile/100*hero.clientHeight : h.dataset.yDesktop/100*hero.clientHeight;
     h.dataset.ox = ox;
     h.dataset.oy = oy;
   });
-  updateParallax(mouseX,mouseY);
+  updateParallax(mouseX, mouseY);
 }
 
-function updateParallax(x,y){
+function updateParallax(x, y) {
   const maxOffset = {background:{x:40,y:20}, midground:{x:60,y:30}, foreground:{x:80,y:40}};
-  layers.background.style.transform=`translate(${x*maxOffset.background.x}px,${y*maxOffset.background.y}px)`;
-  layers.midground.style.transform=`translate(${x*maxOffset.midground.x}px,${y*maxOffset.midground.y}px)`;
-  layers.foreground.style.transform=`translate(${x*maxOffset.foreground.x}px,${y*maxOffset.foreground.y}px)`;
+  layers.background.style.transform = `translate(${x*maxOffset.background.x}px,${y*maxOffset.background.y}px)`;
+  layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px,${y*maxOffset.midground.y}px)`;
+  layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px,${y*maxOffset.foreground.y}px)`;
 
-  hotspots.forEach(h=>{
+  hotspots.forEach(h => {
     if(h.classList.contains('hidden')) return;
     const ox = parseFloat(h.dataset.ox);
     const oy = parseFloat(h.dataset.oy);
@@ -367,82 +393,84 @@ function updateParallax(x,y){
   });
 }
 
-// ZOOM
-function zoomTo(key){
-  const h = Array.from(hotspots).find(el=>el.dataset.key===key);
+// --- ZOOM HOTSPOTS ---
+function zoomTo(key) {
+  const h = Array.from(hotspots).find(el => el.dataset.key === key);
   if(!h) return;
   const tx = parseFloat(h.dataset.ox), ty = parseFloat(h.dataset.oy);
   const cx = hero.clientWidth/2, cy = hero.clientHeight/2;
   const dx = cx - tx, dy = cy - ty;
 
-  layers.background.style.transform=`translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
-  layers.midground.style.transform=`translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
-  layers.foreground.style.transform=`translate(${dx}px,${dy}px) scale(1.5)`;
+  layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
+  layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
+  layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
 
-  isZoomed=true;
+  isZoomed = true;
   title.innerText = map[key].label;
-  overlay.style.display='flex';
-  hotspots.forEach(h=>h.classList.add('hidden'));
-  contentBox.style.transform='scale(1)';
+  overlay.style.display = 'flex';
+  hotspots.forEach(h => h.classList.add('hidden'));
+  contentBox.style.transform = 'scale(1)';
 }
 
-function resetZoom(){
-  isZoomed=false;
-  overlay.style.display='none';
-  contentBox.style.transform='scale(0)';
-  hotspots.forEach(h=>h.classList.remove('hidden'));
-  updateParallax(mouseX,mouseY);
+function resetZoom() {
+  isZoomed = false;
+  overlay.style.display = 'none';
+  contentBox.style.transform = 'scale(0)';
+  hotspots.forEach(h => h.classList.remove('hidden'));
+  updateParallax(mouseX, mouseY);
 }
 
-// EVENTI MOUSE
-hero.addEventListener('mousemove',e=>{
+// --- EVENTI MOUSE ---
+hero.addEventListener('mousemove', e => {
   if('ontouchstart' in window) return;
   const r = hero.getBoundingClientRect();
-  mouseX = (e.clientX-r.left)/r.width-0.5;
-  mouseY = (e.clientY-r.top)/r.height-0.5;
-  if(!isZoomed) updateParallax(mouseX,mouseY);
+  mouseX = (e.clientX - r.left)/r.width - 0.5;
+  mouseY = (e.clientY - r.top)/r.height - 0.5;
+  if(!isZoomed) updateParallax(mouseX, mouseY);
 });
 
-// HOTSPOTS CLICK
-hotspots.forEach(h=>h.addEventListener('click',()=>zoomTo(h.dataset.key)));
-document.querySelectorAll('#menu a, #mobile-menu a').forEach(a=>{
-  a.addEventListener('click',e=>{
+// --- HOTSPOTS CLICK ---
+hotspots.forEach(h => h.addEventListener('click', () => zoomTo(h.dataset.key)));
+document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
+  a.addEventListener('click', e => {
     e.preventDefault();
     zoomTo(a.dataset.key);
     document.getElementById('mobile-menu').style.display='none';
   });
 });
 
-// HAMBURGER
-document.getElementById('hamburger').onclick = ()=>document.getElementById('mobile-menu').style.display='flex';
-document.querySelector('#mobile-menu .close-btn').onclick = ()=>document.getElementById('mobile-menu').style.display='none';
+// --- HAMBURGER ---
+document.getElementById('hamburger').onclick = () => document.getElementById('mobile-menu').style.display='flex';
+document.querySelector('#mobile-menu .close-btn').onclick = () => document.getElementById('mobile-menu').style.display='none';
 overlay.querySelector('.close-btn').onclick = resetZoom;
 
-// GIROSCOPIO TOUCH
+// --- GIROSCOPIO MOBILE ---
 if('ontouchstart' in window){
   const gyroBtn = document.createElement('button');
+  gyroBtn.id = 'gyroBtn';
   gyroBtn.innerText = 'Attiva Giroscopio';
-  gyroBtn.style.cssText = "position:fixed;bottom:20px;right:20px;padding:10px 15px;background:#b22222;color:#fff;border:none;border-radius:5px;z-index:9999;";
   document.body.appendChild(gyroBtn);
 
-  setTimeout(()=>gyroBtn.style.display='none',3000);
-
-  gyroBtn.addEventListener('click',()=>{
-    window.addEventListener('deviceorientation', e=>{
+  gyroBtn.addEventListener('click', ()=>{
+    gyroBtn.classList.add('hidden');
+    window.addEventListener('deviceorientation', e => {
       if(isZoomed) return;
-      mouseX += ((e.gamma||0)/30 - mouseX)*0.1; // smorzamento
+      // smorzamento per fluidità
+      mouseX += ((e.gamma||0)/30 - mouseX)*0.1;
       mouseY += ((e.beta||0)/30 - mouseY)*0.1;
-      mouseX = Math.max(-1,Math.min(1,mouseX));
-      mouseY = Math.max(-1,Math.min(1,mouseY));
-      updateParallax(mouseX,mouseY);
+      mouseX = Math.max(-1, Math.min(1, mouseX));
+      mouseY = Math.max(-1, Math.min(1, mouseY));
+      updateParallax(mouseX, mouseY);
     });
-    gyroBtn.style.display='none';
   });
+
+  // scompare dopo 5 secondi se non cliccato
+  setTimeout(()=>gyroBtn.classList.add('hidden'), 5000);
 }
 
-// INIZIALIZZAZIONE
+// --- INIZIALIZZAZIONE ---
 setLayers();
-window.addEventListener('resize',setLayers);
+window.addEventListener('resize', setLayers);
 </script>
 </body>
 </html>
