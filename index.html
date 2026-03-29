@@ -295,6 +295,13 @@ body[data-time="closed"]::after {
 </head>
 
 <body>
+  
+<div style="position:fixed;top:10px;left:10px;z-index:9999;">
+  <button onclick="setTimeManually('day')">Day</button>
+  <button onclick="setTimeManually('night')">Night</button>
+  <button onclick="setTimeManually('closed')">Closed</button>
+</div>
+
 <div id="hero">
 
 <!-- DESKTOP LAYERS -->
@@ -632,6 +639,10 @@ if('ontouchstart' in window){
       targetY = Math.max(-1, Math.min(1, targetY));
     });
   });
+}
+
+function setTimeManually(state) {
+  document.body.setAttribute('data-time', state);
 }
 
 // --- INIT ---
