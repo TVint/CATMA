@@ -649,6 +649,35 @@ controls.querySelectorAll('button').forEach(btn => {
   btn.addEventListener('click', () => setTimeManually(btn.dataset.time));
 });
 
+function setTimeManually(state) {
+  // Aggiorna attributo data-time
+  document.body.setAttribute('data-time', state);
+
+  // Forza il browser a leggere il filtro corrente
+  void hero.offsetWidth;
+
+  // Applica il filtro con transizione affidabile
+  requestAnimationFrame(() => {
+    hero.style.filter = filters[state];
+  });
+
+  // --- CAMBIO TESTO CENTRALE ---
+  const heroText = document.getElementById('hero-text');
+  if(state === 'chiuso') {
+    heroText.innerHTML = `
+      <h1 class="title">CI DISPIACE</h1>
+      <h1 class="title-big">IL LOCALE È CHIUSO</h1>
+      <p class="subtitle">Torna più tardi o visita il nostro sito</p>
+    `;
+  } else {
+    heroText.innerHTML = `
+      <h1 class="title">BENVENUTI</h1>
+      <h1 class="title-big">AL CATMA BAR</h1>
+      <p class="subtitle">Via delle Sirene, 13 <br> Lido di Jesolo (VE)</p>
+    `;
+  }
+}
+
 // --- INIT ---
 applyTimeFilter();
 setLayers();
