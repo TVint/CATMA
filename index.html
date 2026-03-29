@@ -661,28 +661,24 @@ function setTimeManually(state) {
     hero.style.filter = filters[state];
   });
 
-  // --- CAMBIO TESTO CENTRALE ---
-  const heroText = document.getElementById('hero-text');
-  if(state === 'chiuso') {
-    heroText.innerHTML = `
-      <h1 class="title">SEMBRA CHE CATMA BAR SIA</h1>
-      <h1 class="title-big">CHIUSO</h1>
-      <p class="subtitle">Torna domani per bere un'altra ombra!</p>
-    `;
-  if(state === 'giorno') {
-    heroText.innerHTML = `
-      <h1 class="title">È UN BUONGIORNO AL</h1>
-      <h1 class="title-big">CATMA BAR</h1>
-      <p class="subtitle">Via delle Sirene, 13 <br> Lido di Jesolo (VE)</p>
-    `;
-  } else {
-    heroText.innerHTML = `
-      <h1 class="title">BENVENUTI</h1>
-      <h1 class="title-big">AL CATMA BAR</h1>
-      <p class="subtitle">Via delle Sirene, 13 <br> Lido di Jesolo (VE)</p>
-    `;
+// --- TESTI PER OGNI STATO ---
+const heroTexts = {
+  giorno: {
+    title: "È °UN BUONGIORNO",
+    titleBig: "AL CATMA BAR",
+    subtitle: "Via delle Sirene, 13 <br> Lido di Jesolo (VE)"
+  },
+  sera: {
+    title: "BENVENUTI",
+    titleBig: "AL CATMA BAR",
+    subtitle: "Vivi la magia della sera al Catma Bar"
+  },
+  chiuso: {
+    title: "SEMBRA CHE CATMA BAR SIA",
+    titleBig: "CHIUSO",
+    subtitle: "Torna domani per bere un'altra ombra!"
   }
-}
+};
 
 // --- INIT ---
 applyTimeFilter();
