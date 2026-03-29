@@ -193,7 +193,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 180px;       /* larghezza maggiore */
+  width: 250px;       /* larghezza maggiore */
   height: 80px;       /* altezza maggiore */
   background: #b22222;
   color: #fff;
@@ -466,8 +466,8 @@ if('ontouchstart' in window){
     });
   });
 
-  // scompare automaticamente dopo 4 secondi se non cliccato
-  setTimeout(()=>gyroBtn.classList.add('hidden'), 4000);
+  // scompare automaticamente dopo 10 secondi se non cliccato
+  setTimeout(()=>gyroBtn.classList.add('hidden'), 10000);
 }
 
 // --- INIZIALIZZAZIONE ---
