@@ -230,11 +230,25 @@ html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-
 #gyroOverlay.active {
   opacity: 1;
 }
-
+  
 /* FILTRI TEMPO */
-body[data-time="giorno"] #hero { filter: brightness(1) saturate(1); transition: filter 1s ease; }
-body[data-time="sera"] #hero { filter: brightness(0.6) saturate(0.8) sepia(0.2); transition: filter 1s ease; }
-body[data-time="chiuso"] #hero { filter: brightness(0.2) saturate(0.5); transition: filter 1s ease; }
+body[data-time="giorno"] #hero {
+  filter: brightness(1.3) contrast(1.05) saturate(1.1); 
+  transition: filter 1s ease;
+  /* più chiaro, come luce solare */
+}
+
+body[data-time="sera"] #hero {
+  filter: brightness(0.65) contrast(0.95) sepia(0.3) saturate(1.2); 
+  transition: filter 1s ease;
+  /* luce calda, tipo candele/soffusa */
+}
+
+body[data-time="chiuso"] #hero {
+  filter: brightness(0.2) saturate(0.5); 
+  transition: filter 1s ease;
+  /* rimane invariato */
+}
 
 /* Pulsanti controllo tempo */
 #timeControls {
