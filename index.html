@@ -346,7 +346,7 @@ body, body * {
   background:rgba(0,0,0,.80);
   justify-content:center;
   align-items:center;
-  z-index:700;
+  z-index:2000;
   backdrop-filter: blur(5px);
   display:flex;              /* sempre flex */
   opacity:0;                 /* nascosto */
@@ -466,12 +466,22 @@ body[data-time="chiuso"] #hero {
   background: #b22222;
   color: white;
   cursor: pointer;
+  pointer-events: auto; /* assicurati siano cliccabili */
   font-weight: bold;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   transition: background 0.3s ease;
 }
 
 #timeControls button:hover { background: #ff4d4d; }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 50%; /* per i controlli tempo centrati */
+  transform: translateX(-50%);
+  z-index: 2000; /* sopra hotspot-layer e hero */
+}
 
 .footer-social {
   display: inline-flex;      /* icone in fila */
@@ -572,15 +582,6 @@ body[data-time="chiuso"] #hero {
   <p class="subtitle">Via delle Sirene, 13 - Lido di Jesolo (VE)</p>
 </div>
 
-<!-- OVERLAY CONTENT -->
-<div id="content-overlay">
-  <div class="close-btn">&times;</div>
-  <div class="content-box">
-    <h1 id="title"></h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-  </div>
-</div>
-  
 <div id="hero">
 
     <!-- DESKTOP LAYERS -->
@@ -593,17 +594,26 @@ body[data-time="chiuso"] #hero {
     <img class="layer mobile-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792265/Catma-midground-mobile_xvwur8.webp">
     <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
     
-    <!-- HOTSPOTS -->
-    <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
-    <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
-    <div class="hotspot cta-btn" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
-    <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
-    <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
+    <div id="hotspot-layer">
+        <!-- HOTSPOTS -->
+        <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
+        <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
+        <div class="hotspot cta-btn" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
+        <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
+        <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
+    </div>
   
 </div>
 
-<div id="hotspot-layer"></div>
-
+<!-- OVERLAY CONTENT -->
+<div id="content-overlay">
+  <div class="close-btn">&times;</div>
+  <div class="content-box">
+    <h1 id="title"></h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  </div>
+</div>
+  
 <!-- FOOTER -->
 <footer style="background:#b22222; color:#fff; width:100vw; font-family:sans-serif; position:fixed; bottom:0; left:0; z-index:500; box-sizing: border-box;">
 
