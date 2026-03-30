@@ -15,6 +15,41 @@ body, body * {
   -ms-user-select: none;     /* Edge/IE */
   user-select: none;
 }
+
+/* LOADER */
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #b22222; /* rosso come pulsanti */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  overflow: hidden;
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+#loader img {
+  width: 150px; /* dimensione logo */
+  height: auto;
+  animation: rotateLogo 1s linear infinite; /* rotazione continua */
+}
+
+/* Rotazione logo */
+@keyframes rotateLogo {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Classe da aggiungere quando il loader scompare */
+#loader.hidden {
+  transform: translateY(-100%); /* slide up */
+  opacity: 0;
+  pointer-events: none;
+}
   
 body, body * {
   cursor: none !important; /* nasconde il cursore normale */
@@ -326,6 +361,11 @@ body[data-time="chiuso"] #hero {
 
 <body>
 
+<!-- LOADER -->
+<div id="loader">
+  <img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo">
+</div>
+
 <!-- MENU DESKTOP -->
 <div id="menu">
 <a href="#" data-key="chi">CHI SIAMO</a>
@@ -507,7 +547,7 @@ const filters = {
 // --- TESTI PER OGNI STATO ---
 const heroTexts = {
   giorno: {
-    title: "È UN BUONGIORNO AL",
+    title: "UN BUONGIORNO DA",
     titleBig: "CATMA BAR",
     subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)"
   },
@@ -739,6 +779,21 @@ document.querySelectorAll('.hotspot').forEach(el => {
     // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco
     customCursor.style.boxShadow = '0 0 10px 3px rgba((178,34,34,0.6)'; // glow rosso
   });
+});
+
+// --- LOADER ---
+
+const loader = document.getElementById('loader');
+const minLoaderTime = 1500; // durata minima in ms
+const loaderStart = Date.now();
+
+window.addEventListener('load', () => {
+  const elapsed = Date.now() - loaderStart;
+  const remaining = Math.max(minLoaderTime - elapsed, 0);
+
+  setTimeout(() => {
+    loader.classList.add('hidden'); // aggiunge la classe slide-up
+  }, remaining);
 });
 
 </script>
