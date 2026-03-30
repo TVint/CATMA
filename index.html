@@ -247,14 +247,25 @@ body, body * {
 }
 
 /* OVERLAY */
+  
 #content-overlay{
- display:none;
- position:fixed;
- width:100%;height:100%;
- background:rgba(0,0,0,.80);
- justify-content:center;
- align-items:center;
- z-index:700;
+  position:fixed;
+  width:100%;height:100%;
+  background:rgba(0,0,0,.80);
+  justify-content:center;
+  align-items:center;
+  z-index:700;
+  backdrop-filter: blur(5px);
+  display:flex;              /* sempre flex */
+  opacity:0;                 /* nascosto */
+  visibility:hidden;         /* non cliccabile */
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* stato visibile */
+#content-overlay.active{
+  opacity:1;
+  visibility:visible;
 }
   
 .content-box{
@@ -832,6 +843,14 @@ window.addEventListener('load', tryHideLoader);
 // In caso le risorse siano già pronte prima del load (molto veloce su mobile)
 document.addEventListener('DOMContentLoaded', tryHideLoader);
 
+
+
+
+
+
+
+  
+  
 // Aggiungi quando apri overlay
 function zoomTo(key) {
   const h = Array.from(hotspots).find(el => el.dataset.key === key);
@@ -856,16 +875,23 @@ function zoomTo(key) {
   isZoomed = true;
   title.innerText = map[key].label;
 
-  overlay.style.display = 'flex';
+  overlay.classList.add('active');
+  setTimeout(() => {
+   contentBox.style.transform = 'scale(1)';
+  }, 100); // leggero delay per sincronizzare
+
   hotspots.forEach(h => h.classList.add('hidden'));
   contentBox.style.transform = 'scale(1)';
 }
 
+
 // Rimuovi animazione layer quando chiudi overlay
 function resetZoom() {
   isZoomed = false;
-  overlay.style.display = 'none';
-  contentBox.style.transform = 'scale(0)';
+  ocontentBox.style.transform = 'scale(0)';
+  setTimeout(() => {
+    overlay.classList.remove('active');
+  }, 200);
   hotspots.forEach(h => h.classList.remove('hidden'));
   Object.values(layers).forEach(l => l.classList.remove('overlay-active'));
   updateParallax(mouseX, mouseY);
