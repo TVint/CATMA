@@ -243,9 +243,10 @@ body, body * {
  font-size:4rem;
  color:#fff;
  cursor:pointer;
+ pointer-events: auto;
  z-index:99999;
 }
-
+  
 /* OVERLAY */
   
 #content-overlay{
@@ -888,10 +889,15 @@ function zoomTo(key) {
 // Rimuovi animazione layer quando chiudi overlay
 function resetZoom() {
   isZoomed = false;
-  ocontentBox.style.transform = 'scale(0)';
+
+  // prima chiudi il contenuto
+  contentBox.style.transform = 'scale(0)';
+
+  // DOPO fai il fade out overlay
   setTimeout(() => {
     overlay.classList.remove('active');
-  }, 200);
+  }, 200); // sync con animazione
+
   hotspots.forEach(h => h.classList.remove('hidden'));
   Object.values(layers).forEach(l => l.classList.remove('overlay-active'));
   updateParallax(mouseX, mouseY);
