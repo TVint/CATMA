@@ -166,6 +166,27 @@ body, body * {
 100%{transform:translate(-50%,-50%) scale(1)}
 }
 
+/* HOTSPOTS CTA */
+
+.hotspot.cta{
+  padding: 12px 22px;
+  border-radius: 30px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+
+  background: rgba(178,34,34,0.9);
+  color: #fff;
+
+  box-shadow: 0 0 15px rgba(178,34,34,0.6);
+  transition: all 0.25s ease;
+}
+
+.hotspot.cta:hover{
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(178,34,34,0.9);
+}
+
 /* MENU DESKTOP */
 #menu{
  position:absolute;
@@ -506,7 +527,7 @@ body[data-time="chiuso"] #hero {
 <!-- HOTSPOTS -->
 <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
 <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
-<div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50"></div>
+<div class="hotspot cta" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50"></div>
 <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
 <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
 
@@ -698,8 +719,18 @@ hero.addEventListener('mousemove', e => {
 });
 
 // --- CLICK HOTSPOTS ---
+
 hotspots.forEach(h => {
-  h.addEventListener('click', () => zoomTo(h.dataset.key));
+  h.addEventListener('click', () => {
+    const key = h.dataset.key;
+
+    if(key === 'prenota'){
+      openBooking();
+      return;
+    }
+
+    zoomTo(key);
+  });
 });
 
 document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
