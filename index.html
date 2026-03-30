@@ -783,21 +783,45 @@ function setLayers() {
 // --- HOTSPOTS BASE POSITION ---
 function updateHotspots() {
   const isMobile = 'ontouchstart' in window;
+  const wrapper = document.getElementById('hotspot-wrapper');
 
   hotspots.forEach(h => {
-    const ox = isMobile 
-      ? h.dataset.xMobile/100 * hero.clientWidth
-      : h.dataset.xDesktop/100 * hero.clientWidth;
+    // calcola posizione in pixel in base a viewport
+    const ox = isMobile
+      ? h.dataset.xMobile / 100 * hero.clientWidth
+      : h.dataset.xDesktop / 100 * hero.clientWidth;
 
-    const oy = isMobile 
-      ? h.dataset.yMobile/100 * hero.clientHeight
-      : h.dataset.yDesktop/100 * hero.clientHeight;
+    const oy = isMobile
+      ? h.dataset.yMobile / 100 * hero.clientHeight
+      : h.dataset.yDesktop / 100 * hero.clientHeight;
 
     h.dataset.ox = ox;
     h.dataset.oy = oy;
+
+    // append al wrapper se non è già dentro
+    if(h.parentElement !== wrapper) {
+      wrapper.appendChild(h);
+    }
   });
 
-  updateParallax(mouseX, mouseY);
+  // aggiorna posizione hotspot in base al parallax
+  const maxOffset = {
+    background: {x:40, y:20},
+    midground: {x:60, y:30},
+    foreground: {x:80, y:40}
+  };
+  const scaleFix = isMobile ? 1.08 : 1;
+
+  const refX = mouseX * maxOffset.midground.x;
+  const refY = mouseY * maxOffset.midground.y;
+
+  hotspots.forEach(h => {
+    if(h.classList.contains('hidden')) return;
+    const ox = parseFloat(h.dataset.ox);
+    const oy = parseFloat(h.dataset.oy);
+    h.style.left = ox + refX + 'px';
+    h.style.top  = oy + refY + 'px';
+  });
 }
 
 // --- PARALLAX ---
