@@ -795,15 +795,18 @@ function updateParallax(x, y) {
   const isMobile = 'ontouchstart' in window;
   const scaleFix = isMobile ? 1.08 : 1;
 
-  layers.background.style.transform = `translate(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px) scale(${scaleFix})`;
-  layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px, ${y*maxOffset.midground.y}px) scale(${scaleFix})`;
-  layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px, ${y*maxOffset.foreground.y}px) scale(${scaleFix})`;
+  Object.entries(layers).forEach(([key, layer]) => {
+    if(!layer.classList.contains('parallax-target')) return;
+    const offset = maxOffset[key];
+    layer.style.transform = `translate(${x*offset.x}px, ${y*offset.y}px) scale(${scaleFix})`;
+  });
 
   const refX = x * maxOffset.midground.x;
   const refY = y * maxOffset.midground.y;
 
+  // aggiorna solo gli hotspot dentro hero
   hotspots.forEach(h => {
-    if(h.classList.contains('hidden')) return;
+    if(h.classList.contains('hidden') || !hero.contains(h)) return;
     const ox = parseFloat(h.dataset.ox);
     const oy = parseFloat(h.dataset.oy);
     h.style.left = ox + refX + 'px';
