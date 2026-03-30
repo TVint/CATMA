@@ -29,7 +29,7 @@ body, body * {
   align-items: center;
   z-index: 999999;
   overflow: hidden;
-  transition: transform 0.8s ease, opacity 0.8s ease;
+  transition: transform 0.8s ease;
 }
 
 #loader img {
@@ -47,7 +47,6 @@ body, body * {
 /* Classe da aggiungere quando il loader scompare */
 #loader.hidden {
   transform: translateY(-100%); /* slide up */
-  opacity: 1;
   pointer-events: none;
 }
   
