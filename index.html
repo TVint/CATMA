@@ -579,11 +579,11 @@ body[data-time="chiuso"] #hero {
 </div>
 
 <!-- HOTSPOTS -->
-<div class="hotspot parallax-hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
-<div class="hotspot parallax-hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
+<div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
+<div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
 <div class="hotspot cta-btn" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
-<div class="hotspot parallax-hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
-<div class="hotspot parallax-hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
+<div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
+<div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
 
 <!-- FOOTER -->
 <footer style="background:#b22222; color:#fff; width:100vw; font-family:sans-serif; position:fixed; bottom:0; left:0; z-index:500; box-sizing: border-box;">
@@ -616,9 +616,9 @@ body[data-time="chiuso"] #hero {
 
 <script>
 
-// --- AGGIORNA ANNO DINAMICAMENTE ---
+// Aggiorna anno dinamicamente
 document.getElementById('year').innerText = new Date().getFullYear();
-
+  
 // --- ELEMENTI PRINCIPALI ---
 const hero = document.getElementById('hero');
 let layers = {};
@@ -628,30 +628,100 @@ const overlay = document.getElementById('content-overlay');
 const contentBox = overlay.querySelector('.content-box');
 const title = document.getElementById('title');
 
-// --- MAPPA HOTSPOTS ---
 const map = {
-  chi: {label:'CHI SIAMO'},
-  mescita: {label:'MESCITA'},
-  prenota: {label:'PRENOTA'},
-  eventi: {label:'EVENTI'},
-  bar: {label:'BAR'}
+  chi: {label:'CHI SIAMO', key:'chi'},
+  mescita: {label:'MESCITA', key:'mescita'},
+  prenota: {label:'PRENOTA', key:'prenota'},
+  eventi: {label:'EVENTI', key:'eventi'},
+  bar: {label:'BAR', key:'bar'}
 };
 
-// --- CONTENUTI OVERLAY ---
 const contentMap = {
-  chi: `<div class="content-inner"><h1>Chi siamo</h1><p>CATMA BAR è un punto di riferimento al Lido di Jesolo, tra ricerca musicale e cultura del bere.</p></div>`,
-  mescita: `<div class="content-inner"><h1>Mescita</h1><p>Selezione di vini naturali, birre artigianali e cocktail essenziali.</p></div>`,
-  eventi: `<div class="content-inner"><h1>Eventi</h1><p>Dj set, live e serate speciali ogni settimana.</p></div>`,
-  bar: `<div class="content-inner"><h1>Il Bar</h1><p>Uno spazio intimo tra luce e ombra, progettato per vivere la notte.</p></div>`,
-  prenota: `<div class="content-inner">
+
+  chi: `
+    <div class="content-inner">
+      <h1>Chi siamo</h1>
+      <p>CATMA BAR è un punto di riferimento al Lido di Jesolo, tra ricerca musicale e cultura del bere.</p>
+    </div>
+  `,
+
+  mescita: `
+    <div class="content-inner">
+      <h1>Mescita</h1>
+      <p>Selezione di vini naturali, birre artigianali e cocktail essenziali.</p>
+    </div>
+  `,
+
+  eventi: `
+    <div class="content-inner">
+      <h1>Eventi</h1>
+      <p>Dj set, live e serate speciali ogni settimana.</p>
+    </div>
+  `,
+
+  bar: `
+    <div class="content-inner">
+      <h1>Il Bar</h1>
+      <p>Uno spazio intimo tra luce e ombra, progettato per vivere la notte.</p>
+    </div>
+  `,
+
+  prenota: `
+    <div class="content-inner">
       <h1>Prenota un tavolo</h1>
       <p>Scrivici su WhatsApp oppure chiamaci direttamente.</p>
+
       <div class="cta-group">
-        <a href="https://wa.me/393XXXXXXXXX?text=Ciao, vorrei prenotare un tavolo al CATMA BAR" target="_blank" class="cta-btn">WhatsApp</a>
-        <a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a>
+        <a href="https://wa.me/393XXXXXXXXX?text=Ciao, vorrei prenotare un tavolo al CATMA BAR"
+           target="_blank"
+           class="cta-btn">
+          WhatsApp
+        </a>
+
+        <a href="tel:+393XXXXXXXXX" class="cta-btn secondary">
+          Chiama
+        </a>
       </div>
-    </div>`
+    </div>
+  `
 };
+
+  // --- GIROSCOPIO MOBILE ---
+if('ontouchstart' in window){
+
+  const gyroOverlay = document.createElement('div');
+  gyroOverlay.id = 'gyroOverlay';
+  document.body.appendChild(gyroOverlay);
+
+  const gyroBtn = document.createElement('button');
+  gyroBtn.id = 'gyroBtn';
+  gyroBtn.innerText = 'Attiva Giroscopio';
+  document.body.appendChild(gyroBtn);
+
+  setTimeout(()=>gyroOverlay.classList.add('active'), 10);
+
+  setTimeout(()=>{
+    gyroBtn.classList.add('hidden');
+    gyroOverlay.classList.remove('active');
+  }, 10000);
+
+  gyroBtn.addEventListener('click', ()=>{
+    gyroBtn.classList.add('hidden');
+    gyroOverlay.classList.remove('active');
+
+    window.addEventListener('deviceorientation', e => {
+      if(isZoomed) return;
+
+      mouseX += ((e.gamma||0)/30 - mouseX)*0.1;
+      mouseY += ((e.beta||0)/30 - mouseY)*0.1;
+
+      mouseX = Math.max(-1, Math.min(1, mouseX));
+      mouseY = Math.max(-1, Math.min(1, mouseY));
+
+      updateParallax(mouseX, mouseY);
+    });
+  });
+}
 
 // --- FILTRI TEMPO ---
 const filters = {
@@ -660,14 +730,26 @@ const filters = {
   chiuso: 'brightness(0.2) saturate(0.5)'
 };
 
-// --- TESTI TEMPO ---
+// --- TESTI PER OGNI STATO ---
 const heroTexts = {
-  giorno: {title:"BUONGIORNO DA", titleBig:"CATMA BAR", subtitle:"Via delle Sirene, 13 - Lido di Jesolo (VE)"},
-  sera: {title:"BENVENUTI AL", titleBig:"CATMA BAR", subtitle:"Via delle Sirene, 13 - Lido di Jesolo (VE)"},
-  chiuso: {title:"SEMBRA CHE <br> IL CATMA SIA", titleBig:"CHIUSO", subtitle:"Torna domani per bere un'altra ombra!"}
+  giorno: {
+    title: "BUONGIORNO DA",
+    titleBig: "CATMA BAR",
+    subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)"
+  },
+  sera: {
+    title: "BENVENUTI AL",
+    titleBig: "CATMA BAR",
+    subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)"
+  },
+  chiuso: {
+    title: "SEMBRA CHE <br> IL CATMA SIA",
+    titleBig: "CHIUSO",
+    subtitle: "Torna domani per bere un'altra ombra!"
+  }
 };
 
-// --- LAYERS & PARALLAX TARGET ---
+// --- LAYERS ---
 function setLayers() {
   const isMobile = 'ontouchstart' in window;
   layers = isMobile ? {
@@ -682,20 +764,21 @@ function setLayers() {
   updateHotspots();
 }
 
-// --- HOTSPOTS POSITION ---
+// --- HOTSPOTS BASE POSITION ---
 function updateHotspots() {
   const isMobile = 'ontouchstart' in window;
-  const maxOffset = {midground:{x:60,y:30}};
+
   hotspots.forEach(h => {
-    const ox = isMobile ? h.dataset.xMobile/100 * hero.clientWidth : h.dataset.xDesktop/100 * hero.clientWidth;
-    const oy = isMobile ? h.dataset.yMobile/100 * hero.clientHeight : h.dataset.yDesktop/100 * hero.clientHeight;
+    const ox = isMobile 
+      ? h.dataset.xMobile/100 * hero.clientWidth
+      : h.dataset.xDesktop/100 * hero.clientWidth;
+
+    const oy = isMobile 
+      ? h.dataset.yMobile/100 * hero.clientHeight
+      : h.dataset.yDesktop/100 * hero.clientHeight;
+
     h.dataset.ox = ox;
     h.dataset.oy = oy;
-
-    const refX = mouseX * maxOffset.midground.x;
-    const refY = mouseY * maxOffset.midground.y;
-    h.style.left = ox + refX + 'px';
-    h.style.top = oy + refY + 'px';
   });
 
   updateParallax(mouseX, mouseY);
@@ -703,24 +786,28 @@ function updateHotspots() {
 
 // --- PARALLAX ---
 function updateParallax(x, y) {
-  const maxOffset = {background:{x:40,y:20}, midground:{x:60,y:30}, foreground:{x:80,y:40}};
+  const maxOffset = {
+    background:{x:40,y:20},
+    midground:{x:60,y:30},
+    foreground:{x:80,y:40}
+  };
+
   const isMobile = 'ontouchstart' in window;
   const scaleFix = isMobile ? 1.08 : 1;
 
-  Object.entries(layers).forEach(([key, layer]) => {
-    if(!layer.classList.contains('parallax-target')) return;
-    const offset = maxOffset[key];
-    layer.style.transform = `translate(${x*offset.x}px, ${y*offset.y}px) scale(${scaleFix})`;
-  });
+  layers.background.style.transform = `translate(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px) scale(${scaleFix})`;
+  layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px, ${y*maxOffset.midground.y}px) scale(${scaleFix})`;
+  layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px, ${y*maxOffset.foreground.y}px) scale(${scaleFix})`;
 
   const refX = x * maxOffset.midground.x;
   const refY = y * maxOffset.midground.y;
+
   hotspots.forEach(h => {
     if(h.classList.contains('hidden')) return;
     const ox = parseFloat(h.dataset.ox);
     const oy = parseFloat(h.dataset.oy);
     h.style.left = ox + refX + 'px';
-    h.style.top = oy + refY + 'px';
+    h.style.top  = oy + refY + 'px';
   });
 }
 
@@ -733,199 +820,270 @@ hero.addEventListener('mousemove', e => {
   if(!isZoomed) updateParallax(mouseX, mouseY);
 });
 
-// --- GIROSCOPIO MOBILE ---
-if('ontouchstart' in window){
-  const gyroOverlay = document.createElement('div');
-  gyroOverlay.id = 'gyroOverlay';
-  document.body.appendChild(gyroOverlay);
+// --- CLICK HOTSPOTS ---
 
-  const gyroBtn = document.createElement('button');
-  gyroBtn.id = 'gyroBtn';
-  gyroBtn.innerText = 'Attiva Giroscopio';
-  document.body.appendChild(gyroBtn);
-
-  setTimeout(()=>gyroOverlay.classList.add('active'), 10);
-  setTimeout(()=>{gyroBtn.classList.add('hidden'); gyroOverlay.classList.remove('active');}, 10000);
-
-  gyroBtn.addEventListener('click', ()=>{
-    gyroBtn.classList.add('hidden');
-    gyroOverlay.classList.remove('active');
-
-    window.addEventListener('deviceorientation', e => {
-      if(isZoomed) return;
-      mouseX += ((e.gamma||0)/30 - mouseX)*0.1;
-      mouseY += ((e.beta||0)/30 - mouseY)*0.1;
-      mouseX = Math.max(-1, Math.min(1, mouseX));
-      mouseY = Math.max(-1, Math.min(1, mouseY));
-      updateParallax(mouseX, mouseY);
-    });
-  });
-}
-
-// --- HOTSPOT CLICK & LABELS ---
 hotspots.forEach(h => {
-  const label = document.createElement('div');
-  label.className = 'hotspot-label';
-  label.innerText = map[h.dataset.key].label;
-  h.appendChild(label);
+  h.addEventListener('click', () => zoomTo(h.dataset.key));
+});
 
-  h.addEventListener('click', (e)=>{
-    if('ontouchstart' in window){
-      const currentlyActive = label.classList.contains('active');
-      document.querySelectorAll('.hotspot-label').forEach(l=>l.classList.remove('active'));
-      if(!currentlyActive) label.classList.add('active');
-    }
-    zoomTo(h.dataset.key);
-    e.stopPropagation();
-  });
-
-  h.addEventListener('mouseenter', ()=>{
-    if(!('ontouchstart' in window)){
-      label.classList.add('active');
-    }
-  });
-  h.addEventListener('mouseleave', ()=>{
-    if(!('ontouchstart' in window)){
-      label.classList.remove('active');
-    }
+document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    zoomTo(a.dataset.key);
+    document.getElementById('mobile-menu').style.display='none';
   });
 });
 
-// --- TAP OUTSIDE PER NASCONDERE LABELS SU MOBILE ---
-if('ontouchstart' in window){
-  document.addEventListener('touchstart', e=>{
-    if(!e.target.closest('.hotspot')){
-      document.querySelectorAll('.hotspot-label').forEach(l=>l.classList.remove('active'));
-    }
+// --- HAMBURGER MOBILE ---
+document.getElementById('hamburger').onclick = () =>
+  document.getElementById('mobile-menu').style.display='flex';
+
+document.querySelector('#mobile-menu .close-btn').onclick = () =>
+  document.getElementById('mobile-menu').style.display='none';
+
+overlay.querySelector('.close-btn').onclick = resetZoom;
+
+// --- CONTROLLO TEMPO MANUALE CON TESTO CENTRALE ---
+function setTimeManually(state) {
+  document.body.setAttribute('data-time', state);
+
+  // filtro con transizione affidabile
+  void hero.offsetWidth;
+  requestAnimationFrame(() => {
+    hero.style.filter = filters[state];
   });
+
+  // testo centrale con transizione opacità
+  const heroText = document.getElementById('hero-text');
+  heroText.style.opacity = 0;
+  setTimeout(() => {
+    const t = heroTexts[state];
+    heroText.innerHTML = `
+      <h2 class="title">${t.title}</h2>
+      <h1 class="title-big">${t.titleBig}</h1>
+      <p class="subtitle">${t.subtitle}</p>
+    `;
+    heroText.style.opacity = 1;
+  }, 250);
 }
 
-// --- ZOOM OVERLAY ---
-function zoomTo(key){
-  const h = Array.from(hotspots).find(el => el.dataset.key===key);
-  if(!h) return;
+// --- CONTROLLO TEMPO AUTOMATICO ---
+function applyTimeFilter() {
+  const hour = new Date().getHours();
+  let state = 'giorno';
+  if(hour >= 9 && hour < 18) state = 'giorno';
+  else if(hour >= 18 || hour < 2) state = 'sera';
+  else state = 'chiuso';
+  setTimeManually(state);
+}
 
+// --- CREAZIONE PULSANTI TEMPO ---
+const controls = document.createElement('div');
+controls.id = 'timeControls';
+controls.innerHTML = `
+  <button data-time="giorno">Giorno</button>
+  <button data-time="sera">Sera</button>
+  <button data-time="chiuso">Chiuso</button>
+`;
+document.body.appendChild(controls);
+
+controls.querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => setTimeManually(btn.dataset.time));
+});
+
+// --- INIT ---
+setLayers();
+applyTimeFilter();
+setInterval(applyTimeFilter, 60*60*1000); // aggiorna ogni ora
+window.addEventListener('resize', setLayers);
+
+// --- CURSORE PERSONALIZZATO ---
+
+// crea il cursore personalizzato
+const customCursor = document.createElement('div');
+customCursor.id = 'custom-cursor';
+document.body.appendChild(customCursor);
+
+// traccia il mouse
+document.addEventListener('mousemove', e => {
+  customCursor.style.top = e.clientY + 'px';
+  customCursor.style.left = e.clientX + 'px';
+});
+
+// feedback al click
+document.addEventListener('mousedown', () => {
+  customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)'; // ingrandisce al click
+  // customCursor.style.boxShadow = '0 0 15px 5px rgba(255,255,255,0.8)'; // glow bianco più intenso
+  customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)'; // glow rosso più intenso
+});
+document.addEventListener('mouseup', () => {
+  customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+  // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco normale
+  customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; // glow rosso normale
+});
+
+// effetto su hotspot
+document.querySelectorAll('.hotspot').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    customCursor.style.transform = 'translate(-50%, -50%) scale(2)'; // più grande sugli hotspot
+    // customCursor.style.boxShadow = '0 0 20px 6px rgba(255,255,255,0.9)'; // glow bianco
+    customCursor.style.boxShadow = '0 0 20px 6px rgba(178,34,34,0.9)'; // glow rosso
+  });
+  el.addEventListener('mouseleave', () => {
+    customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco
+    customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; // glow rosso
+  });
+});
+
+// --- LOADER ---
+  
+const loader = document.getElementById('loader');
+const minLoaderTime = 2000; // durata minima in ms
+const loaderStart = Date.now();
+
+function hideLoader() {
+  loader.classList.add('hidden'); // slide-up
+}
+
+// Eventi per sicurezza
+let isLoaderHidden = false;
+
+// Nasconde il loader solo dopo 2s e quando il sito è pronto
+function tryHideLoader() {
+  if (isLoaderHidden) return;
+  const elapsed = Date.now() - loaderStart;
+  const remaining = Math.max(minLoaderTime - elapsed, 0);
+
+  setTimeout(() => {
+    loader.classList.add('hidden');
+    isLoaderHidden = true;
+  }, remaining);
+}
+
+// Trigger principale: quando tutte le risorse della pagina sono caricate
+window.addEventListener('load', tryHideLoader);
+
+// In caso le risorse siano già pronte prima del load (molto veloce su mobile)
+document.addEventListener('DOMContentLoaded', tryHideLoader);
+  
+// Aggiungi quando apri overlay
+function zoomTo(key) {
   if(isZoomed){
+    // cambia contenuto senza rifare zoom
     title.innerText = map[key].label;
+  
     contentBox.style.transform = 'scale(0)';
-    setTimeout(()=>{contentBox.innerHTML = contentMap[key]; contentBox.style.transform='scale(1)';},200);
+  
+    setTimeout(() => {
+      contentBox.innerHTML = contentMap[key];
+      contentBox.style.transform = 'scale(1)';
+    }, 200);
+  
     return;
   }
+  
+  const h = Array.from(hotspots).find(el => el.dataset.key === key);
+  if(!h) return;
 
   const tx = parseFloat(h.dataset.ox);
   const ty = parseFloat(h.dataset.oy);
+
   const cx = hero.clientWidth/2;
   const cy = hero.clientHeight/2;
+
   const dx = cx - tx;
   const dy = cy - ty;
 
   layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
   layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
   layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
-  Object.values(layers).forEach(l=>l.classList.add('overlay-active'));
+
+  // ✨ Aggiungi animazione layer
+  Object.values(layers).forEach(l => l.classList.add('overlay-active'));
 
   isZoomed = true;
   title.innerText = map[key].label;
-  contentBox.innerHTML = contentMap[key] || `<div class="content-inner"><h1>${map[key].label}</h1><p>Contenuto in arrivo...</p></div>`;
+
+  // contenuti dinamici overlay
+  contentBox.innerHTML = '';
+  contentBox.innerHTML = contentMap[key] || `
+    <div class="content-inner">
+      <h1>${map[key].label}</h1>
+      <p>Contenuto in arrivo...</p>
+    </div>
+  `;
+
   overlay.classList.add('active');
-  setTimeout(()=>{contentBox.style.transform='scale(1)';},100);
-  hotspots.forEach(h=>h.classList.add('hidden'));
+  setTimeout(() => {
+   contentBox.style.transform = 'scale(1)';
+  }, 100); // leggero delay per sincronizzare
+
+  hotspots.forEach(h => h.classList.add('hidden'));
+
 }
 
-function resetZoom(){
+// Rimuovi animazione layer quando chiudi overlay
+function resetZoom() {
   isZoomed = false;
-  contentBox.style.transform='scale(0)';
-  setTimeout(()=>overlay.classList.remove('active'),200);
-  hotspots.forEach(h=>h.classList.remove('hidden'));
-  Object.values(layers).forEach(l=>l.classList.remove('overlay-active'));
+
+  // prima chiudi il contenuto
+  contentBox.style.transform = 'scale(0)';
+
+  // DOPO fai il fade out overlay
+  setTimeout(() => {
+    overlay.classList.remove('active');
+  }, 200); // sync con animazione
+
+  hotspots.forEach(h => h.classList.remove('hidden'));
+  Object.values(layers).forEach(l => l.classList.remove('overlay-active'));
   updateParallax(mouseX, mouseY);
 }
 
-// --- ESCAPE ---
-document.addEventListener('keydown', e=>{if(e.key==='Escape' && isZoomed) resetZoom();});
-overlay.addEventListener('click', e=>{if(!contentBox.contains(e.target)) resetZoom();});
-overlay.querySelector('.close-btn').addEventListener('click', e=>{e.stopPropagation(); resetZoom();});
-
-// --- CURSORE PERSONALIZZATO ---
-const customCursor = document.createElement('div');
-customCursor.id='custom-cursor';
-document.body.appendChild(customCursor);
-
-document.addEventListener('mousemove', e=>{
-  customCursor.style.top=e.clientY+'px';
-  customCursor.style.left=e.clientX+'px';
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && isZoomed){
+    resetZoom();
+  }
 });
 
-document.addEventListener('mousedown', ()=>{
-  customCursor.style.transform='translate(-50%,-50%) scale(1.5)';
-  customCursor.style.boxShadow='0 0 15px 5px rgba(178,34,34,0.8)';
+overlay.addEventListener('click', (e) => {
+  if(!contentBox.contains(e.target)){
+    resetZoom();
+  }
 });
-document.addEventListener('mouseup', ()=>{
-  customCursor.style.transform='translate(-50%,-50%) scale(1)';
-  customCursor.style.boxShadow='0 0 10px 3px rgba(178,34,34,0.6)';
+
+overlay.querySelector('.close-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  resetZoom();
 });
-hotspots.forEach(el=>{
-  el.addEventListener('mouseenter', ()=>{
-    customCursor.style.transform='translate(-50%,-50%) scale(2)';
-    customCursor.style.boxShadow='0 0 20px 6px rgba(178,34,34,0.9)';
+
+// --- HOTSPOT LABELS + MOBILE TAP ---
+hotspots.forEach(h => {
+  const label = document.createElement('div');
+  label.className = 'hotspot-label';
+  label.innerText = map[h.dataset.key].label;
+  h.appendChild(label);
+
+  if('ontouchstart' in window){
+    h.addEventListener('click', (e) => {
+      const currentlyActive = label.classList.contains('active');
+      document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
+      if(!currentlyActive) label.classList.add('active');
+      zoomTo(h.dataset.key);
+      e.stopPropagation();
+    });
+  }
+});
+
+// --- TAP OUTSIDE PER NASCONDERE LABELS SU MOBILE ---
+if('ontouchstart' in window){
+  document.addEventListener('touchstart', (e) => {
+    if(!e.target.closest('.hotspot')){
+      document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
+    }
   });
-  el.addEventListener('mouseleave', ()=>{
-    customCursor.style.transform='translate(-50%,-50%) scale(1)';
-    customCursor.style.boxShadow='0 0 10px 3px rgba(178,34,34,0.6)';
-  });
-});
-
-// --- LOADER ---
-const loader = document.getElementById('loader');
-const minLoaderTime = 2000;
-const loaderStart = Date.now();
-let isLoaderHidden=false;
-function tryHideLoader(){
-  if(isLoaderHidden) return;
-  const elapsed = Date.now()-loaderStart;
-  const remaining = Math.max(minLoaderTime-elapsed,0);
-  setTimeout(()=>{loader.classList.add('hidden'); isLoaderHidden=true;},remaining);
-}
-window.addEventListener('load', tryHideLoader);
-document.addEventListener('DOMContentLoaded', tryHideLoader);
-
-// --- PULSANTI TEMPO ---
-const controls=document.createElement('div');
-controls.id='timeControls';
-controls.innerHTML=`<button data-time="giorno">Giorno</button><button data-time="sera">Sera</button><button data-time="chiuso">Chiuso</button>`;
-document.body.appendChild(controls);
-controls.querySelectorAll('button').forEach(btn=>{
-  btn.addEventListener('click', ()=> setTimeManually(btn.dataset.time));
-});
-
-function setTimeManually(state){
-  document.body.setAttribute('data-time',state);
-  void hero.offsetWidth;
-  requestAnimationFrame(()=>hero.style.filter=filters[state]);
-  const heroText = document.getElementById('hero-text');
-  heroText.style.opacity=0;
-  setTimeout(()=>{
-    const t=heroTexts[state];
-    heroText.innerHTML=`<h2 class="title">${t.title}</h2><h1 class="title-big">${t.titleBig}</h1><p class="subtitle">${t.subtitle}</p>`;
-    heroText.style.opacity=1;
-  },250);
-}
-
-function applyTimeFilter(){
-  const h = new Date().getHours();
-  let state='giorno';
-  if(h>=9 && h<18) state='giorno';
-  else if(h>=18 || h<2) state='sera';
-  else state='chiuso';
-  setTimeManually(state);
-}
-
-// --- INIT ---
-setLayers();
-applyTimeFilter();
-setInterval(applyTimeFilter,60*60*1000);
-window.addEventListener('resize', setLayers);
-
+}  
+  
 </script>
 </body>
 </html>
