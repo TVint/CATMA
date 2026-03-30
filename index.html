@@ -761,6 +761,17 @@ function zoomTo(key) {
   contentBox.style.transform = 'scale(1)';
 }
 
+function zoomTo(key) {
+  const data = map[key];
+  if (!data) return;
+
+  title.innerText = data.label;
+
+  contentBox.innerHTML = data.content || '';
+
+  overlay.style.display = 'flex';
+}
+
 function resetZoom() {
   isZoomed = false;
   overlay.style.display = 'none';
@@ -777,20 +788,6 @@ hero.addEventListener('mousemove', e => {
   mouseY = (e.clientY - r.top)/r.height - 0.5;
   if(!isZoomed) updateParallax(mouseX, mouseY);
 });
-
-/*
-hotspots.forEach(h => {
-  h.addEventListener('click', () => zoomTo(h.dataset.key));
-});
-
-document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    zoomTo(a.dataset.key);
-    document.getElementById('mobile-menu').style.display='none';
-  });
-});
-*/
 
 // --- CLICK HOTSPOTS + CTA PRENOTA ---
 document.querySelectorAll('.hotspot, .cta-prenota').forEach(el => {
