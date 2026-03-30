@@ -137,15 +137,27 @@ body, body * {
   
 }
   
-/* Floating testo centrale */
+/* Flare testo centrale */
 
-  #hero-text {
-  animation: floatText 6s ease-in-out infinite;
+#hero-text .title,
+#hero-text .title-big {
+  background: linear-gradient(
+    90deg,
+    #fff 0%,
+    #fff 40%,
+    #ffcccc 50%,
+    #fff 60%,
+    #fff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
 }
 
-@keyframes floatText {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
+@keyframes shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
 }
 
 /* Flicker testo centrale 
