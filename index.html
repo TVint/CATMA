@@ -136,7 +136,7 @@ body, body * {
   }
   
 }
-  
+
 /* Glow testo centrale */
 
 #hero-text .title,
@@ -163,6 +163,7 @@ body, body * {
   opacity: 0.8;         /* leggero fade */
   transform: scale(1.05); /* leggero zoom */
 }
+
 
 /* LAYERS */
 .layer {
@@ -192,53 +193,6 @@ body, body * {
 0%{transform:translate(-50%,-50%) scale(1)}
 50%{transform:translate(-50%,-50%) scale(1.2)}
 100%{transform:translate(-50%,-50%) scale(1)}
-}
-
-/* CTA PRENOTA */
-.cta-prenota {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  
-  padding: 14px 28px;
-  background: #b22222;
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  
-  border-radius: 50px;
-  cursor: pointer;
-  z-index: 50;
-
-  box-shadow: 0 8px 25px rgba(178,34,34,0.5);
-  transition: all 0.25s ease;
-}
-
-/* Hover */
-.cta-prenota:hover {
-  transform: translate(-50%, -50%) scale(1.08);
-  box-shadow: 0 12px 35px rgba(178,34,34,0.7);
-}
-
-/* Click */
-.cta-prenota:active {
-  transform: translate(-50%, -50%) scale(0.95);
-}
-
-/* Pulsazione elegante */
-.cta-prenota {
-  animation: pulseCTA 2.5s ease-in-out infinite;
-}
-
-@keyframes pulseCTA {
-  0%, 100% {
-    box-shadow: 0 8px 25px rgba(178,34,34,0.5);
-  }
-  50% {
-    box-shadow: 0 12px 40px rgba(178,34,34,0.8);
-  }
 }
 
 /* MENU DESKTOP */
@@ -517,13 +471,13 @@ body[data-time="chiuso"] #hero {
 
 <!-- MOBILE LAYERS -->
 <img class="layer mobile-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
-<img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774866281/Catma-midground-mobile_xvwur8.webp">
+<img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792265/Catma-midground-mobile_xvwur8.webp">
 <img class="layer mobile-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
 
 <!-- HOTSPOTS -->
 <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
 <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
-<div class="cta-prenota" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
+<div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50"></div>
 <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
 <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
 
@@ -559,6 +513,30 @@ body[data-time="chiuso"] #hero {
 </footer>
 
 <script>
+  // Aggiorna anno dinamicamente
+  document.getElementById('year').innerText = new Date().getFullYear();
+</script>
+
+<style>
+.footer-social {
+  display: inline-flex;      /* icone in fila */
+  align-items: center;
+  gap: 10px;                 /* spazio tra icone */
+}
+
+.footer-social a {
+  display: inline-block;
+}
+
+.footer-social img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+</style>
+
+<script>
 // --- ELEMENTI PRINCIPALI ---
 const hero = document.getElementById('hero');
 let layers = {};
@@ -569,27 +547,16 @@ const contentBox = overlay.querySelector('.content-box');
 const title = document.getElementById('title');
 
 const map = {
-  chi: {label:'CHI SIAMO', key:'chi', content:'<p>Informazioni sul CATMA</p>'},
-  mescita: {label:'MESCITA', key:'mescita', content:'<p>Scopri la nostra selezione di drink</p>'},
-  
-  prenota: {
-    label: "PRENOTA",
-    key: 'prenota',
-    content: `
-      <h2>Prenota il tuo tavolo</h2>
-      <p>Contattaci per riservare il tuo posto al CATMA.</p>
-      <button onclick="window.open('https://wa.me/XXXXXXXXXXX', '_blank')">
-        Prenota su WhatsApp
-      </button>
-    `
-  },
-
-  eventi: {label:'EVENTI', key:'eventi', content:'<p>Eventi speciali al CATMA</p>'},
-  bar: {label:'BAR', key:'bar', content:'<p>Scopri il nostro bar</p>'}
+  chi: {label:'CHI SIAMO', key:'chi'},
+  mescita: {label:'MESCITA', key:'mescita'},
+  prenota: {label:'PRENOTA', key:'prenota'},
+  eventi: {label:'EVENTI', key:'eventi'},
+  bar: {label:'BAR', key:'bar'}
 };
 
-// --- GIROSCOPIO MOBILE ---
+  // --- GIROSCOPIO MOBILE ---
 if('ontouchstart' in window){
+
   const gyroOverlay = document.createElement('div');
   gyroOverlay.id = 'gyroOverlay';
   document.body.appendChild(gyroOverlay);
@@ -712,13 +679,197 @@ function updateParallax(x, y) {
   });
 }
 
-// --- ZOOM HOTSPOTS UNICA VERSIONE ---
+// --- ZOOM HOTSPOTS ---
 function zoomTo(key) {
   const h = Array.from(hotspots).find(el => el.dataset.key === key);
   if(!h) return;
 
-  const data = map[key];
-  if(!data) return;
+  const tx = parseFloat(h.dataset.ox);
+  const ty = parseFloat(h.dataset.oy);
+  const cx = hero.clientWidth/2;
+  const cy = hero.clientHeight/2;
+  const dx = cx - tx;
+  const dy = cy - ty;
+
+  layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
+  layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
+  layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
+
+  isZoomed = true;
+  title.innerText = map[key].label;
+
+  overlay.style.display = 'flex';
+  hotspots.forEach(h => h.classList.add('hidden'));
+  contentBox.style.transform = 'scale(1)';
+}
+
+function resetZoom() {
+  isZoomed = false;
+  overlay.style.display = 'none';
+  contentBox.style.transform = 'scale(0)';
+  hotspots.forEach(h => h.classList.remove('hidden'));
+  updateParallax(mouseX, mouseY);
+}
+
+// --- MOUSE DESKTOP ---
+hero.addEventListener('mousemove', e => {
+  if('ontouchstart' in window) return;
+  const r = hero.getBoundingClientRect();
+  mouseX = (e.clientX - r.left)/r.width - 0.5;
+  mouseY = (e.clientY - r.top)/r.height - 0.5;
+  if(!isZoomed) updateParallax(mouseX, mouseY);
+});
+
+// --- CLICK HOTSPOTS ---
+hotspots.forEach(h => {
+  h.addEventListener('click', () => zoomTo(h.dataset.key));
+});
+
+document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    zoomTo(a.dataset.key);
+    document.getElementById('mobile-menu').style.display='none';
+  });
+});
+
+// --- HAMBURGER MOBILE ---
+document.getElementById('hamburger').onclick = () =>
+  document.getElementById('mobile-menu').style.display='flex';
+
+document.querySelector('#mobile-menu .close-btn').onclick = () =>
+  document.getElementById('mobile-menu').style.display='none';
+
+overlay.querySelector('.close-btn').onclick = resetZoom;
+
+// --- CONTROLLO TEMPO MANUALE CON TESTO CENTRALE ---
+function setTimeManually(state) {
+  document.body.setAttribute('data-time', state);
+
+  // filtro con transizione affidabile
+  void hero.offsetWidth;
+  requestAnimationFrame(() => {
+    hero.style.filter = filters[state];
+  });
+
+  // testo centrale con transizione opacità
+  const heroText = document.getElementById('hero-text');
+  heroText.style.opacity = 0;
+  setTimeout(() => {
+    const t = heroTexts[state];
+    heroText.innerHTML = `
+      <h2 class="title">${t.title}</h2>
+      <h1 class="title-big">${t.titleBig}</h1>
+      <p class="subtitle">${t.subtitle}</p>
+    `;
+    heroText.style.opacity = 1;
+  }, 250);
+}
+
+// --- CONTROLLO TEMPO AUTOMATICO ---
+function applyTimeFilter() {
+  const hour = new Date().getHours();
+  let state = 'giorno';
+  if(hour >= 9 && hour < 18) state = 'giorno';
+  else if(hour >= 18 || hour < 2) state = 'sera';
+  else state = 'chiuso';
+  setTimeManually(state);
+}
+
+// --- CREAZIONE PULSANTI TEMPO ---
+const controls = document.createElement('div');
+controls.id = 'timeControls';
+controls.innerHTML = `
+  <button data-time="giorno">Giorno</button>
+  <button data-time="sera">Sera</button>
+  <button data-time="chiuso">Chiuso</button>
+`;
+document.body.appendChild(controls);
+
+controls.querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => setTimeManually(btn.dataset.time));
+});
+
+// --- INIT ---
+setLayers();
+applyTimeFilter();
+setInterval(applyTimeFilter, 60*60*1000); // aggiorna ogni ora
+window.addEventListener('resize', setLayers);
+
+// --- CURSORE PERSONALIZZATO ---
+
+// crea il cursore personalizzato
+const customCursor = document.createElement('div');
+customCursor.id = 'custom-cursor';
+document.body.appendChild(customCursor);
+
+// traccia il mouse
+document.addEventListener('mousemove', e => {
+  customCursor.style.top = e.clientY + 'px';
+  customCursor.style.left = e.clientX + 'px';
+});
+
+// feedback al click
+document.addEventListener('mousedown', () => {
+  customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)'; // ingrandisce al click
+  // customCursor.style.boxShadow = '0 0 15px 5px rgba(255,255,255,0.8)'; // glow bianco più intenso
+  customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)'; // glow rosso più intenso
+});
+document.addEventListener('mouseup', () => {
+  customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+  // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco normale
+  customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; // glow rosso normale
+});
+
+// effetto su hotspot
+document.querySelectorAll('.hotspot').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    customCursor.style.transform = 'translate(-50%, -50%) scale(2)'; // più grande sugli hotspot
+    // customCursor.style.boxShadow = '0 0 20px 6px rgba(255,255,255,0.9)'; // glow bianco
+    customCursor.style.boxShadow = '0 0 20px 6px rgba(178,34,34,0.9)'; // glow rosso
+  });
+  el.addEventListener('mouseleave', () => {
+    customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco
+    customCursor.style.boxShadow = '0 0 10px 3px rgba((178,34,34,0.6)'; // glow rosso
+  });
+});
+
+// --- LOADER ---
+  
+const loader = document.getElementById('loader');
+const minLoaderTime = 2000; // durata minima in ms
+const loaderStart = Date.now();
+
+function hideLoader() {
+  loader.classList.add('hidden'); // slide-up
+}
+
+// Eventi per sicurezza
+let isLoaderHidden = false;
+
+// Nasconde il loader solo dopo 2s e quando il sito è pronto
+function tryHideLoader() {
+  if (isLoaderHidden) return;
+  const elapsed = Date.now() - loaderStart;
+  const remaining = Math.max(minLoaderTime - elapsed, 0);
+
+  setTimeout(() => {
+    loader.classList.add('hidden');
+    isLoaderHidden = true;
+  }, remaining);
+}
+
+// Trigger principale: quando tutte le risorse della pagina sono caricate
+window.addEventListener('load', tryHideLoader);
+
+// In caso le risorse siano già pronte prima del load (molto veloce su mobile)
+document.addEventListener('DOMContentLoaded', tryHideLoader);
+
+// Aggiungi quando apri overlay
+function zoomTo(key) {
+  const h = Array.from(hotspots).find(el => el.dataset.key === key);
+  if(!h) return;
 
   const tx = parseFloat(h.dataset.ox);
   const ty = parseFloat(h.dataset.oy);
@@ -733,135 +884,28 @@ function zoomTo(key) {
   layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
   layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
 
+  // ✨ Aggiungi animazione layer
   Object.values(layers).forEach(l => l.classList.add('overlay-active'));
 
   isZoomed = true;
-
-  title.innerText = data.label;
-  contentBox.innerHTML = data.content || '';
+  title.innerText = map[key].label;
 
   overlay.style.display = 'flex';
   hotspots.forEach(h => h.classList.add('hidden'));
   contentBox.style.transform = 'scale(1)';
 }
 
-// --- RESET ZOOM ---
+// Rimuovi animazione layer quando chiudi overlay
 function resetZoom() {
   isZoomed = false;
+
   overlay.style.display = 'none';
   contentBox.style.transform = 'scale(0)';
+
   hotspots.forEach(h => h.classList.remove('hidden'));
   Object.values(layers).forEach(l => l.classList.remove('overlay-active'));
   updateParallax(mouseX, mouseY);
 }
-
-// --- MOUSE DESKTOP ---
-hero.addEventListener('mousemove', e => {
-  if('ontouchstart' in window) return;
-  const r = hero.getBoundingClientRect();
-  mouseX = (e.clientX - r.left)/r.width - 0.5;
-  mouseY = (e.clientY - r.top)/r.height - 0.5;
-  if(!isZoomed) updateParallax(mouseX, mouseY);
-});
-
-// --- CLICK HOTSPOTS + CTA PRENOTA ---
-document.querySelectorAll('.hotspot, .cta-prenota').forEach(el => {
-  el.addEventListener('click', () => zoomTo(el.dataset.key));
-});
-
-// --- HAMBURGER MOBILE ---
-document.getElementById('hamburger').onclick = () =>
-  document.getElementById('mobile-menu').style.display='flex';
-
-document.querySelector('#mobile-menu .close-btn').onclick = () =>
-  document.getElementById('mobile-menu').style.display='none';
-
-overlay.querySelector('.close-btn').onclick = resetZoom;
-
-// --- CONTROLLO TEMPO ---
-function setTimeManually(state) {
-  document.body.setAttribute('data-time', state);
-  void hero.offsetWidth; // trigger reflow
-  requestAnimationFrame(() => {
-    hero.style.filter = filters[state];
-  });
-
-  const heroText = document.getElementById('hero-text');
-  heroText.style.opacity = 0;
-  setTimeout(() => {
-    const t = heroTexts[state];
-    heroText.innerHTML = `
-      <h2 class="title">${t.title}</h2>
-      <h1 class="title-big">${t.titleBig}</h1>
-      <p class="subtitle">${t.subtitle}</p>
-    `;
-    heroText.style.opacity = 1;
-  }, 250);
-}
-
-function applyTimeFilter() {
-  const hour = new Date().getHours();
-  let state = 'giorno';
-  if(hour >= 9 && hour < 18) state = 'giorno';
-  else if(hour >= 18 || hour < 2) state = 'sera';
-  else state = 'chiuso';
-  setTimeManually(state);
-}
-
-// --- INIT ---
-setLayers();
-applyTimeFilter();
-setInterval(applyTimeFilter, 60*60*1000);
-window.addEventListener('resize', setLayers);
-
-// --- CURSORE ---
-const customCursor = document.createElement('div');
-customCursor.id = 'custom-cursor';
-document.body.appendChild(customCursor);
-
-document.addEventListener('mousemove', e => {
-  customCursor.style.top = e.clientY + 'px';
-  customCursor.style.left = e.clientX + 'px';
-});
-
-document.addEventListener('mousedown', () => {
-  customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-  customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)';
-});
-document.addEventListener('mouseup', () => {
-  customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-  customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)';
-});
-
-document.querySelectorAll('.hotspot').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    customCursor.style.transform = 'translate(-50%, -50%) scale(2)';
-    customCursor.style.boxShadow = '0 0 20px 6px rgba(178,34,34,0.9)';
-  });
-  el.addEventListener('mouseleave', () => {
-    customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-    customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)';
-  });
-});
-
-// --- LOADER ---
-const loader = document.getElementById('loader');
-const minLoaderTime = 2000;
-const loaderStart = Date.now();
-let isLoaderHidden = false;
-
-function tryHideLoader() {
-  if(isLoaderHidden) return;
-  const elapsed = Date.now() - loaderStart;
-  const remaining = Math.max(minLoaderTime - elapsed, 0);
-  setTimeout(() => {
-    loader.classList.add('hidden');
-    isLoaderHidden = true;
-  }, remaining);
-}
-
-window.addEventListener('load', tryHideLoader);
-document.addEventListener('DOMContentLoaded', tryHideLoader);
 
 </script>
 </body>
