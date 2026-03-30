@@ -159,17 +159,15 @@ body, body * {
 }
 
 /* HOTSPOTS */
-
+  
 #hotspot-layer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;       /* i singoli hotspot gestiscono il click */
-  z-index: 50;                /* sopra i layer, sotto testi/CTA se necessario */
-  isolation: isolate;         /* crea contesto separato dai filtri del parent */
-  filter: none !important;    /* ignorano i filtri del parent */
+  pointer-events: none; /* di default non blocca click */
+  z-index: 1000;        /* sopra hero ma sotto overlay se serve */
 }
 
 .hotspot, .hotspot.cta-btn {
@@ -186,6 +184,7 @@ body, body * {
  transform:translate(-50%,-50%);
  animation:pulse 2s infinite;
  cursor:pointer;
+ pointer-events: auto;
  z-index:50;
 }
 @keyframes pulse{
@@ -605,6 +604,8 @@ body[data-time="chiuso"] #hero {
   
 </div>
 
+<div id="hotspot-layer"></div>
+
 <!-- FOOTER -->
 <footer style="background:#b22222; color:#fff; width:100vw; font-family:sans-serif; position:fixed; bottom:0; left:0; z-index:500; box-sizing: border-box;">
 
@@ -784,28 +785,31 @@ function setLayers() {
   updateHotspots();
 }
 
+
+const hotspotLayer = document.getElementById('hotspot-layer');
+
+hotspots.forEach(h => {
+  hotspotLayer.appendChild(h);       // sposta nel layer
+  h.style.pointerEvents = 'auto';    // gli hotspot restano cliccabili
+});
+
 // --- HOTSPOTS BASE POSITION ---
 function updateHotspots() {
   const isMobile = 'ontouchstart' in window;
 
   hotspots.forEach(h => {
-    const ox = isMobile 
+    const ox = isMobile
       ? h.dataset.xMobile/100 * hero.clientWidth
       : h.dataset.xDesktop/100 * hero.clientWidth;
 
-    const oy = isMobile 
+    const oy = isMobile
       ? h.dataset.yMobile/100 * hero.clientHeight
       : h.dataset.yDesktop/100 * hero.clientHeight;
 
     h.dataset.ox = ox;
     h.dataset.oy = oy;
-
-    // applica posizione iniziale
-    h.style.left = ox + 'px';
-    h.style.top = oy + 'px';
   });
 
-  // Aggiorna posizione hotspot in base al parallax
   updateParallax(mouseX, mouseY);
 }
 
