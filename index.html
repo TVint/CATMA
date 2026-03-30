@@ -903,7 +903,7 @@ function resetZoom() {
 }
 
 overlay.addEventListener('click', (e) => {
-  if(e.target === overlay){
+  if(!contentBox.contains(e.target)){
     resetZoom();
   }
 });
