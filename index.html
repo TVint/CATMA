@@ -821,7 +821,7 @@ function hideLoader() {
 // Eventi per sicurezza
 let isLoaderHidden = false;
 
-// Nasconde il loader solo dopo 1.5s e quando il sito è pronto
+// Nasconde il loader solo dopo 2s e quando il sito è pronto
 function tryHideLoader() {
   if (isLoaderHidden) return;
   const elapsed = Date.now() - loaderStart;
