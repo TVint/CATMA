@@ -155,25 +155,6 @@ body, body * {
   }
 }
 
-/* Flicker testo centrale 
-#hero-text .title, 
-#hero-text .title-big {
-  animation: flicker 2s infinite;
-}
-  
-@keyframes flicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-    opacity: 1;
-    text-shadow: 1px 1px 2.5px #fff, 0 0 5px #fff;
-  }
-  20%, 24%, 55% {
-    opacity: 0.8;
-    text-shadow: 0 0 0.5px #fff;
-  }
-}
-*/
-
-/* Transizione layer durante overlay */
 .layer {
   transition: transform 0.5s ease, opacity 0.5s ease;
 }
@@ -182,7 +163,6 @@ body, body * {
   opacity: 0.8;         /* leggero fade */
   transform: scale(1.05); /* leggero zoom */
 }
-
 
 /* LAYERS */
 .layer {
@@ -212,6 +192,53 @@ body, body * {
 0%{transform:translate(-50%,-50%) scale(1)}
 50%{transform:translate(-50%,-50%) scale(1.2)}
 100%{transform:translate(-50%,-50%) scale(1)}
+}
+
+/* CTA PRENOTA */
+.cta-prenota {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  
+  padding: 14px 28px;
+  background: #b22222;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  
+  border-radius: 50px;
+  cursor: pointer;
+  z-index: 50;
+
+  box-shadow: 0 8px 25px rgba(178,34,34,0.5);
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.cta-prenota:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow: 0 12px 35px rgba(178,34,34,0.7);
+}
+
+/* Click */
+.cta-prenota:active {
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
+/* Pulsazione elegante */
+.cta-prenota {
+  animation: pulseCTA 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseCTA {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(178,34,34,0.5);
+  }
+  50% {
+    box-shadow: 0 12px 40px rgba(178,34,34,0.8);
+  }
 }
 
 /* MENU DESKTOP */
@@ -496,7 +523,7 @@ body[data-time="chiuso"] #hero {
 <!-- HOTSPOTS -->
 <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
 <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
-<div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50"></div>
+<div class="cta-prenota" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
 <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
 <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
 
@@ -739,9 +766,23 @@ hero.addEventListener('mousemove', e => {
   if(!isZoomed) updateParallax(mouseX, mouseY);
 });
 
-// --- CLICK HOTSPOTS ---
+/*
 hotspots.forEach(h => {
   h.addEventListener('click', () => zoomTo(h.dataset.key));
+});
+
+document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    zoomTo(a.dataset.key);
+    document.getElementById('mobile-menu').style.display='none';
+  });
+});
+*/
+
+// --- CLICK HOTSPOTS + CTA PRENOTA ---
+document.querySelectorAll('.hotspot, .cta-prenota').forEach(el => {
+  el.addEventListener('click', () => zoomTo(el.dataset.key));
 });
 
 document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
