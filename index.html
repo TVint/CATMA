@@ -885,7 +885,6 @@ function zoomTo(key) {
   contentBox.style.transform = 'scale(1)';
 }
 
-
 // Rimuovi animazione layer quando chiudi overlay
 function resetZoom() {
   isZoomed = false;
@@ -902,6 +901,12 @@ function resetZoom() {
   Object.values(layers).forEach(l => l.classList.remove('overlay-active'));
   updateParallax(mouseX, mouseY);
 }
+
+overlay.addEventListener('click', (e) => {
+  if(e.target === overlay){
+    resetZoom();
+  }
+});
 
 </script>
 </body>
