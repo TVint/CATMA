@@ -278,29 +278,48 @@ body, body * {
  opacity:0;
  pointer-events:none;
 }
-
-#gyroBtn {
-  position: fixed;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 250px;       /* larghezza maggiore */
-  height: 50px;       /* altezza maggiore */
-  background: #b22222;
-  color: #fff;
-  border: none;
-  border-radius: 150px;
-  z-index: 99999;     /* molto alto */
-  font-size: 1.5rem;  /* testo più grande */
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-  transition: opacity 0.3s ease, transform 0.2s ease;
-}
   
 #gyroBtn.hidden {
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* Pulsazione del pulsante giroscopio */
+#gyroBtn {
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250px;       
+  height: 50px;       
+  background: #b22222;
+  color: #fff;
+  border: none;
+  border-radius: 150px;
+  z-index: 99999;     
+  font-size: 1.5rem;  
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  animation: pulseBtn 1.5s ease-in-out infinite; /* animazione pulsazione */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#gyroBtn:hover {
+  transform: translate(-50%, -50%) scale(1.05); /* ingrandisce leggermente al hover */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+}
+
+/* Animazione pulsante */
+@keyframes pulseBtn {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.08);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  }
 }
 
 #gyroOverlay {
