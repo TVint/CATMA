@@ -29,7 +29,7 @@ body, body * {
   align-items: center;
   z-index: 999999;
   overflow: hidden;
-  transition: transform 0.8s ease, opacity 0.8s ease;
+  transition: transform 0.8s ease;
 }
 
 #loader img {
@@ -784,7 +784,7 @@ document.querySelectorAll('.hotspot').forEach(el => {
 // --- LOADER ---
 
 const loader = document.getElementById('loader');
-const minLoaderTime = 1500; // durata minima in ms
+const minLoaderTime = 2500; // durata minima in ms
 const loaderStart = Date.now();
 
 window.addEventListener('load', () => {
