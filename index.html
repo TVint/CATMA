@@ -136,14 +136,24 @@ body, body * {
   }
   
 }
+  
+/* Floating testo centrale */
 
-/* Flicker testo centrale */
+  #hero-text {
+  animation: floatText 6s ease-in-out infinite;
+}
+
+@keyframes floatText {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Flicker testo centrale 
 #hero-text .title, 
 #hero-text .title-big {
   animation: flicker 2s infinite;
 }
-
-/* Animazione flicker */
+  
 @keyframes flicker {
   0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
     opacity: 1;
@@ -154,6 +164,7 @@ body, body * {
     text-shadow: 0 0 0.5px #fff;
   }
 }
+*/
 
 /* Transizione layer durante overlay */
 .layer {
