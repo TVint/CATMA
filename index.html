@@ -32,7 +32,8 @@ body, body * {
   transform: translate(-50%, -50%);
   z-index: 99999;
   transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 0 10px 3px rgba(255,255,255,0.6); /* glow bianco */
+  /* box-shadow: 0 0 10px 3px rgba(255,255,255,0.6); /* glow bianco */
+  box-shadow: 0 0 10px 3px rgba(178,34,34,0.6); /* glow rosso */
 }
   
 #hero{
@@ -717,22 +718,26 @@ document.addEventListener('mousemove', e => {
 // feedback al click
 document.addEventListener('mousedown', () => {
   customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)'; // ingrandisce al click
-  customCursor.style.boxShadow = '0 0 15px 5px rgba(255,255,255,0.8)'; // glow più intenso
+  // customCursor.style.boxShadow = '0 0 15px 5px rgba(255,255,255,0.8)'; // glow bianco più intenso
+  customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)'; // glow rosso più intenso
 });
 document.addEventListener('mouseup', () => {
   customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-  customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow normale
+  // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco normale
+  customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; // glow rosso normale
 });
 
 // effetto su hotspot
 document.querySelectorAll('.hotspot').forEach(el => {
   el.addEventListener('mouseenter', () => {
     customCursor.style.transform = 'translate(-50%, -50%) scale(2)'; // più grande sugli hotspot
-    customCursor.style.boxShadow = '0 0 20px 6px rgba(255,255,255,0.9)';
+    // customCursor.style.boxShadow = '0 0 20px 6px rgba(255,255,255,0.9)'; // glow bianco
+    customCursor.style.boxShadow = '0 0 20px 6px rgba(178,34,34,0.9)'; // glow rosso
   });
   el.addEventListener('mouseleave', () => {
     customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-    customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)';
+    // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco
+    customCursor.style.boxShadow = '0 0 10px 3px rgba((178,34,34,0.6)'; // glow rosso
   });
 });
 
