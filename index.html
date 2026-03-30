@@ -908,6 +908,11 @@ overlay.addEventListener('click', (e) => {
   }
 });
 
+overlay.querySelector('.close-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  resetZoom();
+});
+  
 </script>
 </body>
 </html>
