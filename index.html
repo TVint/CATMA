@@ -782,14 +782,14 @@ document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
 
 // --- CLICK HOTSPOTS + CTA PRENOTA ---
 document.querySelectorAll('.hotspot, .cta-prenota').forEach(el => {
-  el.addEventListener('click', () => zoomTo(el.dataset.key));
-});
+  el.addEventListener('click', () => {
 
-document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    zoomTo(a.dataset.key);
-    document.getElementById('mobile-menu').style.display='none';
+    if (el.dataset.key === 'prenota') {
+      window.open('https://tuolinkprenotazione.it', '_blank');
+      return; // blocca zoomTo
+    }
+
+    zoomTo(el.dataset.key);
   });
 });
 
