@@ -176,6 +176,20 @@ body, body * {
 100%{transform:translate(-50%,-50%) scale(1)}
 }
 
+#hotspot-wrapper {
+  position: absolute;       
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;    
+  z-index: 100;          
+}
+
+.hotspot {
+  pointer-events: auto;
+}
+
 /* Label hotspot */
 .hotspot-label {
   position: absolute;
@@ -576,14 +590,15 @@ body[data-time="chiuso"] #hero {
   <img class="layer mobile-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792265/Catma-midground-mobile_xvwur8.webp">
   <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
   
-  
-  <!-- HOTSPOTS -->
+</div>
+
+<!-- HOTSPOTS -->
+<div id="hotspot-wrapper">
   <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
   <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
   <div class="hotspot cta-btn" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
   <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
   <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
-  
 </div>
 
 <!-- FOOTER -->
