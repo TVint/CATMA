@@ -370,6 +370,23 @@ body[data-time="chiuso"] #hero {
 
 #timeControls button:hover { background: #ff4d4d; }
 
+.footer-social {
+  display: inline-flex;      /* icone in fila */
+  align-items: center;
+  gap: 10px;                 /* spazio tra icone */
+}
+
+.footer-social a {
+  display: inline-block;
+}
+
+.footer-social img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
 /* MEDIA */
   
 @media(max-width:768px){
@@ -513,30 +530,10 @@ body[data-time="chiuso"] #hero {
 </footer>
 
 <script>
-  // Aggiorna anno dinamicamente
-  document.getElementById('year').innerText = new Date().getFullYear();
-</script>
 
-<style>
-.footer-social {
-  display: inline-flex;      /* icone in fila */
-  align-items: center;
-  gap: 10px;                 /* spazio tra icone */
-}
-
-.footer-social a {
-  display: inline-block;
-}
-
-.footer-social img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  vertical-align: middle;
-}
-</style>
-
-<script>
+// Aggiorna anno dinamicamente
+document.getElementById('year').innerText = new Date().getFullYear();
+  
 // --- ELEMENTI PRINCIPALI ---
 const hero = document.getElementById('hero');
 let layers = {};
