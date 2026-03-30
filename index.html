@@ -240,6 +240,23 @@ body, body * {
   border:1px solid rgba(255,255,255,0.4);
 }
 
+
+
+
+#hotspot-wrapper {
+  position: absolute;    /* in overlay sopra #hero */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;  /* gli hotspot stessi gestiscono i click */
+  z-index: 1000;         /* sopra gli layers di hero */
+}
+
+#hotspot-wrapper .hotspot {
+  pointer-events: auto;  /* abilita click sugli hotspot */
+}
+
 /* MENU DESKTOP */
 #menu{
  position:absolute;
@@ -575,14 +592,16 @@ body[data-time="chiuso"] #hero {
     <img class="layer mobile-layer background parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
     <img class="layer mobile-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792265/Catma-midground-mobile_xvwur8.webp">
     <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
-    
-    <!-- HOTSPOTS -->
-    <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
-    <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
-    <div class="hotspot cta-btn" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
-    <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
-    <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
   
+</div>
+
+<!-- HOTSPOTS -->
+<div id="hotspot-wrapper">
+  <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
+  <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
+  <div class="hotspot cta-btn" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
+  <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
+  <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
 </div>
 
 <!-- FOOTER -->
@@ -766,22 +785,29 @@ function setLayers() {
 
 // --- HOTSPOTS BASE POSITION ---
 function updateHotspots() {
-  const isMobile = 'ontouchstart' in window;
+  const hotspotWrapper = document.getElementById('hotspot-wrapper');
+  const hero = document.getElementById('hero');
+  const isMobile = window.innerWidth <= 768;
 
   hotspots.forEach(h => {
-    const ox = isMobile 
-      ? h.dataset.xMobile/100 * hero.clientWidth
-      : h.dataset.xDesktop/100 * hero.clientWidth;
+    // Calcolo posizione
+    const x = isMobile 
+      ? parseFloat(h.dataset.xMobile) / 100 * hero.clientWidth 
+      : parseFloat(h.dataset.xDesktop) / 100 * hero.clientWidth;
 
-    const oy = isMobile 
-      ? h.dataset.yMobile/100 * hero.clientHeight
-      : h.dataset.yDesktop/100 * hero.clientHeight;
+    const y = isMobile 
+      ? parseFloat(h.dataset.yMobile) / 100 * hero.clientHeight 
+      : parseFloat(h.dataset.yDesktop) / 100 * hero.clientHeight;
 
-    h.dataset.ox = ox;
-    h.dataset.oy = oy;
+    h.style.position = 'absolute';
+    h.style.left = `${x}px`;
+    h.style.top = `${y}px`;
+
+    // Append al wrapper (solo se non è già figlio)
+    if (h.parentElement !== hotspotWrapper) {
+      hotspotWrapper.appendChild(h);
+    }
   });
-
-  updateParallax(mouseX, mouseY);
 }
 
 // --- PARALLAX ---
