@@ -679,38 +679,6 @@ function updateParallax(x, y) {
   });
 }
 
-// --- ZOOM HOTSPOTS ---
-function zoomTo(key) {
-  const h = Array.from(hotspots).find(el => el.dataset.key === key);
-  if(!h) return;
-
-  const tx = parseFloat(h.dataset.ox);
-  const ty = parseFloat(h.dataset.oy);
-  const cx = hero.clientWidth/2;
-  const cy = hero.clientHeight/2;
-  const dx = cx - tx;
-  const dy = cy - ty;
-
-  layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
-  layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
-  layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
-
-  isZoomed = true;
-  title.innerText = map[key].label;
-
-  overlay.style.display = 'flex';
-  hotspots.forEach(h => h.classList.add('hidden'));
-  contentBox.style.transform = 'scale(1)';
-}
-
-function resetZoom() {
-  isZoomed = false;
-  overlay.style.display = 'none';
-  contentBox.style.transform = 'scale(0)';
-  hotspots.forEach(h => h.classList.remove('hidden'));
-  updateParallax(mouseX, mouseY);
-}
-
 // --- MOUSE DESKTOP ---
 hero.addEventListener('mousemove', e => {
   if('ontouchstart' in window) return;
@@ -898,10 +866,8 @@ function zoomTo(key) {
 // Rimuovi animazione layer quando chiudi overlay
 function resetZoom() {
   isZoomed = false;
-
   overlay.style.display = 'none';
   contentBox.style.transform = 'scale(0)';
-
   hotspots.forEach(h => h.classList.remove('hidden'));
   Object.values(layers).forEach(l => l.classList.remove('overlay-active'));
   updateParallax(mouseX, mouseY);
