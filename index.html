@@ -17,21 +17,22 @@ body, body * {
 }
   
 body, body * {
-  cursor: none !important; /* nasconde il cursore standard */
+  cursor: none !important; /* nasconde il cursore normale */
 }
 
 #custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 12px;             /* diametro del cerchio */
-  height: 12px;
-  background: black;        /* colore elegante */
-  border-radius: 50%;       /* forma circolare */
+  width: 20px;              /* diametro più grande */
+  height: 20px;
+  background: black;
+  border-radius: 50%;
   pointer-events: none;     /* non blocca click o hover */
   transform: translate(-50%, -50%);
-  z-index: 99999;           /* sempre in primo piano */
-  transition: transform 0.1s ease, background 0.2s ease;
+  z-index: 99999;
+  transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px 3px rgba(255,255,255,0.6); /* glow bianco */
 }
   
 #hero{
@@ -702,23 +703,37 @@ window.addEventListener('resize', setLayers);
 
 // --- CURSORE PERSONALIZZATO ---
 
+// crea il cursore personalizzato
 const customCursor = document.createElement('div');
 customCursor.id = 'custom-cursor';
 document.body.appendChild(customCursor);
 
+// traccia il mouse
 document.addEventListener('mousemove', e => {
   customCursor.style.top = e.clientY + 'px';
   customCursor.style.left = e.clientX + 'px';
 });
 
-// Opzionale: cambia colore o dimensione al clic
+// feedback al click
 document.addEventListener('mousedown', () => {
-  customCursor.style.transform = 'translate(-50%, -50%) scale(1.3)';
-  customCursor.style.background = '#222';
+  customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)'; // ingrandisce al click
+  customCursor.style.boxShadow = '0 0 15px 5px rgba(255,255,255,0.8)'; // glow più intenso
 });
 document.addEventListener('mouseup', () => {
   customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-  customCursor.style.background = 'black';
+  customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow normale
+});
+
+// effetto su hotspot
+document.querySelectorAll('.hotspot').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    customCursor.style.transform = 'translate(-50%, -50%) scale(2)'; // più grande sugli hotspot
+    customCursor.style.boxShadow = '0 0 20px 6px rgba(255,255,255,0.9)';
+  });
+  el.addEventListener('mouseleave', () => {
+    customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)';
+  });
 });
 
 </script>
