@@ -902,6 +902,12 @@ function resetZoom() {
   updateParallax(mouseX, mouseY);
 }
 
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && isZoomed){
+    resetZoom();
+  }
+});
+
 overlay.addEventListener('click', (e) => {
   if(!contentBox.contains(e.target)){
     resetZoom();
