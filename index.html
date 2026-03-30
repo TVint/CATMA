@@ -137,6 +137,48 @@ body, body * {
   
 }
 
+/* Flicker testo centrale */
+#hero-text .title, 
+#hero-text .title-big {
+  animation: flicker 2s infinite;
+}
+
+/* Animazione flicker */
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+    text-shadow: 1px 1px 5px #fff, 0 0 10px #fff;
+  }
+  20%, 24%, 55% {
+    opacity: 0.8;
+    text-shadow: 0 0 2px #fff;
+  }
+}
+
+/* Wiggle al passaggio del cursore */
+#hero-text:hover .title,
+#hero-text:hover .title-big {
+  animation: wiggle 0.3s ease-in-out 1;
+}
+
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(1.5deg); }
+  50% { transform: rotate(-1.5deg); }
+  75% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Transizione layer durante overlay */
+.layer {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.layer.overlay-active {
+  opacity: 0.8;         /* leggero fade */
+  transform: scale(1.05); /* leggero zoom */
+}
+
 
 /* LAYERS */
 .layer {
@@ -838,6 +880,47 @@ window.addEventListener('load', tryHideLoader);
 
 // In caso le risorse siano già pronte prima del load (molto veloce su mobile)
 document.addEventListener('DOMContentLoaded', tryHideLoader);
+
+// Aggiungi quando apri overlay
+function zoomTo(key) {
+  const h = Array.from(hotspots).find(el => el.dataset.key === key);
+  if(!h) return;
+
+  const tx = parseFloat(h.dataset.ox);
+  const ty = parseFloat(h.dataset.oy);
+
+  const cx = hero.clientWidth/2;
+  const cy = hero.clientHeight/2;
+
+  const dx = cx - tx;
+  const dy = cy - ty;
+
+  layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
+  layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
+  layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
+
+  // ✨ Aggiungi animazione layer
+  Object.values(layers).forEach(l => l.classList.add('overlay-active'));
+
+  isZoomed = true;
+  title.innerText = map[key].label;
+
+  overlay.style.display = 'flex';
+  hotspots.forEach(h => h.classList.add('hidden'));
+  contentBox.style.transform = 'scale(1)';
+}
+
+// Rimuovi animazione layer quando chiudi overlay
+function resetZoom() {
+  isZoomed = false;
+
+  overlay.style.display = 'none';
+  contentBox.style.transform = 'scale(0)';
+
+  hotspots.forEach(h => h.classList.remove('hidden'));
+  Object.values(layers).forEach(l => l.classList.remove('overlay-active'));
+  updateParallax(mouseX, mouseY);
+}
 
 </script>
 </body>
