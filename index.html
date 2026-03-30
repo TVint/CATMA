@@ -240,23 +240,6 @@ body, body * {
   border:1px solid rgba(255,255,255,0.4);
 }
 
-
-
-
-#hotspot-wrapper {
-  position: absolute;    /* in overlay sopra #hero */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;  /* gli hotspot stessi gestiscono i click */
-  z-index: 1000;         /* sopra gli layers di hero */
-}
-
-#hotspot-wrapper .hotspot {
-  pointer-events: auto;  /* abilita click sugli hotspot */
-}
-
 /* MENU DESKTOP */
 #menu{
  position:absolute;
@@ -582,27 +565,25 @@ body[data-time="chiuso"] #hero {
 </div>
   
 <div id="hero">
-    
-    <!-- DESKTOP LAYERS -->
-    <img class="layer desktop-layer background parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp">
-    <img class="layer desktop-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774821283/Catma-midground_zjbznb.webp">
-    <img class="layer desktop-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp">
-    
-    <!-- MOBILE LAYERS -->
-    <img class="layer mobile-layer background parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
-    <img class="layer mobile-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792265/Catma-midground-mobile_xvwur8.webp">
-    <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
-  
+
+<!-- DESKTOP LAYERS -->
+<img class="layer desktop-layer background parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp">
+<img class="layer desktop-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774821283/Catma-midground_zjbznb.webp">
+<img class="layer desktop-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp">
+
+<!-- MOBILE LAYERS -->
+<img class="layer mobile-layer background parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
+<img class="layer mobile-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792265/Catma-midground-mobile_xvwur8.webp">
+<img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
+
 </div>
 
 <!-- HOTSPOTS -->
-<div id="hotspot-wrapper">
-  <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
-  <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
-  <div class="hotspot cta-btn" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
-  <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
-  <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
-</div>
+<div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
+<div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
+<div class="hotspot cta-btn" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
+<div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
+<div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
 
 <!-- FOOTER -->
 <footer style="background:#b22222; color:#fff; width:100vw; font-family:sans-serif; position:fixed; bottom:0; left:0; z-index:500; box-sizing: border-box;">
@@ -785,29 +766,22 @@ function setLayers() {
 
 // --- HOTSPOTS BASE POSITION ---
 function updateHotspots() {
-  const hotspotWrapper = document.getElementById('hotspot-wrapper');
-  const hero = document.getElementById('hero');
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = 'ontouchstart' in window;
 
   hotspots.forEach(h => {
-    // Calcolo posizione
-    const x = isMobile 
-      ? parseFloat(h.dataset.xMobile) / 100 * hero.clientWidth 
-      : parseFloat(h.dataset.xDesktop) / 100 * hero.clientWidth;
+    const ox = isMobile 
+      ? h.dataset.xMobile/100 * hero.clientWidth
+      : h.dataset.xDesktop/100 * hero.clientWidth;
 
-    const y = isMobile 
-      ? parseFloat(h.dataset.yMobile) / 100 * hero.clientHeight 
-      : parseFloat(h.dataset.yDesktop) / 100 * hero.clientHeight;
+    const oy = isMobile 
+      ? h.dataset.yMobile/100 * hero.clientHeight
+      : h.dataset.yDesktop/100 * hero.clientHeight;
 
-    h.style.position = 'absolute';
-    h.style.left = `${x}px`;
-    h.style.top = `${y}px`;
-
-    // Append al wrapper (solo se non è già figlio)
-    if (h.parentElement !== hotspotWrapper) {
-      hotspotWrapper.appendChild(h);
-    }
+    h.dataset.ox = ox;
+    h.dataset.oy = oy;
   });
+
+  updateParallax(mouseX, mouseY);
 }
 
 // --- PARALLAX ---
