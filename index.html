@@ -69,6 +69,13 @@ body, body * {
   /* box-shadow: 0 0 10px 3px rgba(255,255,255,0.6); /* glow bianco */
   box-shadow: 0 0 10px 3px rgba(178,34,34,0.6); /* glow rosso */
 }
+
+/* Nascondi cursore personalizzato su mobile */
+@media (pointer: coarse), (max-width: 768px) {
+  #custom-cursor {
+    display: none !important;
+  }
+}
   
 #hero{
   width:100%;
@@ -80,7 +87,7 @@ body, body * {
 #hero-text{
   position: absolute;
   width:100%;
-  top: 150px;
+  top: 35%;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
@@ -106,6 +113,28 @@ body, body * {
   font-size: 6vw; /* titolo più grande */
   margin: 0 0 0 0;
   font-weight: bold;
+}
+
+/* MEDIA QUERY per mobile */
+  
+@media(max-width:768px){
+  
+  #hero-text{
+    top: 80px; /* leggermente più vicino al top su mobile */
+  }
+  
+  #hero-text .title-big{
+    font-size: 12vw;
+  }
+
+  #hero-text .title{
+    font-size: 6vw;
+  }
+  
+  #hero-text .subtitle{
+    font-size: 3vw;
+  }
+  
 }
 
 /* Glow testo centrale */
@@ -264,6 +293,14 @@ body, body * {
  transition:transform 0.4s ease;
 }
 
+/* MEDIA */
+@media(max-width:768px){
+ #menu{display:none}
+ #hamburger{display:flex}
+ #mobile-logo{display:block}
+ .hotspot{width:40px;height:40px;}
+}
+
 .hotspot.hidden{
  opacity:0;
  pointer-events:none;
@@ -370,62 +407,9 @@ body[data-time="chiuso"] #hero {
 
 #timeControls button:hover { background: #ff4d4d; }
 
-.footer-social {
-  display: inline-flex;   
-  align-items: center;
-  gap: 10px;                
+@media(min-width:769px){
+ .mobile-layer{display:none}
 }
-
-.footer-social a {
-  display: inline-block;
-}
-
-.footer-social img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  vertical-align: middle;
-}
-
-/* MEDIA */
-  
-@media(max-width:768px){
- #menu{display:none}
- #hamburger{display:flex}
- #mobile-logo{display:block}
- .hotspot{width:40px;height:40px;}
-}
-
-/* Nascondi cursore personalizzato su mobile */
-@media (pointer: coarse), (max-width: 768px) {
-  #custom-cursor {
-    display: none !important;
-  }
-}
-@media(max-width:769px){
-  .mobile-layer{display:none}
-}
-  
-@media(max-width:768px){
-  
-  #hero-text{
-    top: 35%;
-  }
-  
-  #hero-text .title-big{
-    font-size: 12vw;
-  }
-
-  #hero-text .title{
-    font-size: 6vw;
-  }
-  
-  #hero-text .subtitle{
-    font-size: 3vw;
-  }
-  
-}
-
 </style>
 </head>
 
@@ -532,6 +516,25 @@ body[data-time="chiuso"] #hero {
   // Aggiorna anno dinamicamente
   document.getElementById('year').innerText = new Date().getFullYear();
 </script>
+
+<style>
+.footer-social {
+  display: inline-flex;      /* icone in fila */
+  align-items: center;
+  gap: 10px;                 /* spazio tra icone */
+}
+
+.footer-social a {
+  display: inline-block;
+}
+
+.footer-social img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+</style>
 
 <script>
 // --- ELEMENTI PRINCIPALI ---
@@ -905,6 +908,5 @@ function resetZoom() {
 }
 
 </script>
-  
 </body>
 </html>
