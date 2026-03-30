@@ -176,6 +176,35 @@ body, body * {
 100%{transform:translate(-50%,-50%) scale(1)}
 }
 
+/* Label hotspot */
+.hotspot-label {
+  position: absolute;
+  pointer-events: none; /* non interferisce col click */
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+}
+
+/* Hover per desktop */
+.hotspot:hover .hotspot-label {
+  opacity: 1;
+  transform: translate(-50%, -30px);
+}
+
+/* Mobile active */
+.hotspot-label.active {
+  opacity: 1 !important;
+  transform: translate(-50%, -30px) !important;
+}
+  
 /* HOTSPOTS CTA */
 
 .cta-group{
@@ -1027,6 +1056,33 @@ overlay.querySelector('.close-btn').addEventListener('click', (e) => {
   e.stopPropagation();
   resetZoom();
 });
+
+// --- HOTSPOT LABELS + MOBILE TAP ---
+hotspots.forEach(h => {
+  const label = document.createElement('div');
+  label.className = 'hotspot-label';
+  label.innerText = map[h.dataset.key].label;
+  h.appendChild(label);
+
+  if('ontouchstart' in window){
+    h.addEventListener('click', (e) => {
+      const currentlyActive = label.classList.contains('active');
+      document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
+      if(!currentlyActive) label.classList.add('active');
+      zoomTo(h.dataset.key);
+      e.stopPropagation();
+    });
+  }
+});
+
+// --- TAP OUTSIDE PER NASCONDERE LABELS SU MOBILE ---
+if('ontouchstart' in window){
+  document.addEventListener('touchstart', (e) => {
+    if(!e.target.closest('.hotspot')){
+      document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
+    }
+  });
+}  
   
 </script>
 </body>
