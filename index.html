@@ -880,6 +880,7 @@ document.addEventListener('DOMContentLoaded', tryHideLoader);
 
 // Aggiungi quando apri overlay
 function zoomTo(key) {
+  console.log('KEY:', key);
   const h = Array.from(hotspots).find(el => el.dataset.key === key);
   if(!h) return;
 
