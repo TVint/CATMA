@@ -809,19 +809,35 @@ document.querySelectorAll('.hotspot').forEach(el => {
 });
 
 // --- LOADER ---
-
+  
 const loader = document.getElementById('loader');
-const minLoaderTime = 2000; // durata minima in ms
+const minLoaderTime = 1500; // durata minima in ms
 const loaderStart = Date.now();
 
-window.addEventListener('load', () => {
+function hideLoader() {
+  loader.classList.add('hidden'); // slide-up
+}
+
+// Eventi per sicurezza
+let isLoaderHidden = false;
+
+// Nasconde il loader solo dopo 1.5s e quando il sito è pronto
+function tryHideLoader() {
+  if (isLoaderHidden) return;
   const elapsed = Date.now() - loaderStart;
   const remaining = Math.max(minLoaderTime - elapsed, 0);
 
   setTimeout(() => {
-    loader.classList.add('hidden'); // aggiunge la classe slide-up
+    loader.classList.add('hidden');
+    isLoaderHidden = true;
   }, remaining);
-});
+}
+
+// Trigger principale: quando tutte le risorse della pagina sono caricate
+window.addEventListener('load', tryHideLoader);
+
+// In caso le risorse siano già pronte prima del load (molto veloce su mobile)
+document.addEventListener('DOMContentLoaded', tryHideLoader);
 
 </script>
 </body>
