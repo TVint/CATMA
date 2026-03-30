@@ -6,6 +6,14 @@
 <title>Catma Bar</title>
 <style>
 
+/* disabilita selezione testo e highlight */
+body, body * {
+  -webkit-user-select: none; /* Safari/Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Edge/IE */
+  user-select: none;
+}
+  
 html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-serif;}
   
 #hero{
