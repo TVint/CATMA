@@ -69,13 +69,6 @@ body, body * {
   /* box-shadow: 0 0 10px 3px rgba(255,255,255,0.6); /* glow bianco */
   box-shadow: 0 0 10px 3px rgba(178,34,34,0.6); /* glow rosso */
 }
-
-/* Nascondi cursore personalizzato su mobile */
-@media (pointer: coarse), (max-width: 768px) {
-  #custom-cursor {
-    display: none !important;
-  }
-}
   
 #hero{
   width:100%;
@@ -113,28 +106,6 @@ body, body * {
   font-size: 6vw; /* titolo più grande */
   margin: 0 0 0 0;
   font-weight: bold;
-}
-
-/* MEDIA QUERY per mobile */
-  
-@media(max-width:768px){
-  
-  #hero-text{
-    top: 35%;
-  }
-  
-  #hero-text .title-big{
-    font-size: 12vw;
-  }
-
-  #hero-text .title{
-    font-size: 6vw;
-  }
-  
-  #hero-text .subtitle{
-    font-size: 3vw;
-  }
-  
 }
 
 /* Glow testo centrale */
@@ -293,14 +264,6 @@ body, body * {
  transition:transform 0.4s ease;
 }
 
-/* MEDIA */
-@media(max-width:768px){
- #menu{display:none}
- #hamburger{display:flex}
- #mobile-logo{display:block}
- .hotspot{width:40px;height:40px;}
-}
-
 .hotspot.hidden{
  opacity:0;
  pointer-events:none;
@@ -407,9 +370,46 @@ body[data-time="chiuso"] #hero {
 
 #timeControls button:hover { background: #ff4d4d; }
 
+/* MEDIA */
+  
+@media(max-width:768px){
+ #menu{display:none}
+ #hamburger{display:flex}
+ #mobile-logo{display:block}
+ .hotspot{width:40px;height:40px;}
+}
+  
+@media(max-width:768px){
+  
+  #hero-text{
+    top: 35%;
+  }
+  
+  #hero-text .title-big{
+    font-size: 12vw;
+  }
+
+  #hero-text .title{
+    font-size: 6vw;
+  }
+  
+  #hero-text .subtitle{
+    font-size: 3vw;
+  }
+  
+}
+
+/* Nascondi cursore personalizzato su mobile */
+@media (pointer: coarse), (max-width: 768px) {
+  #custom-cursor {
+    display: none !important;
+  }
+}
+
 @media(min-width:769px){
  .mobile-layer{display:none}
 }
+  
 </style>
 </head>
 
