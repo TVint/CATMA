@@ -8,6 +8,16 @@
   
 html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-serif;}
 
+.content-box{
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s ease;
+}
+
+#content-overlay.active .content-box{
+  opacity: 1;
+} 
+  
 /* disabilita selezione testo e highlight */
 body, body * {
   -webkit-user-select: none; /* Safari/Chrome */
@@ -597,6 +607,56 @@ const map = {
   bar: {label:'BAR', key:'bar'}
 };
 
+const contentMap = {
+
+  chi: `
+    <div class="content-inner">
+      <h1>Chi siamo</h1>
+      <p>CATMA BAR è un punto di riferimento al Lido di Jesolo, tra ricerca musicale e cultura del bere.</p>
+    </div>
+  `,
+
+  mescita: `
+    <div class="content-inner">
+      <h1>Mescita</h1>
+      <p>Selezione di vini naturali, birre artigianali e cocktail essenziali.</p>
+    </div>
+  `,
+
+  eventi: `
+    <div class="content-inner">
+      <h1>Eventi</h1>
+      <p>Dj set, live e serate speciali ogni settimana.</p>
+    </div>
+  `,
+
+  bar: `
+    <div class="content-inner">
+      <h1>Il Bar</h1>
+      <p>Uno spazio intimo tra luce e ombra, progettato per vivere la notte.</p>
+    </div>
+  `,
+
+  prenota: `
+    <div class="content-inner">
+      <h1>Prenota un tavolo</h1>
+      <p>Scrivici su WhatsApp oppure chiamaci direttamente.</p>
+
+      <div class="cta-group">
+        <a href="https://wa.me/393XXXXXXXXX?text=Ciao, vorrei prenotare un tavolo al CATMA BAR"
+           target="_blank"
+           class="cta-btn">
+          WhatsApp
+        </a>
+
+        <a href="tel:+393XXXXXXXXX" class="cta-btn secondary">
+          Chiama
+        </a>
+      </div>
+    </div>
+  `
+};
+
   // --- GIROSCOPIO MOBILE ---
 if('ontouchstart' in window){
 
@@ -877,9 +937,23 @@ window.addEventListener('load', tryHideLoader);
 
 // In caso le risorse siano già pronte prima del load (molto veloce su mobile)
 document.addEventListener('DOMContentLoaded', tryHideLoader);
-
+  
 // Aggiungi quando apri overlay
 function zoomTo(key) {
+  if(isZoomed){
+    // cambia contenuto senza rifare zoom
+    title.innerText = map[key].label;
+  
+    contentBox.style.transform = 'scale(0)';
+  
+    setTimeout(() => {
+      contentBox.innerHTML = contentMap[key];
+      contentBox.style.transform = 'scale(1)';
+    }, 200);
+  
+    return;
+  }
+  
   const h = Array.from(hotspots).find(el => el.dataset.key === key);
   if(!h) return;
 
@@ -902,7 +976,8 @@ function zoomTo(key) {
   isZoomed = true;
   title.innerText = map[key].label;
 
-  // contenuti dinamici overlay (SEMPRE)
+  // contenuti dinamici overlay
+  contentBox.innerHTML = '';
   contentBox.innerHTML = contentMap[key] || `
     <div class="content-inner">
       <h1>${map[key].label}</h1>
@@ -916,8 +991,8 @@ function zoomTo(key) {
   }, 100); // leggero delay per sincronizzare
 
   hotspots.forEach(h => h.classList.add('hidden'));
-  contentBox.style.transform = 'scale(1)';
-  }
+
+}
 
 // Rimuovi animazione layer quando chiudi overlay
 function resetZoom() {
