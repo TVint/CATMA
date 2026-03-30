@@ -147,26 +147,12 @@ body, body * {
 @keyframes flicker {
   0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
     opacity: 1;
-    text-shadow: 1px 1px 5px #fff, 0 0 10px #fff;
+    text-shadow: 1px 1px 5px #fff, 0 0 5px #fff;
   }
   20%, 24%, 55% {
     opacity: 0.8;
-    text-shadow: 0 0 2px #fff;
+    text-shadow: 0 0 1px #fff;
   }
-}
-
-/* Wiggle al passaggio del cursore */
-#hero-text:hover .title,
-#hero-text:hover .title-big {
-  animation: wiggle 0.3s ease-in-out 1;
-}
-
-@keyframes wiggle {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(1.5deg); }
-  50% { transform: rotate(-1.5deg); }
-  75% { transform: rotate(1deg); }
-  100% { transform: rotate(0deg); }
 }
 
 /* Transizione layer durante overlay */
