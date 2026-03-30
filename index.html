@@ -902,25 +902,13 @@ function zoomTo(key) {
   isZoomed = true;
   title.innerText = map[key].label;
 
-  // contenuti dinamici overlay
-  if(key === 'prenota'){
-    contentBox.innerHTML = `
-      <div class="content-inner">
-        <h1>Prenota un tavolo</h1>
-        <p>Scrivici su WhatsApp oppure chiamaci direttamente.</p>
-  
-        <div class="cta-group">
-          <a href="https://wa.me/393XXXXXXXXX?text=Ciao, vorrei prenotare un tavolo al CATMA BAR" target="_blank" class="cta-btn">
-            WhatsApp
-          </a>
-  
-          <a href="tel:+393XXXXXXXXX" class="cta-btn secondary">
-            Chiama
-          </a>
-        </div>
-      </div>
-    `;
-  }
+  // contenuti dinamici overlay (SEMPRE)
+  contentBox.innerHTML = contentMap[key] || `
+    <div class="content-inner">
+      <h1>${map[key].label}</h1>
+      <p>Contenuto in arrivo...</p>
+    </div>
+  `;
 
   overlay.classList.add('active');
   setTimeout(() => {
@@ -929,7 +917,7 @@ function zoomTo(key) {
 
   hotspots.forEach(h => h.classList.add('hidden'));
   contentBox.style.transform = 'scale(1)';
-}
+  }
 
 // Rimuovi animazione layer quando chiudi overlay
 function resetZoom() {
