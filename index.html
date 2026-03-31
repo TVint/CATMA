@@ -5,73 +5,531 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catma Bar</title>
 <style>
-html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-serif;user-select:none;cursor:none;}
-#loader{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#b22222;display:flex;justify-content:center;align-items:center;z-index:999999;overflow:hidden;transition:transform 0.8s ease;}
-#loader img{width:150px;animation:rotateLogo 1s linear infinite;}
-@keyframes rotateLogo{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
-#loader.hidden{transform:translateY(-100%);pointer-events:none;}
-#custom-cursor{position:fixed;top:0;left:0;width:25px;height:25px;background:black;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);z-index:99999;transition:transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;box-shadow:0 0 10px 3px rgba(178,34,34,0.6);}
-#hero{width:100%;height:100vh;position:relative;overflow:hidden;}
-#hero-text{position:absolute;width:100%;top:150px;left:50%;transform:translateX(-50%);text-align:center;color:#fff;z-index:90;pointer-events:none;text-shadow:1px 1px 5px #000;}
-#hero-text .subtitle{font-size:1.5vw;margin-top:25px;opacity:.8;}
-#hero-text .title{font-size:3vw;margin:5px 0;font-weight:bold;animation:glowBreath 3s ease-in-out infinite;}
-#hero-text .title-big{font-size:6vw;margin:0;font-weight:bold;animation:glowBreath 3s ease-in-out infinite;}
-@keyframes glowBreath{0%,100%{text-shadow:0 0 4px rgba(255,255,255,.7),0 0 10px rgba(178,34,34,.5);}50%{text-shadow:0 0 8px rgba(255,255,255,1),0 0 20px rgba(178,34,34,.8);}}
-.layer{position:absolute;width:120%;height:120%;top:-10%;left:-10%;object-fit:cover;pointer-events:none;transition:transform .5s ease;}.layer.overlay-active{opacity:.8;transform:scale(1.05);}
-.hotspot{position:absolute;width:50px;height:50px;border-radius:50%;background:#b22222;box-shadow:0 0 20px rgba(178,34,34,.9);transform:translate(-50%,-50%);animation:pulse 2s infinite;cursor:pointer;z-index:50;}
-@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.2);}}
-.hotspot-label{position:absolute;pointer-events:none;background:rgba(0,0,0,.7);color:#fff;padding:4px 10px;border-radius:4px;font-size:14px;font-weight:500;white-space:nowrap;opacity:0;transform:translate(-50%,-10px);transition:opacity .2s ease,transform .2s ease;z-index:100;}
-.hotspot:hover .hotspot-label{opacity:1;transform:translate(-50%,-30px);}
-.cta-group{display:flex;gap:15px;justify-content:center;margin-top:20px;}
-.cta-btn{border:2.5px solid #fff;height:auto;text-align:center;width:200px;box-sizing:border-box;padding:10px;border-radius:50px;text-decoration:none;font-weight:600;background:rgba(178,34,34,.9);color:#fff;box-shadow:0 0 15px rgba(178,34,34,.6);transition:all .25s ease;}
-.cta-btn:hover{transform:scale(1.1);box-shadow:0 0 25px rgba(178,34,34,.9);}
-.cta-btn.secondary{background:transparent;border:1px solid rgba(255,255,255,.4);}
-#menu{position:absolute;top:40px;left:50%;transform:translateX(-50%);width:90%;display:flex;align-items:center;z-index:100;}
-#menu a{flex:1;text-align:center;color:#fff;text-decoration:none;}
-.logo-center{flex:1;display:flex;justify-content:center;}
-.logo-center img{height:60px;}
-#mobile-logo{display:none;position:absolute;top:20px;left:20px;height:40px;z-index:101;}
-#hamburger{display:none;position:absolute;top:20px;right:20px;width:30px;height:25px;flex-direction:column;justify-content:space-between;cursor:pointer;z-index:101;}
-#hamburger div{height:4px;background:#fff;}
-#mobile-menu{display:none;position:fixed;width:100%;height:100%;background:rgba(0,0,0,.9);justify-content:center;align-items:center;flex-direction:column;z-index:800;}
-#mobile-menu a{color:#fff;margin:15px 0;font-size:1.5rem;text-decoration:none;text-transform:uppercase;}
-#mobile-menu .cta{border:2px solid #fff;padding:12px 25px;border-radius:30px;margin-top:20px;}
-#mobile-menu img{height:60px;margin-bottom:20px;}
-.close-btn{position:absolute;top:100px;font-size:4rem;color:#fff;cursor:pointer;pointer-events:auto;z-index:99999;}
-#content-overlay{position:fixed;width:100%;height:100%;background:rgba(0,0,0,.8);justify-content:center;align-items:center;z-index:700;backdrop-filter:blur(5px);display:flex;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s ease;}
-#content-overlay.active{opacity:1;visibility:visible;}
-.content-box{color:#fff;text-align:center;transform:scale(0);transition:transform .4s ease;}
-.hotspot.hidden{opacity:0;pointer-events:none;}
-#gyroBtn{position:fixed;top:35%;left:50%;transform:translate(-50%,-50%);width:250px;height:50px;background:#b22222;color:#fff;border:none;border-radius:150px;z-index:99999;font-size:1.5rem;cursor:pointer;box-shadow:0 0 15px rgba(255,255,255,.5);animation:pulseBtn 1.5s ease-in-out infinite;transition:transform .2s ease,box-shadow .2s ease;}
-#gyroBtn:hover{transform:translate(-50%,-50%) scale(1.05);box-shadow:0 0 25px rgba(255,255,255,.6);}
-#gyroBtn.hidden{opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.8);}
-@keyframes pulseBtn{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 15px rgba(255,255,255,.5);}50%{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 0 25px rgba(255,255,255,.6);}}
-#gyroOverlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,.7);z-index:99998;pointer-events:none;opacity:0;transition:opacity .3s ease;}
-#gyroOverlay.active{opacity:1;}
-body[data-time="giorno"] #hero{filter:brightness(1.2) saturate(.35) hue-rotate(-5deg);}
-body[data-time="sera"] #hero{filter:brightness(.95) contrast(1.1) sepia(.3) saturate(1.2);}
-body[data-time="chiuso"] #hero{filter:brightness(.2) saturate(.5);}
-#timeControls{position:fixed;top:120px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:650;}
-#timeControls button{padding:5px 10px;border:none;border-radius:150px;background:#b22222;color:white;cursor:pointer;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,.3);transition:background .3s ease;}
-#timeControls button:hover{background:#ff4d4d;}
-.footer-social{display:inline-flex;align-items:center;gap:10px;}
-.footer-social a{display:inline-block;}
-.footer-social img{width:20px;height:20px;object-fit:contain;vertical-align:middle;}
-@media(max-width:768px){#menu{display:none}#hamburger{display:flex}#mobile-logo{display:block}.hotspot{width:40px;height:40px}#hero-text{top:35%}#hero-text .title-big{font-size:12vw}#hero-text .title{font-size:6vw}#hero-text .subtitle{font-size:3vw}}
-@media(min-width:769px){.mobile-layer{display:none}}
-@media(pointer:coarse),(max-width:768px){#custom-cursor{display:none!important}}
+  
+html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:sans-serif;}
+
+.content-box{
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s ease;
+}
+
+#content-overlay.active .content-box{
+  opacity: 1;
+} 
+  
+/* disabilita selezione testo e highlight */
+body, body * {
+  -webkit-user-select: none; /* Safari/Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Edge/IE */
+  user-select: none;
+}
+
+/* LOADER */
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #b22222; /* rosso come pulsanti */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  overflow: hidden;
+  transition: transform 0.8s ease;
+}
+
+#loader img {
+  width: 150px; /* dimensione logo */
+  height: auto;
+  animation: rotateLogo 1s linear infinite; /* rotazione continua */
+}
+
+/* Rotazione logo */
+@keyframes rotateLogo {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Classe da aggiungere quando il loader scompare */
+#loader.hidden {
+  transform: translateY(-100%); /* slide up */
+  pointer-events: none;
+}
+  
+body, body * {
+  cursor: none !important; /* nasconde il cursore normale */
+}
+
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 25px;              /* diametro più grande */
+  height: 25px;
+  background: black;
+  border-radius: 50%;
+  pointer-events: none;     /* non blocca click o hover */
+  transform: translate(-50%, -50%);
+  z-index: 99999;
+  transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
+  /* box-shadow: 0 0 10px 3px rgba(255,255,255,0.6); /* glow bianco */
+  box-shadow: 0 0 10px 3px rgba(178,34,34,0.6); /* glow rosso */
+}
+  
+#hero{
+  width:100%;
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+#hero-text{
+  position: absolute;
+  width:100%;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #fff;
+  z-index: 90; /* sopra i layer, sotto il menu */
+  pointer-events: none; /* non interferisce con click sugli hotspot */
+  text-shadow: 1px 1px 5px #000;
+}
+
+#hero-text .subtitle{
+  font-size: 1.5vw; /* dimensione piccola, proporzionale */
+  margin-top: 25px;
+  opacity: 0.8;
+}
+
+#hero-text .title{
+  font-size: 3vw; /* titolo più grande */
+  margin: 5px 0 0 0;
+  font-weight: bold;
+}
+
+#hero-text .title-big{
+  font-size: 6vw; /* titolo più grande */
+  margin: 0 0 0 0;
+  font-weight: bold;
+}
+
+/* Glow testo centrale */
+
+#hero-text .title,
+#hero-text .title-big {
+  animation: glowBreath 3s ease-in-out infinite;
+}
+
+@keyframes glowBreath {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(255,255,255,0.7),
+                 0 0 10px rgba(178,34,34,0.5);
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(255,255,255,1),
+                 0 0 20px rgba(178,34,34,0.8);
+  }
+}
+
+.layer {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.layer.overlay-active {
+  opacity: 0.8;         /* leggero fade */
+  transform: scale(1.05); /* leggero zoom */
+}
+
+
+/* LAYERS */
+.layer {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  top: -10%;
+  left: -10%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: transform 0.5s ease;
+}
+
+/* HOTSPOTS */
+.hotspot{
+ position:absolute;
+ width:50px;height:50px;
+ border-radius:50%;
+ background:#b22222;
+ box-shadow:0 0 20px rgba(178,34,34,.9);
+ transform:translate(-50%,-50%);
+ animation:pulse 2s infinite;
+ cursor:pointer;
+ z-index:50;
+}
+@keyframes pulse{
+0%{transform:translate(-50%,-50%) scale(1)}
+50%{transform:translate(-50%,-50%) scale(1.2)}
+100%{transform:translate(-50%,-50%) scale(1)}
+}
+
+/* Label hotspot */
+.hotspot-label {
+  position: absolute;
+  pointer-events: none; /* non interferisce col click */
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+}
+
+/* Hover per desktop */
+.hotspot:hover .hotspot-label {
+  opacity: 1;
+  transform: translate(-50%, -30px);
+}
+
+/* Mobile active */
+.hotspot-label.active {
+  opacity: 1 !important;
+  transform: translate(-50%, -30px) !important;
+}
+  
+/* HOTSPOTS CTA */
+
+.cta-group{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  margin-top:20px;
+}
+
+.cta-btn{
+    border: 2.5px solid #fff;
+    height: auto;
+    text-align: center;
+    width: 200px;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    background: rgba(178, 34, 34, 0.9);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(178, 34, 34, 0.6);
+    transition: all 0.25s ease;
+}
+
+.cta-btn:hover{
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(178,34,34,0.9);
+}
+
+.cta-btn.secondary{
+  background: transparent;
+  border:1px solid rgba(255,255,255,0.4);
+}
+
+/* MENU DESKTOP */
+#menu{
+ position:absolute;
+ top:40px;
+ left:50%;
+ transform:translateX(-50%);
+ width:90%;
+ display:flex;
+ align-items:center;
+ z-index:100;
+}
+#menu a{
+ flex:1;
+ text-align:center;
+ color:#fff;
+ text-decoration:none;
+}
+.logo-center{
+ flex:1;
+ display:flex;
+ justify-content:center;
+}
+.logo-center img{height:60px}
+
+/* MOBILE */
+#mobile-logo{
+ display:none;
+ position:absolute;
+ top:20px;left:20px;
+ height:40px;
+ z-index:101;
+}
+#hamburger{
+ display:none;
+ position:absolute;
+ top:20px;right:20px;
+ width:30px;height:25px;
+ flex-direction:column;
+ justify-content:space-between;
+ cursor:pointer;
+ z-index:101;
+}
+#hamburger div{height:4px;background:#fff}
+
+#mobile-menu{
+ display:none;
+ position:fixed;
+ width:100%;height:100%;
+ background:rgba(0,0,0,.9);
+ justify-content:center;
+ align-items:center;
+ flex-direction:column;
+ z-index:800;
+}
+#mobile-menu a{
+ color:#fff;
+ margin:15px 0;
+ font-size:1.5rem;
+ text-decoration:none;
+ text-transform:uppercase;
+}
+#mobile-menu .cta{
+ border:2px solid #fff;
+ padding:12px 25px;
+ border-radius:30px;
+ margin-top:20px;
+}
+#mobile-menu img{
+ height:60px; /* logo ridotto */
+ margin-bottom:20px;
+}
+.close-btn{
+ position:absolute;
+ top:100px;
+ font-size:4rem;
+ color:#fff;
+ cursor:pointer;
+ pointer-events: auto;
+ z-index:99999;
+}
+  
+/* OVERLAY */
+  
+#content-overlay{
+  position:fixed;
+  width:100%;height:100%;
+  background:rgba(0,0,0,.80);
+  justify-content:center;
+  align-items:center;
+  z-index:700;
+  backdrop-filter: blur(5px);
+  display:flex;              /* sempre flex */
+  opacity:0;                 /* nascosto */
+  visibility:hidden;         /* non cliccabile */
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* stato visibile */
+#content-overlay.active{
+  opacity:1;
+  visibility:visible;
+}
+  
+.content-box{
+ color:#fff;
+ text-align:center;
+ transform:scale(0);
+ transition:transform 0.4s ease;
+}
+
+.hotspot.hidden{
+ opacity:0;
+ pointer-events:none;
+}
+  
+/* Pulsazione del pulsante giroscopio */
+#gyroBtn {
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250px;       
+  height: 50px;       
+  background: #b22222;
+  color: #fff;
+  border: none;
+  border-radius: 150px;
+  z-index: 99999;     
+  font-size: 1.5rem;  
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(255,255,255,0.5);
+  animation: pulseBtn 1.5s ease-in-out infinite; /* animazione pulsazione */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#gyroBtn:hover {
+  transform: translate(-50%, -50%) scale(1.05); /* ingrandisce leggermente al hover */
+  box-shadow: 0 0 25px rgba(255,255,255,0.6);
+}
+  
+#gyroBtn.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* Animazione pulsante */
+@keyframes pulseBtn {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 15px rgba(255,255,255,0.5);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.08);
+    box-shadow: 0 0 25px rgba(255,255,255,0.6);
+  }
+}
+
+#gyroOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7); /* scurisce la scena */
+  z-index: 99998;               /* subito sotto il pulsante */
+  pointer-events: none;         /* clic passano al pulsante */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+  
+#gyroOverlay.active {
+  opacity: 1;
+}
+
+/* FILTRI TEMPO */
+
+body[data-time="giorno"] #hero {
+  filter: brightness(1.2) saturate(0.35) hue-rotate(-5deg);
+  /* luce più fredda e meno saturata per effetto naturale */
+}
+
+body[data-time="sera"] #hero {
+  filter: brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2);
+  /* luce calda tipo candele */
+}
+
+body[data-time="chiuso"] #hero {
+  filter: brightness(0.2) saturate(0.5);
+}
+
+/* Pulsanti controllo tempo */
+#timeControls {
+  position: fixed;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 650;
+}
+
+#timeControls button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 150px;
+  background: #b22222;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: background 0.3s ease;
+}
+
+#timeControls button:hover { background: #ff4d4d; }
+
+.footer-social {
+  display: inline-flex;      /* icone in fila */
+  align-items: center;
+  gap: 10px;                 /* spazio tra icone */
+}
+
+.footer-social a {
+  display: inline-block;
+}
+
+.footer-social img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+/* MEDIA */
+  
+@media(max-width:768px){
+ #menu{display:none}
+ #hamburger{display:flex}
+ #mobile-logo{display:block}
+ .hotspot{width:40px;height:40px;}
+}
+  
+@media(max-width:768px){
+  
+  #hero-text{
+    top: 35%;
+  }
+  
+  #hero-text .title-big{
+    font-size: 12vw;
+  }
+
+  #hero-text .title{
+    font-size: 6vw;
+  }
+  
+  #hero-text .subtitle{
+    font-size: 3vw;
+  }
+  
+}
+
+/* Nascondi cursore personalizzato su mobile */
+@media (pointer: coarse), (max-width: 768px) {
+  #custom-cursor {
+    display: none !important;
+  }
+}
+
+@media(min-width:769px){
+ .mobile-layer{display:none}
+}
+  
 </style>
 </head>
+
 <body>
 
 <!-- LOADER -->
-<div id="loader"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo"></div>
+<div id="loader">
+  <img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo">
+</div>
 
 <!-- MENU DESKTOP -->
 <div id="menu">
 <a href="#" data-key="chi">CHI SIAMO</a>
 <a href="#" data-key="mescita">MESCITA</a>
-<div class="logo-center"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png"></div>
+<div class="logo-center">
+<img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png">
+</div>
 <a href="#" data-key="bar">BAR</a>
 <a href="#" data-key="eventi">EVENTI</a>
 </div>
@@ -80,34 +538,44 @@ body[data-time="chiuso"] #hero{filter:brightness(.2) saturate(.5);}
 <img id="mobile-logo" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png">
 <div id="hamburger"><div></div><div></div><div></div></div>
 
-<!-- MOBILE MENU -->
+<!-- MOBILE MENU OVERLAY -->
 <div id="mobile-menu">
-<div class="close-btn">&times;</div>
-<a href="#" data-key="chi">CHI SIAMO</a>
-<a href="#" data-key="mescita">MESCITA</a>
-<a href="#" data-key="bar">BAR</a>
-<a href="#" data-key="eventi">EVENTI</a>
-<a href="#" class="cta" data-key="prenota">PRENOTA</a>
+  <div class="close-btn">&times;</div>
+  <a href="#" data-key="chi">CHI SIAMO</a>
+  <a href="#" data-key="mescita">MESCITA</a>
+  <a href="#" data-key="bar">BAR</a>
+  <a href="#" data-key="eventi">EVENTI</a>
+  <a href="#" class="cta" data-key="prenota">PRENOTA</a>
 </div>
 
-<!-- HERO TEXT -->
+<!-- SCRITTA FISSA CENTRALE -->
 <div id="hero-text">
-<h2 class="title">BENVENUTI AL</h2>
-<h1 class="title-big">CATMA BAR</h1>
-<p class="subtitle">Via delle Sirene, 13 - Lido di Jesolo (VE)</p>
+  <h2 class="title">BENVENUTI AL</h2>
+  <h1 class="title-big">CATMA BAR</h1>
+  <p class="subtitle">Via delle Sirene, 13 - Lido di Jesolo (VE)</p>
 </div>
 
-<!-- CONTENT OVERLAY -->
-<div id="content-overlay"><div class="close-btn">&times;</div><div class="content-box"></div></div>
-
-<!-- HERO LAYERS -->
+<!-- OVERLAY CONTENT -->
+<div id="content-overlay">
+  <div class="close-btn">&times;</div>
+  <div class="content-box">
+    <h1 id="title"></h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  </div>
+</div>
+  
 <div id="hero">
+
+<!-- DESKTOP LAYERS -->
 <img class="layer desktop-layer background parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp">
 <img class="layer desktop-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774821283/Catma-midground_zjbznb.webp">
 <img class="layer desktop-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp">
+
+<!-- MOBILE LAYERS -->
 <img class="layer mobile-layer background parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
 <img class="layer mobile-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792265/Catma-midground-mobile_xvwur8.webp">
 <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
+
 </div>
 
 <!-- HOTSPOTS -->
@@ -118,78 +586,504 @@ body[data-time="chiuso"] #hero{filter:brightness(.2) saturate(.5);}
 <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
 
 <!-- FOOTER -->
-<footer style="background:#b22222;color:#fff;width:100vw;position:fixed;bottom:0;left:0;z-index:500;box-sizing:border-box;">
-<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
-<div style="padding:10px;width:100%;text-align:center;font-size:10px;">Via delle Sirene 13, Lido di Jesolo (VE) | P.IVA: 01234567890</div>
-</div>
-<div style="text-align:center;margin-top:8px;font-size:10px;padding:10px;background-color:#000">&copy; <span id="year"></span> Catma Bar. Tutti i diritti riservati.
+<footer style="background:#b22222; color:#fff; width:100vw; font-family:sans-serif; position:fixed; bottom:0; left:0; z-index:500; box-sizing: border-box;">
+
+<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+    <!-- INFO TESTO SU UNA RIGA -->
+    <div style="padding:10px; flex-wrap:wrap; font-size: 10px; width: 100%; text-align: center;">
+      <p>Via delle Sirene 13, Lido di Jesolo (VE) | P.IVA: 01234567890</p>
+    </div>
+
+    <!-- ICONE SOCIAL -->
+    
+  </div>
+
+<!-- COPYRIGHT -->
+  <div style="text-align:center; margin-top:8px; font-size: 10px; padding:10px; background-color:#000">
+    &copy; <span id="year"></span> Catma Bar. Tutti i diritti riservati.
 <div class="footer-social" style="padding:10px;">
-<a href="https://www.instagram.com/" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-01_n8pedz.png" alt="Instagram"></a>
-<a href="https://www.facebook.com/" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-02_qpgtp7.png" alt="Facebook"></a>
-</div>
-</div>
+      <a href="https://www.instagram.com/" target="_blank">
+        <img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-01_n8pedz.png" alt="Instagram">
+      </a>
+      <a href="https://www.facebook.com/" target="_blank">
+        <img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-02_qpgtp7.png" alt="Facebook">
+      </a>
+  </div>
+  </div>
+  
+
 </footer>
 
 <script>
-// --- VARIABILI PRINCIPALI ---
+
+// Aggiorna anno dinamicamente
 document.getElementById('year').innerText = new Date().getFullYear();
-const hero=document.getElementById('hero'),hotspots=document.querySelectorAll('.hotspot'),overlay=document.getElementById('content-overlay'),contentBox=overlay.querySelector('.content-box'),title=document.getElementById('title');let layers={},mouseX=0,mouseY=0,isZoomed=false;
-const map={chi:{label:'CHI SIAMO',key:'chi'},mescita:{label:'MESCITA',key:'mescita'},prenota:{label:'PRENOTA',key:'prenota'},eventi:{label:'EVENTI',key:'eventi'},bar:{label:'BAR',key:'bar'}};
-const contentMap={
-chi:`<div class="content-inner"><h1>Chi siamo</h1><p>CATMA BAR è un punto di riferimento al Lido di Jesolo, tra ricerca musicale e cultura del bere.</p></div>`,
-mescita:`<div class="content-inner"><h1>Mescita</h1><p>Selezione di vini naturali, birre artigianali e cocktail essenziali.</p></div>`,
-eventi:`<div class="content-inner"><h1>Eventi</h1><p>Dj set, live e serate speciali ogni settimana.</p></div>`,
-bar:`<div class="content-inner"><h1>Il Bar</h1><p>Uno spazio intimo tra luce e ombra, progettato per vivere la notte.</p></div>`,
-prenota:`<div class="content-inner"><h1>Prenota un tavolo</h1><p>Scrivici su WhatsApp oppure chiamaci direttamente.</p><div class="cta-group"><a href="https://wa.me/393XXXXXXXXX?text=Ciao, vorrei prenotare un tavolo al CATMA BAR" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
+  
+// --- ELEMENTI PRINCIPALI ---
+const hero = document.getElementById('hero');
+let layers = {};
+let mouseX = 0, mouseY = 0, isZoomed = false;
+const hotspots = document.querySelectorAll('.hotspot');
+const overlay = document.getElementById('content-overlay');
+const contentBox = overlay.querySelector('.content-box');
+const title = document.getElementById('title');
+
+const map = {
+  chi: {label:'CHI SIAMO', key:'chi'},
+  mescita: {label:'MESCITA', key:'mescita'},
+  prenota: {label:'PRENOTA', key:'prenota'},
+  eventi: {label:'EVENTI', key:'eventi'},
+  bar: {label:'BAR', key:'bar'}
 };
 
-// --- INIT LAYERS ---
-function setLayers(){
-const isMobile='ontouchstart' in window;
-layers=isMobile?{background:hero.querySelector('.mobile-layer.background'),midground:hero.querySelector('.mobile-layer.midground'),foreground:hero.querySelector('.mobile-layer.foreground')}:{background:hero.querySelector('.desktop-layer.background'),midground:hero.querySelector('.desktop-layer.midground'),foreground:hero.querySelector('.desktop-layer.foreground')};
-updateHotspots();
+const contentMap = {
+
+  chi: `
+    <div class="content-inner">
+      <h1>Chi siamo</h1>
+      <p>CATMA BAR è un punto di riferimento al Lido di Jesolo, tra ricerca musicale e cultura del bere.</p>
+    </div>
+  `,
+
+  mescita: `
+    <div class="content-inner">
+      <h1>Mescita</h1>
+      <p>Selezione di vini naturali, birre artigianali e cocktail essenziali.</p>
+    </div>
+  `,
+
+  eventi: `
+    <div class="content-inner">
+      <h1>Eventi</h1>
+      <p>Dj set, live e serate speciali ogni settimana.</p>
+    </div>
+  `,
+
+  bar: `
+    <div class="content-inner">
+      <h1>Il Bar</h1>
+      <p>Uno spazio intimo tra luce e ombra, progettato per vivere la notte.</p>
+    </div>
+  `,
+
+  prenota: `
+    <div class="content-inner">
+      <h1>Prenota un tavolo</h1>
+      <p>Scrivici su WhatsApp oppure chiamaci direttamente.</p>
+
+      <div class="cta-group">
+        <a href="https://wa.me/393XXXXXXXXX?text=Ciao, vorrei prenotare un tavolo al CATMA BAR"
+           target="_blank"
+           class="cta-btn">
+          WhatsApp
+        </a>
+
+        <a href="tel:+393XXXXXXXXX" class="cta-btn secondary">
+          Chiama
+        </a>
+      </div>
+    </div>
+  `
+};
+
+  // --- GIROSCOPIO MOBILE ---
+if('ontouchstart' in window){
+
+  const gyroOverlay = document.createElement('div');
+  gyroOverlay.id = 'gyroOverlay';
+  document.body.appendChild(gyroOverlay);
+
+  const gyroBtn = document.createElement('button');
+  gyroBtn.id = 'gyroBtn';
+  gyroBtn.innerText = 'Attiva Giroscopio';
+  document.body.appendChild(gyroBtn);
+
+  setTimeout(()=>gyroOverlay.classList.add('active'), 10);
+
+  setTimeout(()=>{
+    gyroBtn.classList.add('hidden');
+    gyroOverlay.classList.remove('active');
+  }, 10000);
+
+  gyroBtn.addEventListener('click', ()=>{
+    gyroBtn.classList.add('hidden');
+    gyroOverlay.classList.remove('active');
+
+    window.addEventListener('deviceorientation', e => {
+      if(isZoomed) return;
+
+      mouseX += ((e.gamma||0)/30 - mouseX)*0.1;
+      mouseY += ((e.beta||0)/30 - mouseY)*0.1;
+
+      mouseX = Math.max(-1, Math.min(1, mouseX));
+      mouseY = Math.max(-1, Math.min(1, mouseY));
+
+      updateParallax(mouseX, mouseY);
+    });
+  });
 }
 
-// --- HOTSPOTS ---
-function updateHotspots(){
-const isMobile='ontouchstart' in window;
-hotspots.forEach(h=>{const ox=isMobile?h.dataset.xMobile/100*hero.clientWidth:h.dataset.xDesktop/100*hero.clientWidth,oy=isMobile?h.dataset.yMobile/100*hero.clientHeight:h.dataset.yDesktop/100*hero.clientHeight;h.dataset.ox=ox;h.dataset.oy=oy;});
-updateParallax(mouseX,mouseY);
+// --- FILTRI TEMPO ---
+const filters = {
+  giorno: 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)',
+  sera: 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)',
+  chiuso: 'brightness(0.2) saturate(0.5)'
+};
+
+// --- TESTI PER OGNI STATO ---
+const heroTexts = {
+  giorno: {
+    title: "BUONGIORNO DA",
+    titleBig: "CATMA BAR",
+    subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)"
+  },
+  sera: {
+    title: "BENVENUTI AL",
+    titleBig: "CATMA BAR",
+    subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)"
+  },
+  chiuso: {
+    title: "SEMBRA CHE <br> IL CATMA SIA",
+    titleBig: "CHIUSO",
+    subtitle: "Torna domani per bere un'altra ombra!"
+  }
+};
+
+// --- LAYERS ---
+function setLayers() {
+  const isMobile = 'ontouchstart' in window;
+  layers = isMobile ? {
+    background: hero.querySelector('.mobile-layer.background'),
+    midground: hero.querySelector('.mobile-layer.midground'),
+    foreground: hero.querySelector('.mobile-layer.foreground')
+  } : {
+    background: hero.querySelector('.desktop-layer.background'),
+    midground: hero.querySelector('.desktop-layer.midground'),
+    foreground: hero.querySelector('.desktop-layer.foreground')
+  };
+  updateHotspots();
+}
+
+// --- HOTSPOTS BASE POSITION ---
+function updateHotspots() {
+  const isMobile = 'ontouchstart' in window;
+
+  hotspots.forEach(h => {
+    const ox = isMobile 
+      ? h.dataset.xMobile/100 * hero.clientWidth
+      : h.dataset.xDesktop/100 * hero.clientWidth;
+
+    const oy = isMobile 
+      ? h.dataset.yMobile/100 * hero.clientHeight
+      : h.dataset.yDesktop/100 * hero.clientHeight;
+
+    h.dataset.ox = ox;
+    h.dataset.oy = oy;
+  });
+
+  updateParallax(mouseX, mouseY);
 }
 
 // --- PARALLAX ---
-function updateParallax(x,y){
-const maxOffset={background:{x:40,y:20},midground:{x:60,y:40},foreground:{x:100,y:80}};
-if(!layers.background) return;
-layers.background.style.transform=`translate(${x/maxOffset.background.x}px,${y/maxOffset.background.y}px)`;
-layers.midground.style.transform=`translate(${x/maxOffset.midground.x}px,${y/maxOffset.midground.y}px)`;
-layers.foreground.style.transform=`translate(${x/maxOffset.foreground.x}px,${y/maxOffset.foreground.y}px)`;
-hotspots.forEach(h=>{h.style.left=`${h.dataset.ox}px`;h.style.top=`${h.dataset.oy}px`;});
+function updateParallax(x, y) {
+  const maxOffset = {
+    background:{x:40,y:20},
+    midground:{x:60,y:30},
+    foreground:{x:80,y:40}
+  };
+
+  const isMobile = 'ontouchstart' in window;
+  const scaleFix = isMobile ? 1.08 : 1;
+
+  layers.background.style.transform = `translate(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px) scale(${scaleFix})`;
+  layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px, ${y*maxOffset.midground.y}px) scale(${scaleFix})`;
+  layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px, ${y*maxOffset.foreground.y}px) scale(${scaleFix})`;
+
+  const refX = x * maxOffset.midground.x;
+  const refY = y * maxOffset.midground.y;
+
+  hotspots.forEach(h => {
+    if(h.classList.contains('hidden')) return;
+    const ox = parseFloat(h.dataset.ox);
+    const oy = parseFloat(h.dataset.oy);
+    h.style.left = ox + refX + 'px';
+    h.style.top  = oy + refY + 'px';
+  });
 }
 
-// --- MOUSE MOVE ---
-document.addEventListener('mousemove',e=>{mouseX=(e.clientX-window.innerWidth/2)/30;mouseY=(e.clientY-window.innerHeight/2)/30;updateParallax(mouseX,mouseY);document.getElementById('custom-cursor').style.transform=`translate(${e.clientX}px,${e.clientY}px)`;});
+// --- MOUSE DESKTOP ---
+hero.addEventListener('mousemove', e => {
+  if('ontouchstart' in window) return;
+  const r = hero.getBoundingClientRect();
+  mouseX = (e.clientX - r.left)/r.width - 0.5;
+  mouseY = (e.clientY - r.top)/r.height - 0.5;
+  if(!isZoomed) updateParallax(mouseX, mouseY);
+});
 
-// --- HOTSPOT CLICK ---
-hotspots.forEach(h=>{h.addEventListener('click',()=>{const key=h.dataset.key;contentBox.innerHTML=contentMap[key];overlay.classList.add('active');});});
-overlay.querySelector('.close-btn').addEventListener('click',()=>{overlay.classList.remove('active');});
+// --- CLICK HOTSPOTS ---
+
+hotspots.forEach(h => {
+  h.addEventListener('click', () => zoomTo(h.dataset.key));
+});
+
+document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    zoomTo(a.dataset.key);
+    document.getElementById('mobile-menu').style.display='none';
+  });
+});
+
+// --- HAMBURGER MOBILE ---
+document.getElementById('hamburger').onclick = () =>
+  document.getElementById('mobile-menu').style.display='flex';
+
+document.querySelector('#mobile-menu .close-btn').onclick = () =>
+  document.getElementById('mobile-menu').style.display='none';
+
+overlay.querySelector('.close-btn').onclick = resetZoom;
+
+// --- CONTROLLO TEMPO MANUALE CON TESTO CENTRALE ---
+function setTimeManually(state) {
+  document.body.setAttribute('data-time', state);
+
+  // filtro con transizione affidabile
+  void hero.offsetWidth;
+  requestAnimationFrame(() => {
+    hero.style.filter = filters[state];
+  });
+
+  // testo centrale con transizione opacità
+  const heroText = document.getElementById('hero-text');
+  heroText.style.opacity = 0;
+  setTimeout(() => {
+    const t = heroTexts[state];
+    heroText.innerHTML = `
+      <h2 class="title">${t.title}</h2>
+      <h1 class="title-big">${t.titleBig}</h1>
+      <p class="subtitle">${t.subtitle}</p>
+    `;
+    heroText.style.opacity = 1;
+  }, 250);
+}
+
+// --- CONTROLLO TEMPO AUTOMATICO ---
+function applyTimeFilter() {
+  const hour = new Date().getHours();
+  let state = 'giorno';
+  if(hour >= 9 && hour < 18) state = 'giorno';
+  else if(hour >= 18 || hour < 2) state = 'sera';
+  else state = 'chiuso';
+  setTimeManually(state);
+}
+
+// --- CREAZIONE PULSANTI TEMPO ---
+const controls = document.createElement('div');
+controls.id = 'timeControls';
+controls.innerHTML = `
+  <button data-time="giorno">Giorno</button>
+  <button data-time="sera">Sera</button>
+  <button data-time="chiuso">Chiuso</button>
+`;
+document.body.appendChild(controls);
+
+controls.querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => setTimeManually(btn.dataset.time));
+});
+
+// --- INIT ---
+setLayers();
+applyTimeFilter();
+setInterval(applyTimeFilter, 60*60*1000); // aggiorna ogni ora
+window.addEventListener('resize', setLayers);
+
+// --- CURSORE PERSONALIZZATO ---
+
+// crea il cursore personalizzato
+const customCursor = document.createElement('div');
+customCursor.id = 'custom-cursor';
+document.body.appendChild(customCursor);
+
+// traccia il mouse
+document.addEventListener('mousemove', e => {
+  customCursor.style.top = e.clientY + 'px';
+  customCursor.style.left = e.clientX + 'px';
+});
+
+// feedback al click
+document.addEventListener('mousedown', () => {
+  customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)'; // ingrandisce al click
+  // customCursor.style.boxShadow = '0 0 15px 5px rgba(255,255,255,0.8)'; // glow bianco più intenso
+  customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)'; // glow rosso più intenso
+});
+document.addEventListener('mouseup', () => {
+  customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+  // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco normale
+  customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; // glow rosso normale
+});
+
+// effetto su hotspot
+document.querySelectorAll('.hotspot').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    customCursor.style.transform = 'translate(-50%, -50%) scale(2)'; // più grande sugli hotspot
+    // customCursor.style.boxShadow = '0 0 20px 6px rgba(255,255,255,0.9)'; // glow bianco
+    customCursor.style.boxShadow = '0 0 20px 6px rgba(178,34,34,0.9)'; // glow rosso
+  });
+  el.addEventListener('mouseleave', () => {
+    customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    // customCursor.style.boxShadow = '0 0 10px 3px rgba(255,255,255,0.6)'; // glow bianco
+    customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; // glow rosso
+  });
+});
 
 // --- LOADER ---
-window.addEventListener('load',()=>{setLayers();setTimeout(()=>{document.getElementById('loader').classList.add('hidden');},1200);});
+  
+const loader = document.getElementById('loader');
+const minLoaderTime = 2000; // durata minima in ms
+const loaderStart = Date.now();
 
-// --- MOBILE MENU ---
-const hamburger=document.getElementById('hamburger'),mobileMenu=document.getElementById('mobile-menu'),closeBtn=mobileMenu.querySelector('.close-btn');
-hamburger.addEventListener('click',()=>{mobileMenu.style.display='flex';});
-closeBtn.addEventListener('click',()=>{mobileMenu.style.display='none';});
+function hideLoader() {
+  loader.classList.add('hidden'); // slide-up
+}
 
-// --- TIME CONTROLS ---
-function setTimeState(){const h=new Date().getHours();let state=h>=7&&h<18?'giorno':h>=18&&h<23?'sera':'chiuso';document.body.dataset.time=state;}
-setTimeState();
-setInterval(setTimeState,60000);
+// Eventi per sicurezza
+let isLoaderHidden = false;
 
-// --- CUSTOM CURSOR ---
-const cursor=document.createElement('div');cursor.id='custom-cursor';document.body.appendChild(cursor);
+// Nasconde il loader solo dopo 2s e quando il sito è pronto
+function tryHideLoader() {
+  if (isLoaderHidden) return;
+  const elapsed = Date.now() - loaderStart;
+  const remaining = Math.max(minLoaderTime - elapsed, 0);
+
+  setTimeout(() => {
+    loader.classList.add('hidden');
+    isLoaderHidden = true;
+  }, remaining);
+}
+
+// Trigger principale: quando tutte le risorse della pagina sono caricate
+window.addEventListener('load', tryHideLoader);
+
+// In caso le risorse siano già pronte prima del load (molto veloce su mobile)
+document.addEventListener('DOMContentLoaded', tryHideLoader);
+  
+// Aggiungi quando apri overlay
+function zoomTo(key) {
+  if(isZoomed){
+    // cambia contenuto senza rifare zoom
+    title.innerText = map[key].label;
+  
+    contentBox.style.transform = 'scale(0)';
+  
+    setTimeout(() => {
+      contentBox.innerHTML = contentMap[key];
+      contentBox.style.transform = 'scale(1)';
+    }, 200);
+  
+    return;
+  }
+  
+  const h = Array.from(hotspots).find(el => el.dataset.key === key);
+  if(!h) return;
+
+  const tx = parseFloat(h.dataset.ox);
+  const ty = parseFloat(h.dataset.oy);
+
+  const cx = hero.clientWidth/2;
+  const cy = hero.clientHeight/2;
+
+  const dx = cx - tx;
+  const dy = cy - ty;
+
+  layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
+  layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
+  layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
+
+  // ✨ Aggiungi animazione layer
+  Object.values(layers).forEach(l => l.classList.add('overlay-active'));
+
+  isZoomed = true;
+  title.innerText = map[key].label;
+
+  // contenuti dinamici overlay
+  contentBox.innerHTML = '';
+  contentBox.innerHTML = contentMap[key] || `
+    <div class="content-inner">
+      <h1>${map[key].label}</h1>
+      <p>Contenuto in arrivo...</p>
+    </div>
+  `;
+
+  overlay.classList.add('active');
+  setTimeout(() => {
+   contentBox.style.transform = 'scale(1)';
+  }, 100); // leggero delay per sincronizzare
+
+  hotspots.forEach(h => h.classList.add('hidden'));
+
+}
+
+// Rimuovi animazione layer quando chiudi overlay
+function resetZoom() {
+  isZoomed = false;
+
+  // prima chiudi il contenuto
+  contentBox.style.transform = 'scale(0)';
+
+  // DOPO fai il fade out overlay
+  setTimeout(() => {
+    overlay.classList.remove('active');
+  }, 200); // sync con animazione
+
+  hotspots.forEach(h => h.classList.remove('hidden'));
+  Object.values(layers).forEach(l => l.classList.remove('overlay-active'));
+  updateParallax(mouseX, mouseY);
+}
+
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && isZoomed){
+    resetZoom();
+  }
+});
+
+overlay.addEventListener('click', (e) => {
+  if(!contentBox.contains(e.target)){
+    resetZoom();
+  }
+});
+
+overlay.querySelector('.close-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  resetZoom();
+});
+
+// --- HOTSPOT LABELS + MOBILE TAP ---
+hotspots.forEach(h => {
+  const label = document.createElement('div');
+  label.className = 'hotspot-label';
+  label.innerText = map[h.dataset.key].label;
+  h.appendChild(label);
+
+  if('ontouchstart' in window){
+    h.addEventListener('click', (e) => {
+      const currentlyActive = label.classList.contains('active');
+      document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
+      if(!currentlyActive) label.classList.add('active');
+      zoomTo(h.dataset.key);
+      e.stopPropagation();
+    });
+  }
+});
+
+// --- TAP OUTSIDE PER NASCONDERE LABELS SU MOBILE ---
+if('ontouchstart' in window){
+  document.addEventListener('touchstart', (e) => {
+    if(!e.target.closest('.hotspot')){
+      document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
+    }
+  });
+}  
+  
 </script>
-<div id="custom-cursor"></div>
 </body>
 </html>
