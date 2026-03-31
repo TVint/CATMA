@@ -20,7 +20,7 @@
 
   <style>
     /* =========================================
-       VARIABILI COLORE DINAMICHE
+       VARIABILI E RESET
        ========================================= */
     :root {
       --main-color: #b22222; 
@@ -33,6 +33,14 @@
 
     html, body { margin: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
     body, body * { -webkit-user-select: none; user-select: none; cursor: none !important; }
+
+    /* Forzatura Accelerazione Hardware ANTI-FLICKER ANDROID */
+    #hero-layers, #mobile-menu, .content-box, .layer {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      will-change: transform;
+    }
 
     /* =========================================
        CURSORE E LOADER
@@ -53,25 +61,26 @@
     #loader.hidden { transform: translateY(-100%); pointer-events: none; }
 
     /* =========================================
-       SCENA E LAYERS (INGRANDITI PER MOBILE)
+       SCENA E LAYERS
        ========================================= */
     #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
-    #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; transition: filter 0.5s ease; }
-    .layer {
-      /* Ingrandito al 135% per prevenire tagli su mobile durante l'uso del giroscopio */
-      position: absolute; width: 135%; height: 135%; top: -17.5%; left: -17.5%; object-fit: cover;
-      pointer-events: none; transition: opacity 0.5s ease; will-change: transform; 
-    }
-    .layer.smooth-zoom { transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease, filter 0.3s ease !important; }
-    .layer.is-moving { filter: blur(5px) !important; }
+    
+    /* Il contenitore che fa lo zoom globale */
+    #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease; }
+    #hero-layers.zoomed { transform: scale(1.15); filter: blur(5px) brightness(0.7); }
 
-    /* PARTICELLE: PIÙ PICCOLE E VISIBILI */
+    /* Su Desktop mostriamo molta più immagine ai lati (108%) */
+    .layer { position: absolute; width: 108%; height: 108%; top: -4%; left: -4%; object-fit: cover; pointer-events: none; }
+
+    /* =========================================
+       PARTICELLE
+       ========================================= */
     #particles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 40; overflow: hidden; }
-    .particle { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: floatParticle linear infinite; filter: blur(1px); }
+    .particle { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: floatParticle linear infinite; filter: blur(1.5px); }
     @keyframes floatParticle {
       0% { transform: translate3d(0, 0, 0); opacity: 0; }
-      20% { opacity: 0.45; } 
-      80% { opacity: 0.45; }
+      20% { opacity: 0.65; } /* Aumentata Evidenza */
+      80% { opacity: 0.65; }
       100% { transform: translate3d(30px, -150px, 0); opacity: 0; }
     }
 
@@ -87,12 +96,9 @@
     #hero-text .title-big { font-size: 6vw; margin: 0; font-weight: bold; animation: glowBreath 3s infinite; }
     @keyframes glowBreath { 0%, 100% { text-shadow: 0 0 10px var(--shadow-color); } 50% { text-shadow: 0 0 25px var(--shadow-strong); } }
 
-    /* NUOVO PULSANTE AUDIO CENTRATO */
     #audio-toggle {
-      position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%);
-      display: flex; align-items: center; gap: 12px; z-index: 600; background: #000; 
-      border: 1px solid rgba(255,255,255,0.3); border-radius: 40px; padding: 8px 16px; 
-      color: #fff; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 600; background: #000; 
+      border: 1px solid rgba(255,255,255,0.3); border-radius: 40px; padding: 8px 16px; color: #fff; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
     #audio-toggle:hover { transform: translateX(-50%) scale(1.05); }
     #audio-toggle.playing { background: var(--main-color); border-color: var(--main-color); }
@@ -102,45 +108,37 @@
     #audio-toggle.playing .switch-knob { transform: translateX(16px); }
 
     /* =========================================
-       HOTSPOTS CON ICONE SVG MINIMAL
+       HOTSPOTS
        ========================================= */
     .hotspot {
       position: absolute; left: 0; top: 0; width: 45px; height: 45px; border-radius: 50%; background: var(--main-color);
       box-shadow: 0 0 20px var(--shadow-strong); animation: pulse 2s infinite; display: flex; justify-content: center; align-items: center;
-      z-index: 50; cursor: pointer; transition: opacity 0.3s ease; color: #fff;
+      z-index: 50; cursor: pointer; transition: opacity 0.5s ease, visibility 0.5s ease; color: #fff;
     }
     .hotspot svg { width: 22px; height: 22px; pointer-events: none; }
-    .hotspot.hidden { opacity: 0; pointer-events: none; }
+    .hotspot.hidden { opacity: 0; visibility: hidden; } /* Spariscono durante lo zoom globale */
     @keyframes pulse { 0%, 100% { transform: translate3d(-50%,-50%, 0) scale(1); box-shadow: 0 0 15px var(--shadow-color); } 50% { transform: translate3d(-50%,-50%, 0) scale(1.1); box-shadow: 0 0 30px var(--shadow-strong); } }
     
-    .hotspot[data-key="prenota"] {
-      width: auto !important; min-width: 110px; height: 45px; border-radius: 30px !important;
-      padding: 0 15px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 13px;
-    }
+    .hotspot[data-key="prenota"] { width: auto !important; min-width: 110px; height: 45px; border-radius: 30px !important; padding: 0 15px; font-weight: bold; font-size: 13px; }
 
-    /* LABEL HOTSPOT (NON VA PIÙ A CAPO) */
     .hotspot-label {
       position: absolute; background: var(--main-color); color: #fff; padding: 8px 16px; border-radius: 12px;
       font-weight: bold; font-size: 14px; white-space: nowrap; top: 0; left: 50%; transform: translate3d(-50%, -60px, 0) scale(0); opacity: 0;
       transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; z-index: 100;
     }
-    /* FRECCETTA IN BASSO SISTEMATA */
-    .hotspot-label::after { 
-      content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); 
-      border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 9px solid var(--main-color); 
-    }
+    .hotspot-label::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 9px solid var(--main-color); }
     .hotspot:hover .hotspot-label, .hotspot-label.active { opacity: 1 !important; transform: translate3d(-50%, -75px, 0) scale(1) !important; }
 
     /* =========================================
-       POPUP ANIMATO (NESSUN RIMBALZO)
+       POPUP ANIMATO CON ICONA CENTRALE
        ========================================= */
     #content-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex;
-      justify-content: center; align-items: center; z-index: 9000; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.4s;
+      position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex;
+      justify-content: center; align-items: center; z-index: 9000; opacity: 0; visibility: hidden; transition: 0.5s ease;
     }
     #content-overlay.active { opacity: 1; visibility: visible; }
-    /* Animazione più morbida, niente rimbalzi */
-    .content-box { color: #fff; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+    
+    .content-box { color: #fff; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
     #content-overlay.active .content-box { transform: scale(1); opacity: 1; }
     
     .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3.5rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; transition: color 0.3s; padding: 20px; line-height: 0.5; }
@@ -149,7 +147,11 @@
     .elegant-content { padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .stagger-item { opacity: 0; transform: translateY(20px); transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
     .elegant-content.show .stagger-item { opacity: 1; transform: translateY(0); }
-    .stagger-1 { transition-delay: 0.1s; } .stagger-2 { transition-delay: 0.2s; } .stagger-3 { transition-delay: 0.3s; } .stagger-4 { transition-delay: 0.4s; }
+    
+    /* ICONA SOPRA IL TITOLO */
+    .popup-icon svg { width: 45px; height: 45px; margin-bottom: 15px; color: var(--main-color); filter: drop-shadow(0px 0px 8px var(--shadow-color));}
+    
+    .stagger-0 { transition-delay: 0.05s; } .stagger-1 { transition-delay: 0.15s; } .stagger-2 { transition-delay: 0.25s; } .stagger-3 { transition-delay: 0.35s; } .stagger-4 { transition-delay: 0.45s; }
 
     .elegant-title { font-size: 2.2rem; letter-spacing: 4px; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 300; }
     .elegant-divider { width: 50px; height: 2px; background-color: var(--main-color); margin-bottom: 20px; }
@@ -162,7 +164,7 @@
     .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
 
     /* =========================================
-       NAVBAR E MENU MOBILE (AREE INGRANDITE)
+       NAVBAR E MENU MOBILE
        ========================================= */
     #menu { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 90%; display: flex; align-items: center; z-index: 100; }
     #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; transition: color 0.3s;}
@@ -172,25 +174,20 @@
     
     #mobile-logo { display: none; position: absolute; top: 20px; left: 20px; height: 50px; z-index: 101; }
     
-    /* Hamburger Area Ingigantita per click facili */
     #hamburger { display: none; position: absolute; top: 15px; right: 15px; width: 35px; height: 26px; padding: 15px; box-sizing: content-box; flex-direction: column; justify-content: space-between; align-items: center; cursor: pointer; z-index: 801; }
-    #hamburger div { height: 3px; width: 100%; background: #fff; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: left center; }
+    #hamburger div { height: 3px; width: 100%; background: #fff; transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s; transform-origin: left center; }
     #hamburger.open div:nth-child(1) { transform: rotate(45deg) translate(0px, -2px); }
-    #hamburger.open div:nth-child(2) { opacity: 0; width: 0; }
+    #hamburger.open div:nth-child(2) { opacity: 0; transform: scaleX(0); }
     #hamburger.open div:nth-child(3) { transform: rotate(-45deg) translate(0px, 2px); }
 
-    /* WOW Effect Menu Overlay (Scuro ed elegante) */
+    /* Effetto oblò corretto */
     #mobile-menu {
-      position: fixed; inset: 0; background: rgba(12, 12, 12, 0.98); backdrop-filter: blur(10px); display: flex; justify-content: center;
-      align-items: center; flex-direction: column; z-index: 800; clip-path: circle(0px at calc(100% - 40px) 40px); transition: clip-path 0.9s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none;
+      position: fixed; inset: 0; background: rgba(12, 12, 12, 0.98); display: flex; justify-content: center; align-items: center; flex-direction: column; 
+      z-index: 800; clip-path: circle(0px at calc(100% - 40px) 40px); transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none; will-change: clip-path;
     }
     #mobile-menu.open { clip-path: circle(150% at calc(100% - 40px) 40px); pointer-events: auto; }
-    
-    /* Voci Menu con icone allineate */
     #mobile-menu a { display: flex; align-items: center; gap: 15px; color: #fff; margin: 15px 0; font-size: 1.3rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; }
     #mobile-menu a svg { width: 24px; height: 24px; }
-    
-    /* Tasto Prenota Speciale nel menu */
     #mobile-menu a.cta { margin-top: 30px; border: 2px solid var(--main-color); border-radius: 40px; padding: 12px 30px; justify-content: center; font-weight: bold; background: rgba(178,34,34,0.1); }
 
     /* =========================================
@@ -205,35 +202,33 @@
     body[data-time="chiuso"] #hero-layers { filter: brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg); }
 
     /* =========================================
-       FOOTER (TUTTO SU UNA RIGA)
+       FOOTER E GYRO
        ========================================= */
     footer { background: #111; color: #ccc; width: 100vw; position: fixed; bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px; }
-    
     .footer-top { display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 10px 25px; background: var(--main-color); color: #fff; gap: 20px; transition: background-color 0.5s ease; }
     .footer-top-info p { margin: 0; font-weight: bold; letter-spacing: 0.5px; }
-    
     .footer-social { display: flex; gap: 15px; align-items: center; }
     .footer-social img { width: 22px; height: 22px; filter: brightness(0) invert(1); transition: transform 0.2s; }
     .footer-social a:hover img { transform: scale(1.2); }
-    
     .footer-bottom { display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 10px 25px; background: #000; gap: 15px; text-align: center; }
     .footer-links { display: flex; gap: 8px; align-items: center; }
     .footer-links a { color: #888; text-decoration: none; transition: color 0.2s; white-space: nowrap;}
     .footer-links a:hover { color: #fff; }
 
-    /* =========================================
-       OVERLAY GIROSCOPIO MOBILE
-       ========================================= */
     #gyro-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99998; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s; backdrop-filter: blur(5px);}
     #gyro-overlay:not(.active) { opacity: 0; pointer-events: none; }
     #gyro-btn { background: var(--main-color); color: #fff; border: none; padding: 18px 35px; font-size: 1.2rem; border-radius: 40px; font-weight: bold; box-shadow: 0 0 20px var(--shadow-strong); animation: pulseBtn 2s infinite; cursor: none;}
     @keyframes pulseBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    
     @media (min-width: 769px) { #gyro-overlay { display: none !important; } }
 
     /* =========================================
        MEDIA QUERIES (MOBILE)
        ========================================= */
     @media (max-width: 768px) {
+      /* Immagini più grandi su mobile per il giroscopio */
+      .layer { width: 135%; height: 135%; top: -17.5%; left: -17.5%; }
+
       #menu { display: none; } #hamburger { display: flex; } #mobile-logo { display: block; }
       #hero-text { top: 20%; } #hero-text .title-big { font-size: 12vw; }
       #hero-text .title { font-size: 6vw; } #hero-text .subtitle { font-size: 3vw; }
@@ -243,7 +238,6 @@
       .footer-top-info p { letter-spacing: 0; }
       .footer-social { gap: 10px; }
       .footer-social img { width: 18px; height: 18px; }
-      
       .footer-bottom { padding: 8px 10px; font-size: 10px; gap: 10px; justify-content: center; flex-wrap: wrap; }
     }
     @media (pointer: coarse), (max-width: 768px) { #custom-cursor { display: none !important; } }
@@ -257,7 +251,6 @@
   <audio id="click-sfx" src="https://actions.google.com/sounds/v1/ui/pop_up_on.ogg" preload="auto"></audio>
 
   <div id="loader"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo"></div>
-
   <div id="gyro-overlay" class="active"><button id="gyro-btn">Esplora in 3D</button></div>
 
   <div id="menu">
@@ -271,12 +264,7 @@
   
   <div id="hamburger"><div></div><div></div><div></div></div>
   <div id="mobile-menu">
-    <a href="#" data-key="chi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> CHI SIAMO</a>
-    <a href="#" data-key="mescita"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"></path><path d="M12 15v7"></path><path d="M7 3h10v3a5 5 0 0 1-5 5v0a5 5 0 0 1-5-5V3z"></path></svg> MESCITA</a>
-    <a href="#" data-key="bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 11h1a3 3 0 0 1 0 6h-1"></path><path d="M9 12v6"></path><path d="M13 12v6"></path><path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 5 0c.81 0 1.5-.5 2.5-.5a2.5 2.5 0 0 1 5 0c.81 0 1.5-.5 2.5-.5z"></path><path d="M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg> BAR</a>
-    <a href="#" data-key="eventi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg> EVENTI</a>
-    <a href="#" class="cta" data-key="prenota">PRENOTA</a>
-  </div>
+    </div>
 
   <div id="hero-text">
     <h2 class="title">BENVENUTI AL</h2>
@@ -326,16 +314,13 @@
     </div>
     <div class="footer-bottom">
       <div>&copy; <span id="year"></span> Catma Bar. Tutti i diritti riservati.</div>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a> <span style="color:#555">|</span> <a href="#">Cookie Policy</a>
-      </div>
+      <div class="footer-links"><a href="#">Privacy Policy</a> <span style="color:#555">|</span> <a href="#">Cookie Policy</a></div>
     </div>
   </footer>
 
   <script>
     document.getElementById('year').innerText = new Date().getFullYear();
     
-    // VARIABILI GLOBALI
     const hero = document.getElementById('hero');
     const heroLayers = document.getElementById('hero-layers');
     let layers = {};
@@ -346,7 +331,7 @@
     let targetX = 0, targetY = 0, currentX = 0, currentY = 0, rafId = null;
     let isZoomed = false, manualTimeOverride = false, soundEnabled = false;
 
-    // ICONE SVG PER HOTSPOT E LABEL
+    // ICONE SVG PER HOTSPOT, LABEL E POPUP
     const iconsMap = {
       chi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
       mescita: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"></path><path d="M12 15v7"></path><path d="M7 3h10v3a5 5 0 0 1-5 5v0a5 5 0 0 1-5-5V3z"></path></svg>`,
@@ -355,66 +340,56 @@
     };
     const labelsMap = { chi: 'CHI SIAMO', mescita: 'MESCITA', prenota: 'PRENOTA', eventi: 'EVENTI', bar: 'BAR' };
 
-    // GESTIONE AUDIO MAC STYLE
-    const bgAudio = document.getElementById('bg-audio');
-    const hoverSfx = document.getElementById('hover-sfx');
-    const clickSfx = document.getElementById('click-sfx');
-    const audioToggle = document.getElementById('audio-toggle');
-    bgAudio.volume = 0.7; hoverSfx.volume = 0.3; clickSfx.volume = 0.5; // Alzato volume Lounge
+    // POPOLAMENTO MENU MOBILE
+    const mobileMenuObj = document.getElementById('mobile-menu');
+    mobileMenuObj.innerHTML = `
+      <a href="#" data-key="chi">${iconsMap.chi} CHI SIAMO</a>
+      <a href="#" data-key="mescita">${iconsMap.mescita} MESCITA</a>
+      <a href="#" data-key="bar">${iconsMap.bar} BAR</a>
+      <a href="#" data-key="eventi">${iconsMap.eventi} EVENTI</a>
+      <a href="#" class="cta" data-key="prenota">PRENOTA</a>
+    `;
 
-    function playSfx(audioEl) { if(soundEnabled && audioEl) { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); } }
-    
-    audioToggle.addEventListener('click', () => {
-      soundEnabled = !soundEnabled;
-      if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } 
-      else { audioToggle.classList.remove('playing'); bgAudio.pause(); }
-    });
-
+    // CONTENUTO POPUP (ICONE CENTRATE AGGIUNTE)
     const contentMap = {
-      chi: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Chi siamo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
-      mescita: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Mescita</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
-      eventi: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Eventi</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Il ritmo della notte prende vita qui. Dj set curati, performance dal vivo e serate speciali ogni settimana, per accompagnare i tuoi momenti di evasione.<br>{{EVENT_STATUS}}</p></div>`,
-      bar: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Il Bar</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Uno spazio intimo tra luce e ombra, progettato minuziosamente per farti vivere un'esperienza notturna avvolgente, accompagnato da vibrazioni uniche.</p></div>`,
+      chi: `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap.chi}</div><h1 class="elegant-title stagger-item stagger-1">Chi siamo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
+      mescita: `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap.mescita}</div><h1 class="elegant-title stagger-item stagger-1">Mescita</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
+      eventi: `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap.eventi}</div><h1 class="elegant-title stagger-item stagger-1">Eventi</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Il ritmo della notte prende vita qui. Dj set curati, performance dal vivo e serate speciali ogni settimana, per accompagnare i tuoi momenti di evasione.<br>{{EVENT_STATUS}}</p></div>`,
+      bar: `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap.bar}</div><h1 class="elegant-title stagger-item stagger-1">Il Bar</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Uno spazio intimo tra luce e ombra, progettato minuziosamente per farti vivere un'esperienza notturna avvolgente, accompagnato da vibrazioni uniche.</p></div>`,
       prenota: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Prenota un tavolo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group stagger-item stagger-4"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
     };
 
+    // GESTIONE AUDIO MAC STYLE
+    const bgAudio = document.getElementById('bg-audio'); const hoverSfx = document.getElementById('hover-sfx'); const clickSfx = document.getElementById('click-sfx'); const audioToggle = document.getElementById('audio-toggle');
+    bgAudio.volume = 0.7; hoverSfx.volume = 0.3; clickSfx.volume = 0.5;
+
+    function playSfx(audioEl) { if(soundEnabled && audioEl) { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); } }
+    audioToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } else { audioToggle.classList.remove('playing'); bgAudio.pause(); } });
+
     // PARTICELLE FINI E VISIBILI
     function createParticles() {
-      const container = document.getElementById('particles-container');
-      const count = window.innerWidth <= 768 ? 30 : 60;
+      const container = document.getElementById('particles-container'); const count = window.innerWidth <= 768 ? 30 : 60;
       for(let i=0; i<count; i++) {
-        const p = document.createElement('div'); p.className = 'particle';
-        const size = Math.random() * 2 + 1; // Piccole come polvere
-        p.style.width = size + 'px'; p.style.height = size + 'px';
-        p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
-        p.style.animationDuration = (Math.random() * 15 + 10) + 's';
-        p.style.animationDelay = (Math.random() * 5) + 's';
-        container.appendChild(p);
+        const p = document.createElement('div'); p.className = 'particle'; const size = Math.random() * 3 + 1.5;
+        p.style.width = size + 'px'; p.style.height = size + 'px'; p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
+        p.style.animationDuration = (Math.random() * 15 + 10) + 's'; p.style.animationDelay = (Math.random() * 5) + 's'; container.appendChild(p);
       }
     }
     createParticles();
 
     // =========================================
-    // GIROSCOPIO E PARALLASSE (FIX GLITCH)
+    // GIROSCOPIO E PARALLASSE OTTIMIZZATI
     // =========================================
     if('ontouchstart' in window) {
-      const gyroOverlay = document.getElementById('gyro-overlay');
-      const gyroBtn = document.getElementById('gyro-btn');
+      const gyroOverlay = document.getElementById('gyro-overlay'); const gyroBtn = document.getElementById('gyro-btn');
       gyroBtn.onclick = () => {
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-          DeviceOrientationEvent.requestPermission().then(state => {
-            if (state === 'granted') { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); } 
-            else { gyroOverlay.classList.remove('active'); }
-          }).catch(console.error);
+          DeviceOrientationEvent.requestPermission().then(state => { if (state === 'granted') { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); } else { gyroOverlay.classList.remove('active'); } }).catch(console.error);
         } else { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); }
       };
     } else { document.getElementById('gyro-overlay').classList.remove('active'); }
 
-    function handleGyro(e) {
-      if(isZoomed) return;
-      targetX = Math.max(-0.8, Math.min(0.8, (e.gamma || 0) / 30));
-      targetY = Math.max(-0.8, Math.min(0.8, (e.beta || 0) / 30));
-    }
+    function handleGyro(e) { if(isZoomed) return; targetX = Math.max(-0.8, Math.min(0.8, (e.gamma || 0) / 30)); targetY = Math.max(-0.8, Math.min(0.8, (e.beta || 0) / 30)); }
 
     function setLayers() {
       const isMobile = window.innerWidth <= 768;
@@ -434,12 +409,14 @@
     }
 
     function renderParallax(x, y) {
-      const maxOffset = { background:{x:30,y:15}, midground:{x:60,y:30}, foreground:{x:90,y:45} };
-      if(layers.background) layers.background.style.transform = `translate3d(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px, 0)`;
-      if(layers.midground) layers.midground.style.transform = `translate3d(${x*maxOffset.midground.x}px, ${y*maxOffset.midground.y}px, 0)`;
-      if(layers.foreground) layers.foreground.style.transform = `translate3d(${x*maxOffset.foreground.x}px, ${y*maxOffset.foreground.y}px, 0)`;
+      // Movimento ridotto su Desktop perchè abbiamo ritagliato meno margini (108%)
+      const maxOffset = window.innerWidth <= 768 ? {x:30,y:15, mx:60,my:30, fx:90,fy:45} : {x:15,y:7, mx:30,my:15, fx:45,fy:22};
+      
+      if(layers.background) layers.background.style.transform = `translate3d(${x*maxOffset.x}px, ${y*maxOffset.y}px, 0)`;
+      if(layers.midground) layers.midground.style.transform = `translate3d(${x*maxOffset.mx}px, ${y*maxOffset.my}px, 0)`;
+      if(layers.foreground) layers.foreground.style.transform = `translate3d(${x*maxOffset.fx}px, ${y*maxOffset.fy}px, 0)`;
 
-      const refX = x * maxOffset.midground.x; const refY = y * maxOffset.midground.y;
+      const refX = x * maxOffset.mx; const refY = y * maxOffset.my;
       hotspots.forEach(h => {
         if(h.classList.contains('hidden')) return;
         h.style.left = `${parseFloat(h.dataset.ox) + refX}px`; h.style.top = `${parseFloat(h.dataset.oy) + refY}px`;
@@ -447,50 +424,28 @@
     }
 
     function parallaxLoop() {
-      if (!isZoomed) {
-        currentX += (targetX - currentX) * 0.08; currentY += (targetY - currentY) * 0.08;
-        renderParallax(currentX, currentY); rafId = requestAnimationFrame(parallaxLoop);
-      }
+      if (!isZoomed) { currentX += (targetX - currentX) * 0.08; currentY += (targetY - currentY) * 0.08; renderParallax(currentX, currentY); rafId = requestAnimationFrame(parallaxLoop); }
     }
     rafId = requestAnimationFrame(parallaxLoop);
 
-    hero.addEventListener('mousemove', e => {
-      if('ontouchstart' in window) return;
-      targetX = (e.clientX / window.innerWidth) - 0.5; targetY = (e.clientY / window.innerHeight) - 0.5;
-    });
+    hero.addEventListener('mousemove', e => { if('ontouchstart' in window) return; targetX = (e.clientX / window.innerWidth) - 0.5; targetY = (e.clientY / window.innerHeight) - 0.5; });
 
     // =========================================
-    // ZOOM SICURO E AMPIO (NO RIMBALZI)
+    // NUOVO ZOOM GLOBALE (NO GLITCH)
     // =========================================
     function zoomTo(key) {
       playSfx(clickSfx);
-      if(isZoomed) {
-        contentBox.style.opacity = 0; contentBox.style.transform = 'scale(0.9)';
-        setTimeout(() => { contentBox.innerHTML = generateDynamicContent(key); contentBox.style.transform = 'scale(1)'; contentBox.style.opacity = 1; setTimeout(()=> contentBox.querySelector('.elegant-content').classList.add('show'), 50); }, 300);
-        return;
-      }
-      const h = Array.from(hotspots).find(el => el.dataset.key === key); if(!h) return;
-
       isZoomed = true; cancelAnimationFrame(rafId);
-      const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
-      const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
-      const dx = cx - tx; const dy = cy - ty;
-
-      const limitX = hero.clientWidth * 0.22; const limitY = hero.clientHeight * 0.22;
-      const safeDx = Math.max(-limitX, Math.min(limitX, dx)); const safeDy = Math.max(-limitY, Math.min(limitY, dy));
-
-      Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom', 'overlay-active', 'is-moving'); });
-      setTimeout(() => Object.values(layers).forEach(l => { if(l) l.classList.remove('is-moving'); }), 800);
+      
+      // Zoom in avanti di TUTTO il container, ferma il javascript
+      heroLayers.classList.add('zoomed');
+      hotspots.forEach(hot => hot.classList.add('hidden'));
 
       setTimeout(() => {
-        if(layers.background) layers.background.style.transform = `translate3d(${safeDx*1.1}px,${safeDy*1.1}px, 0) scale(1.2)`;
-        if(layers.midground) layers.midground.style.transform = `translate3d(${safeDx*1.5}px,${safeDy*1.5}px, 0) scale(1.5)`;
-        if(layers.foreground) layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(2.2)`;
-      }, 10);
-
-      contentBox.innerHTML = generateDynamicContent(key); overlay.classList.add('active');
-      setTimeout(() => { contentBox.style.transform = 'scale(1)'; contentBox.style.opacity = 1; setTimeout(() => contentBox.querySelector('.elegant-content').classList.add('show'), 100); }, 150);
-      hotspots.forEach(hot => hot.classList.add('hidden'));
+        contentBox.innerHTML = generateDynamicContent(key);
+        overlay.classList.add('active');
+        setTimeout(() => { contentBox.querySelector('.elegant-content').classList.add('show'); }, 100);
+      }, 300);
     }
 
     function generateDynamicContent(key) {
@@ -503,31 +458,27 @@
     }
 
     function resetZoom() {
-      contentBox.querySelector('.elegant-content').classList.remove('show');
-      contentBox.style.transform = 'scale(0.9)'; contentBox.style.opacity = 0;
-      setTimeout(() => overlay.classList.remove('active'), 300);
-      hotspots.forEach(hot => hot.classList.remove('hidden'));
+      const elegantContent = contentBox.querySelector('.elegant-content');
+      if (elegantContent) elegantContent.classList.remove('show');
       
-      // Riapplica la transizione morbida per tornare alla posizione del giroscopio senza scatti
-      Object.values(layers).forEach(l => { if(l) { l.classList.remove('overlay-active'); l.classList.add('smooth-zoom', 'is-moving'); } });
-      renderParallax(currentX, currentY);
-
-      setTimeout(() => { Object.values(layers).forEach(l => { if(l) l.classList.remove('smooth-zoom', 'is-moving'); }); isZoomed = false; rafId = requestAnimationFrame(parallaxLoop); }, 800);
+      setTimeout(() => { 
+        overlay.classList.remove('active');
+        heroLayers.classList.remove('zoomed');
+        hotspots.forEach(hot => hot.classList.remove('hidden'));
+        
+        // Aspettiamo che il CSS dello zoom indietro finisca prima di riavviare il JS
+        setTimeout(() => { isZoomed = false; rafId = requestAnimationFrame(parallaxLoop); }, 800);
+      }, 300);
     }
 
-    // INSERIMENTO ICONE E LABEL NEGLI HOTSPOT E MENU
+    // EVENT LISTENER
     hotspots.forEach(h => { 
       h.onclick = () => zoomTo(h.dataset.key); h.onmouseenter = () => playSfx(hoverSfx);
       if(h.dataset.key !== 'prenota') {
-        h.innerHTML = iconsMap[h.dataset.key]; // Aggiunge icona
-        const label = document.createElement('div'); label.className = 'hotspot-label'; label.innerText = labelsMap[h.dataset.key]; h.appendChild(label); // Aggiunge Label
+        h.innerHTML = iconsMap[h.dataset.key]; const label = document.createElement('div'); label.className = 'hotspot-label'; label.innerText = labelsMap[h.dataset.key]; h.appendChild(label);
       }
       if('ontouchstart' in window) {
-        h.onclick = e => {
-          const l = h.querySelector('.hotspot-label');
-          if(l) { const a = l.classList.contains('active'); document.querySelectorAll('.hotspot-label').forEach(x => x.classList.remove('active')); if(!a) l.classList.add('active'); }
-          zoomTo(h.dataset.key); e.stopPropagation();
-        };
+        h.onclick = e => { const l = h.querySelector('.hotspot-label'); if(l) { const a = l.classList.contains('active'); document.querySelectorAll('.hotspot-label').forEach(x => x.classList.remove('active')); if(!a) l.classList.add('active'); } zoomTo(h.dataset.key); e.stopPropagation(); };
       }
     });
 
@@ -538,10 +489,8 @@
 
     const hamburger = document.getElementById('hamburger'); const mobileMenu = document.getElementById('mobile-menu');
     hamburger.onclick = () => { playSfx(clickSfx); mobileMenu.classList.toggle('open'); hamburger.classList.toggle('open'); };
-    overlay.querySelector('.close-btn').onclick = resetZoom;
-    document.addEventListener('keydown', e => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
-    overlay.onclick = e => { if(!contentBox.contains(e.target)) resetZoom(); };
-    overlay.querySelector('.close-btn').onclick = e => { e.stopPropagation(); resetZoom(); };
+    overlay.querySelector('.close-btn').onclick = resetZoom; document.addEventListener('keydown', e => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
+    overlay.onclick = e => { if(!contentBox.contains(e.target)) resetZoom(); }; overlay.querySelector('.close-btn').onclick = e => { e.stopPropagation(); resetZoom(); };
     if('ontouchstart' in window) document.addEventListener('touchstart', e => { if(!e.target.closest('.hotspot')) document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active')); });
 
     // CURSORE
@@ -550,25 +499,22 @@
     document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px var(--shadow-strong)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
     document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px var(--shadow-color)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
 
-    // TIME VISUALS E DEBUG
+    // TIME VISUALS
     function setTimeVisuals(state) {
       document.body.setAttribute('data-time', state); void heroLayers.offsetWidth;
       const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
       const heroText = document.getElementById('hero-text'); heroText.style.opacity = 0;
       setTimeout(() => { heroText.innerHTML = `<h2 class="title">${t.title}</h2><h1 class="title-big">${t.titleBig}</h1><p class="subtitle">${t.subtitle}</p>`; heroText.style.opacity = 1; }, 250);
-      document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug'));
-      document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
+      document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug')); document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
     }
     function applyTimeFilter() { if (manualTimeOverride) return; const h = new Date().getHours(); setTimeVisuals((h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso'); }
     document.querySelectorAll('#timeControls button').forEach(btn => btn.onclick = e => { manualTimeOverride = true; setTimeVisuals(e.target.dataset.time); });
 
-    // CARICAMENTO INIT E RESIZE
+    // INIT
     const loader = document.getElementById('loader'); const loaderStart = Date.now(); let isLoaderHidden = false;
     function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
     window.onload = tryHideLoader; document.addEventListener('DOMContentLoaded', tryHideLoader);
-    
     window.addEventListener('resize', () => { setLayers(); });
-    
     setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); 
   </script>
 </body>
