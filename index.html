@@ -5,25 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catma Bar</title>
   <style>
-    /* --- RESET & GLOBALS --- */
+    /* =========================================
+       RESET E IMPOSTAZIONI GLOBALI
+       ========================================= */
     html, body {
       margin: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif;
     }
     body, body * {
       -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-      cursor: none !important;
+      cursor: none !important; /* DISABILITA IL CURSORE STANDARD */
     }
 
-    /* --- CURSORE CUSTOM --- */
+    /* =========================================
+       CURSORE PERSONALIZZATO
+       ========================================= */
     #custom-cursor {
       position: fixed; top: 0; left: 0; width: 25px; height: 25px; background: black;
-      border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
+      border-radius: 50%; pointer-events: none; transform: translate3d(-50%, -50%, 0);
       z-index: 99999; transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 0 10px 3px rgba(178,34,34,0.6);
-      will-change: transform, box-shadow; /* Ottimizzazione hardware */
+      box-shadow: 0 0 10px 3px rgba(178,34,34,0.6); /* ROSSO CATMA: #b22222 */
+      will-change: transform, box-shadow;
     }
 
-    /* --- LOADER --- */
+    /* =========================================
+       SCHERMATA DI CARICAMENTO (LOADER)
+       ========================================= */
     #loader {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background-color: #b22222; display: flex; justify-content: center;
@@ -34,7 +40,9 @@
     #loader.hidden { transform: translateY(-100%); pointer-events: none; }
     @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-    /* --- HERO & LAYERS --- */
+    /* =========================================
+       LIVELLI IMMAGINE E PARALLASSE
+       ========================================= */
     #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
     #hero-layers {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -45,15 +53,17 @@
       position: absolute; width: 115%; height: 115%; top: -7.5%; left: -7.5%;
       object-fit: cover; pointer-events: none;
       transition: opacity 0.5s ease; 
-      /* Ottimizzazione: suggeriamo al browser che questi elementi cambieranno posizione di continuo */
       will-change: transform; 
     }
+    /* CLASSE PER GESTIRE LA TRANSIZIONE MORBIDA DURANTE LO ZOOM */
     .layer.smooth-zoom {
       transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease !important;
     }
     .layer.overlay-active { opacity: 0.8; }
 
-    /* --- HERO TESTO CENTRALE --- */
+    /* =========================================
+       TESTO CENTRALE LAMPEGGIANTE
+       ========================================= */
     #hero-text {
       position: absolute; width: 100%; top: 150px; left: 50%;
       transform: translateX(-50%); text-align: center; color: #fff;
@@ -68,7 +78,9 @@
       50% { text-shadow: 0 0 8px rgba(255,255,255,1), 0 0 20px rgba(178,34,34,0.8); }
     }
 
-    /* --- HOTSPOTS --- */
+    /* =========================================
+       HOTSPOTS (PUNTINI ROSSI) E PULSANTE PRENOTA
+       ========================================= */
     .hotspot {
       position: absolute; width: 50px; height: 50px; border-radius: 50%;
       background: #b22222; box-shadow: 0 0 20px rgba(178,34,34,.9);
@@ -82,26 +94,39 @@
       50% { box-shadow: 0 0 30px rgba(178,34,34,1); }
       100% { box-shadow: 0 0 15px rgba(178,34,34,0.6); }
     }
+    /* STILE SPECIFICO PER IL BOTTONE PRENOTA */
     .hotspot[data-key="prenota"] {
-      width: auto !important; min-width: 140px; border-radius: 30px !important;
-      padding: 0 25px; display: flex; justify-content: center; align-items: center;
-      font-weight: bold; color: #fff;
+      width: auto !important; min-width: 110px; height: 45px; border-radius: 30px !important;
+      padding: 0 15px; display: flex; justify-content: center; align-items: center;
+      font-weight: bold; color: #fff; font-size: 13px;
     }
 
-    /* --- LABELS HOTSPOT --- */
+    /* =========================================
+       ETICHETTE HOTSPOT (EFFETTO GENIO / GOOGLE MAPS)
+       ========================================= */
     .hotspot-label {
-      position: absolute; pointer-events: none; background: rgba(0,0,0,0.8);
-      color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 14px;
-      font-weight: 600; letter-spacing: 1px; white-space: nowrap;
-      transform-origin: bottom center; transform: translate3d(-50%, 0px, 0) scale(0);
+      position: absolute; pointer-events: none; background: #b22222; 
+      color: #fff; padding: 8px 16px; border-radius: 12px; font-size: 14px;
+      font-weight: bold; letter-spacing: 1px; white-space: nowrap;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      transform-origin: center center; 
+      transform: translate3d(-50%, -50%, 0) scale(0);
       opacity: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       z-index: 100; will-change: transform, opacity;
     }
+    /* FRECCINA VERSO IL BASSO */
+    .hotspot-label::after {
+      content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #b22222;
+    }
+    /* HOVER / TOUCH SU ETICHETTA */
     .hotspot:hover .hotspot-label, .hotspot-label.active {
-      opacity: 1 !important; transform: translate3d(-50%, -45px, 0) scale(1) !important;
+      opacity: 1 !important; transform: translate3d(-50%, -80px, 0) scale(1) !important;
     }
 
-    /* --- CONTENUTI POPUP --- */
+    /* =========================================
+       STILE CONTENUTI POPUP ELEGANTI
+       ========================================= */
     .elegant-content { padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .elegant-title { font-size: 2.2rem; letter-spacing: 4px; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 300; text-align: center; }
     .elegant-divider { width: 50px; height: 2px; background-color: #b22222; margin-bottom: 20px; }
@@ -115,7 +140,9 @@
     .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(178,34,34,0.9); }
     .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
 
-    /* --- NAVBAR E MENU MOBILE --- */
+    /* =========================================
+       NAVBAR DESKTOP E MENU MOBILE
+       ========================================= */
     #menu {
       position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
       width: 90%; display: flex; align-items: center; z-index: 100;
@@ -123,12 +150,22 @@
     #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; }
     .logo-center { flex: 1; display: flex; justify-content: center; }
     .logo-center img { height: 60px; }
+    
     #mobile-logo { display: none; position: absolute; top: 20px; left: 20px; height: 40px; z-index: 101; }
+    
+    /* HAMBURGER ICON */
     #hamburger {
-      display: none; position: absolute; top: 25px; right: 25px; width: 30px; height: 20px;
+      display: none; position: absolute; top: 25px; right: 25px; width: 30px; height: 22px;
       flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 801;
     }
-    #hamburger div { height: 3px; background: #fff; transition: all 0.3s ease; }
+    #hamburger div { height: 3px; background: #fff; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: left center; }
+    
+    /* ANIMAZIONE HAMBURGER IN "X" QUANDO APERTO */
+    #hamburger.open div:nth-child(1) { transform: rotate(45deg) translate(0px, -2px); }
+    #hamburger.open div:nth-child(2) { opacity: 0; width: 0; }
+    #hamburger.open div:nth-child(3) { transform: rotate(-45deg) translate(0px, 2px); }
+
+    /* MENU MOBILE (OVERLAY CIRCOLARE) */
     #mobile-menu {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,.95); display: flex; justify-content: center;
@@ -139,20 +176,26 @@
     #mobile-menu.open { clip-path: circle(150% at calc(100% - 40px) 35px); pointer-events: auto; }
     #mobile-menu a { color: #fff; margin: 15px 0; font-size: 1.5rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px;}
 
-    /* --- OVERLAY POPUP --- */
+    /* =========================================
+       OVERLAY POPUP (QUANDO CLICCHI HOTSPOT)
+       ========================================= */
     #content-overlay {
       position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,.80);
-      justify-content: center; align-items: center; z-index: 700; backdrop-filter: blur(5px);
-      display: flex; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease;
+      justify-content: center; align-items: center; 
+      z-index: 9000; /* ALZATO Z-INDEX PER COPRIRE L'HAMBURGER */
+      backdrop-filter: blur(5px); display: flex; opacity: 0; visibility: hidden; 
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
     #content-overlay.active { opacity: 1; visibility: visible; }
     .content-box { color: #fff; text-align: center; transform: scale(0); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     #content-overlay.active .content-box { transform: scale(1); }
-    .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 999; }
+    .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; }
 
-    /* --- PULSANTI DEBUG TEMPO --- */
+    /* =========================================
+       PULSANTI DEBUG E GIROSCOPIO
+       ========================================= */
     #timeControls {
-      position: fixed; top: 115px; left: 50%; transform: translateX(-50%);
+      position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
       display: flex; gap: 10px; z-index: 650;
     }
     #timeControls button {
@@ -160,11 +203,8 @@
       background: rgba(0,0,0,0.6); color: white; cursor: pointer; font-size: 11px;
       backdrop-filter: blur(4px); transition: all 0.3s ease;
     }
-    #timeControls button:hover, #timeControls button.active-debug {
-      background: #b22222; border-color: #b22222;
-    }
+    #timeControls button:hover, #timeControls button.active-debug { background: #b22222; border-color: #b22222; }
 
-    /* --- GIROSCOPIO BTN --- */
     #gyroBtn {
       position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%);
       width: 250px; height: 50px; background: #b22222; color: #fff; border: none; border-radius: 150px;
@@ -182,12 +222,16 @@
     }
     #gyroOverlay.active { opacity: 1; pointer-events: auto; }
 
-    /* --- FILTRI TEMPO --- */
-    body[data-time="giorno"] #hero-layers { filter: brightness(1.2) saturate(0.35) hue-rotate(-5deg); }
-    body[data-time="sera"] #hero-layers { filter: brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2); }
-    body[data-time="chiuso"] #hero-layers { filter: brightness(0.2) saturate(0.5); }
+    /* =========================================
+       FILTRI TEMPO (AGGIORNATI PIU' REALISTICI)
+       ========================================= */
+    body[data-time="giorno"] #hero-layers { filter: brightness(1.1) contrast(1.05) saturate(1.1) sepia(0.1); }
+    body[data-time="sera"] #hero-layers { filter: brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg); }
+    body[data-time="chiuso"] #hero-layers { filter: brightness(0.25) contrast(1.2) saturate(0.3) sepia(0.5) hue-rotate(180deg); }
 
-    /* --- FOOTER CENTRATO --- */
+    /* =========================================
+       FOOTER
+       ========================================= */
     footer {
       background: #111; color: #ccc; width: 100vw; position: fixed;
       bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px;
@@ -207,14 +251,24 @@
     .footer-links a { color: #888; text-decoration: none; margin: 0 10px; transition: color 0.2s;}
     .footer-links a:hover { color: #fff; }
 
-    /* --- MEDIA QUERIES --- */
+    /* =========================================
+       MEDIA QUERIES (MOBILE)
+       ========================================= */
     @media (max-width: 768px) {
       #menu { display: none; } #hamburger { display: flex; } #mobile-logo { display: block; }
       #hero-text { top: 20%; } #hero-text .title-big { font-size: 12vw; }
       #hero-text .title { font-size: 6vw; } #hero-text .subtitle { font-size: 3vw; }
-      .hotspot[data-key="prenota"] { min-width: 110px; height: 45px; font-size: 13px; padding: 0 15px;}
-      .hotspot { width: 40px; height: 40px; }
-      .footer-bottom { font-size: 11px; }
+      
+      /* OTTIMIZZAZIONE FOOTER IN 1 RIGA SOPRA E 2 RIGHE SOTTO */
+      .footer-top {
+        flex-direction: row; justify-content: space-between; 
+        padding: 8px 12px; font-size: 9px; gap: 5px;
+      }
+      .footer-social { gap: 8px; }
+      .footer-social img { width: 16px; height: 16px; }
+      .footer-bottom {
+        flex-direction: column; padding: 8px 12px; font-size: 9px; gap: 5px;
+      }
     }
     @media (pointer: coarse), (max-width: 768px) { #custom-cursor { display: none !important; } }
     @media (min-width: 769px) { .mobile-layer { display: none; } }
@@ -270,11 +324,11 @@
       <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
     </div>
 
-    <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="15" data-y-mobile="35"></div>
-    <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="75"></div>
+    <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="10" data-y-mobile="40"></div>
+    <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="65"></div>
     <div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
     <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="38" data-x-mobile="85" data-y-mobile="40"></div>
-    <div class="hotspot" data-key="bar" data-x-desktop="90" data-y-desktop="55" data-x-mobile="35" data-y-mobile="70"></div>
+    <div class="hotspot" data-key="bar" data-x-desktop="90" data-y-desktop="55" data-x-mobile="85" data-y-mobile="60"></div>
   </div>
 
   <footer>
@@ -294,6 +348,9 @@
   <script>
     document.getElementById('year').innerText = new Date().getFullYear();
     
+    // =========================================
+    // VARIABILI GLOBALI
+    // =========================================
     const hero = document.getElementById('hero');
     const heroLayers = document.getElementById('hero-layers');
     let layers = {};
@@ -301,15 +358,17 @@
     const overlay = document.getElementById('content-overlay');
     const contentBox = overlay.querySelector('.content-box');
     let isZoomed = false;
-    let manualTimeOverride = false; // Flag per i tasti debug
+    let manualTimeOverride = false;
 
-    // Logica Lerp
+    // VARIABILI LERP PARALLASSE FLUIDO
     let targetX = 0, targetY = 0;
     let currentX = 0, currentY = 0;
-    let rafId = null; // ID per gestire il requestAnimationFrame
+    let rafId = null;
 
+    // MAPPA ETICHETTE
     const map = { chi: { label: 'CHI SIAMO' }, mescita: { label: 'MESCITA' }, prenota: { label: 'PRENOTA' }, eventi: { label: 'EVENTI' }, bar: { label: 'BAR' } };
 
+    // MAPPA CONTENUTI POPUP ELEGANTI
     const contentMap = {
       chi: `<div class="elegant-content"><h1 class="elegant-title">Chi siamo</h1><div class="elegant-divider"></div><p class="elegant-desc">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
       mescita: `<div class="elegant-content"><h1 class="elegant-title">Mescita</h1><div class="elegant-divider"></div><p class="elegant-desc">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
@@ -318,6 +377,9 @@
       prenota: `<div class="elegant-content"><h1 class="elegant-title">Prenota un tavolo</h1><div class="elegant-divider"></div><p class="elegant-desc">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
     };
 
+    // =========================================
+    // MOTORE PARALLASSE
+    // =========================================
     function setLayers() {
       const isMobile = 'ontouchstart' in window;
       layers = isMobile ? {
@@ -346,7 +408,6 @@
       const maxOffset = { background:{x:30,y:15}, midground:{x:60,y:30}, foreground:{x:90,y:45} };
       const baseScale = ('ontouchstart' in window) ? 1.05 : 1;
 
-      // Utilizziamo translate3d per attivare l'accelerazione hardware (GPU)
       if(layers.background) layers.background.style.transform = `translate3d(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px, 0) scale(${baseScale})`;
       if(layers.midground) layers.midground.style.transform = `translate3d(${x*maxOffset.midground.x}px, ${y*maxOffset.midground.y}px, 0) scale(${baseScale})`;
       if(layers.foreground) layers.foreground.style.transform = `translate3d(${x*maxOffset.foreground.x}px, ${y*maxOffset.foreground.y}px, 0) scale(${baseScale})`;
@@ -358,15 +419,12 @@
         if(h.classList.contains('hidden')) return;
         const ox = parseFloat(h.dataset.ox);
         const oy = parseFloat(h.dataset.oy);
-        // Utilizziamo translate3d anche sugli hotspot
         h.style.transform = `translate3d(calc(-50% + ${ox + refX}px), calc(-50% + ${oy + refY}px), 0)`;
-        h.style.left = '0'; // resettato perché gestito dal translate3d
-        h.style.top = '0';
+        h.style.left = '0'; h.style.top = '0';
       });
     }
 
     function parallaxLoop() {
-      // Se NON siamo zoomati, calcola il Lerp e renderizza
       if (!isZoomed) {
         currentX += (targetX - currentX) * 0.08;
         currentY += (targetY - currentY) * 0.08;
@@ -375,9 +433,9 @@
       }
     }
     
-    // Inizializza loop
-    rafId = requestAnimationFrame(parallaxLoop);
+    rafId = requestAnimationFrame(parallaxLoop); // AVVIA LOOP
 
+    // LETTURA MOUSE DESKTOP
     hero.addEventListener('mousemove', e => {
       if('ontouchstart' in window) return;
       const r = hero.getBoundingClientRect();
@@ -385,7 +443,9 @@
       targetY = (e.clientY - r.top)/r.height - 0.5;
     });
 
-    // --- GIROSCOPIO OTTIMIZZATO ---
+    // =========================================
+    // GIROSCOPIO MOBILE
+    // =========================================
     if('ontouchstart' in window) {
       const gyroOverlay = document.createElement('div');
       gyroOverlay.id = 'gyroOverlay';
@@ -403,7 +463,6 @@
         gyroOverlay.classList.remove('active');
         window.addEventListener('deviceorientation', e => {
           if(isZoomed) return;
-          // Aumentata sensibilità: diviso per 20 invece che per 40. Richiede meno inclinazione.
           targetX += ((e.gamma || 0) / 20 - targetX) * 0.15;
           targetY += ((e.beta || 0) / 20 - targetY) * 0.15;
           targetX = Math.max(-1, Math.min(1, targetX));
@@ -421,7 +480,9 @@
       });
     }
 
-    // --- LOGICA ZOOM ---
+    // =========================================
+    // LOGICA DI ZOOM PROFONDO AL CLICK
+    // =========================================
     function zoomTo(key) {
       if(isZoomed) {
         contentBox.style.transform = 'scale(0)';
@@ -432,23 +493,25 @@
       const h = Array.from(hotspots).find(el => el.dataset.key === key);
       if(!h) return;
 
-      // FERMA IL LOOP per non sovraccaricare il telefono
       isZoomed = true;
-      cancelAnimationFrame(rafId);
+      cancelAnimationFrame(rafId); // FERMA IL PARALLASSE
 
       const tx = parseFloat(h.dataset.ox);
       const ty = parseFloat(h.dataset.oy);
       const cx = hero.clientWidth / 2;
       const cy = hero.clientHeight / 2;
+      
+      // CALCOLO DISTANZA DAL CENTRO
       const dx = cx - tx;
       const dy = cy - ty;
 
       Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom', 'overlay-active'); });
 
+      // ZOOM PROFONDO: Moltiplicare la traslazione per il livello di scala assicura che il punto resti esattamente al centro!
       setTimeout(() => {
-        if(layers.background) layers.background.style.transform = `translate3d(${dx*0.1}px,${dy*0.1}px, 0) scale(1.15)`;
-        if(layers.midground) layers.midground.style.transform = `translate3d(${dx*0.3}px,${dy*0.3}px, 0) scale(1.25)`;
-        if(layers.foreground) layers.foreground.style.transform = `translate3d(${dx*0.5}px,${dy*0.5}px, 0) scale(1.4)`;
+        if(layers.background) layers.background.style.transform = `translate3d(${dx*1.3}px,${dy*1.3}px, 0) scale(1.3)`;
+        if(layers.midground) layers.midground.style.transform = `translate3d(${dx*1.8}px,${dy*1.8}px, 0) scale(1.8)`;
+        if(layers.foreground) layers.foreground.style.transform = `translate3d(${dx*2.5}px,${dy*2.5}px, 0) scale(2.5)`;
       }, 10);
 
       contentBox.innerHTML = contentMap[key];
@@ -463,32 +526,41 @@
       hotspots.forEach(hot => hot.classList.remove('hidden'));
       Object.values(layers).forEach(l => { if(l) l.classList.remove('overlay-active'); });
       
-      renderParallax(currentX, currentY);
+      renderParallax(currentX, currentY); // TORNA ALLA POSIZIONE CORRENTE
 
       setTimeout(() => {
         Object.values(layers).forEach(l => { if(l) l.classList.remove('smooth-zoom'); });
         isZoomed = false;
-        // RIATTIVA IL LOOP
-        rafId = requestAnimationFrame(parallaxLoop);
+        rafId = requestAnimationFrame(parallaxLoop); // RIATTIVA IL PARALLASSE
       }, 800);
     }
 
-    // --- EVENT LISTENER MENU E HOTSPOT ---
+    // =========================================
+    // LISTENER MENU E AZIONI CLICK
+    // =========================================
     hotspots.forEach(h => h.addEventListener('click', () => zoomTo(h.dataset.key)));
     document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault(); zoomTo(a.dataset.key);
         document.getElementById('mobile-menu').classList.remove('open');
+        document.getElementById('hamburger').classList.remove('open');
       });
     });
 
-    document.getElementById('hamburger').onclick = () => document.getElementById('mobile-menu').classList.toggle('open');
+    // HAMBURGER TOGGLE CON CAMBIO IN "X"
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.onclick = () => {
+      mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open');
+    };
+
     overlay.querySelector('.close-btn').onclick = resetZoom;
     document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
     overlay.addEventListener('click', (e) => { if(!contentBox.contains(e.target)) resetZoom(); });
     overlay.querySelector('.close-btn').addEventListener('click', (e) => { e.stopPropagation(); resetZoom(); });
 
-    // Creazione Labels
+    // CREAZIONE ETICHETTE GENIO
     hotspots.forEach(h => {
       if(h.dataset.key !== 'prenota') {
         const label = document.createElement('div');
@@ -515,51 +587,55 @@
       });
     }
 
-    // --- CURSORE CUSTOM (Ottimizzato) ---
+    // =========================================
+    // CURSORE PERSONALIZZATO 
+    // =========================================
     const customCursor = document.createElement('div');
     customCursor.id = 'custom-cursor';
     document.body.appendChild(customCursor);
     document.addEventListener('mousemove', e => { 
-      // Trasforma con GPU per evitare lag del cursore
       customCursor.style.transform = `translate3d(calc(-50% + ${e.clientX}px), calc(-50% + ${e.clientY}px), 0)`;
     });
-    // Rimuoviamo il translate(-50%, -50%) dai listener del mousedown/up perché ora lo gestiamo nel mousemove
     document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
     document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
 
-    // --- GESTIONE TEMPO E FILTRI ---
+    // =========================================
+    // FILTRI TEMPO AVANZATI
+    // =========================================
     function setTimeVisuals(state) {
       document.body.setAttribute('data-time', state);
-      void heroLayers.offsetWidth; // Trigger reflow per assicurare transizione
+      void heroLayers.offsetWidth;
       requestAnimationFrame(() => {
-        heroLayers.style.filter = state === 'giorno' ? 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)' : state === 'sera' ? 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)' : 'brightness(0.2) saturate(0.5)';
+        if(state === 'giorno') heroLayers.style.filter = 'brightness(1.1) contrast(1.05) saturate(1.1) sepia(0.1)';
+        else if(state === 'sera') heroLayers.style.filter = 'brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg)';
+        else heroLayers.style.filter = 'brightness(0.25) contrast(1.2) saturate(0.3) sepia(0.5) hue-rotate(180deg)';
       });
       const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
       const heroText = document.getElementById('hero-text');
       heroText.style.opacity = 0;
       setTimeout(() => { heroText.innerHTML = `<h2 class="title">${t.title}</h2><h1 class="title-big">${t.titleBig}</h1><p class="subtitle">${t.subtitle}</p>`; heroText.style.opacity = 1; }, 250);
 
-      // Aggiorna stile tasti debug
       document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug'));
       document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
     }
 
     function applyTimeFilter() {
-      if (manualTimeOverride) return; // Se l'utente ha usato i tasti debug, non aggiornare in automatico
+      if (manualTimeOverride) return;
       const hour = new Date().getHours();
       let state = (hour >= 9 && hour < 18) ? 'giorno' : (hour >= 18 || hour < 2) ? 'sera' : 'chiuso';
       setTimeVisuals(state);
     }
 
-    // Tasti Debug
     document.querySelectorAll('#timeControls button').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        manualTimeOverride = true; // Blocca il timer automatico
+        manualTimeOverride = true; // DISABILITA AUTO-SWITCH
         setTimeVisuals(e.target.dataset.time);
       });
     });
 
-    // --- INIT ---
+    // =========================================
+    // INIZIALIZZAZIONE E CARICAMENTO
+    // =========================================
     const loader = document.getElementById('loader');
     const loaderStart = Date.now();
     let isLoaderHidden = false;
@@ -570,10 +646,7 @@
     window.addEventListener('load', tryHideLoader);
     document.addEventListener('DOMContentLoaded', tryHideLoader);
     
-    setLayers(); 
-    applyTimeFilter(); 
-    setInterval(applyTimeFilter, 60*60*1000); 
-    window.addEventListener('resize', setLayers);
+    setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); window.addEventListener('resize', setLayers);
   </script>
 </body>
 </html>
