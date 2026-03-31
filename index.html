@@ -36,16 +36,23 @@
     html, body { margin: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
     body, body * { -webkit-user-select: none; user-select: none; cursor: none !important; }
 
-    /* ACCELERAZIONE HARDWARE */
-    .layer, #mobile-menu, .content-box, #hamburger {
+    /* =========================================
+       OTTIMIZZAZIONE HARDWARE ESTREMA (GPU FORCING)
+       ========================================= */
+    #hero-layers {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+    
+    .layer, #mobile-menu, .content-box, #hamburger, .particle {
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
-      transform: translateZ(0);
+      transform: translateZ(0); /* Obbliga l'uso della memoria video dedicata */
       will-change: transform;
     }
 
     /* =========================================
-       CURSORE
+       CURSORE E LOADER IRIS
        ========================================= */
     #custom-cursor {
       position: fixed; top: 0; left: 0; width: 25px; height: 25px; background: black;
@@ -54,29 +61,23 @@
       box-shadow: 0 0 10px 3px var(--shadow-color); will-change: transform;
     }
 
-    /* =========================================
-       LOADER CON EFFETTO IRIS (CLIP-PATH CENTRATO)
-       ========================================= */
     #loader {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--main-color); 
       display: flex; justify-content: center; align-items: center; z-index: 999999; 
-      clip-path: circle(150% at 50% 50%); /* Inizia a schermo pieno */
+      clip-path: circle(150% at 50% 50%); 
       transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1);
       will-change: clip-path;
     }
     #loader img { width: 150px; animation: rotateLogo 1.5s linear infinite; }
     @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    
-    /* Quando scompare, si ritira al centro */
     #loader.hidden { clip-path: circle(0% at 50% 50%); pointer-events: none; }
 
     /* =========================================
-       SCENA E LAYERS (VISTA PIÙ AMPIA, RIPRISTINATA)
+       SCENA E LAYERS
        ========================================= */
     #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
     #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; transition: filter 0.5s ease; }
     
-    /* 110% su desktop: vista bella larga e spaziosa */
     .layer {
       position: absolute; width: 110%; height: 110%; top: -5%; left: -5%; object-fit: cover;
       pointer-events: none; transition: opacity 0.5s ease; 
@@ -96,7 +97,7 @@
     }
 
     /* =========================================
-       TESTI CENTRALI E AUDIO MAC-STYLE
+       TESTI CENTRALI E AUDIO
        ========================================= */
     #hero-text {
       position: absolute; width: 100%; top: 150px; left: 50%; transform: translateX(-50%); text-align: center; color: #fff;
@@ -372,7 +373,7 @@
     audioToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } else { audioToggle.classList.remove('playing'); bgAudio.pause(); } });
 
     function createParticles() {
-      const container = document.getElementById('particles-container'); const count = window.innerWidth <= 768 ? 30 : 60;
+      const container = document.getElementById('particles-container'); const count = window.innerWidth <= 768 ? 20 : 50; // Leggermente ridotto per performance mobile
       for(let i=0; i<count; i++) {
         const p = document.createElement('div'); p.className = 'particle'; const size = Math.random() * 3 + 1.5;
         p.style.width = size + 'px'; p.style.height = size + 'px'; p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
@@ -427,7 +428,13 @@
     }
 
     function parallaxLoop() {
-      if (!isZoomed) { currentX += (targetX - currentX) * 0.08; currentY += (targetY - currentY) * 0.08; renderParallax(currentX, currentY); rafId = requestAnimationFrame(parallaxLoop); }
+      if (!isZoomed) { 
+        // Aumentato a 0.15 per eliminare il lag del giroscopio!
+        currentX += (targetX - currentX) * 0.15; 
+        currentY += (targetY - currentY) * 0.15; 
+        renderParallax(currentX, currentY); 
+        rafId = requestAnimationFrame(parallaxLoop); 
+      }
     }
     rafId = requestAnimationFrame(parallaxLoop);
 
@@ -451,8 +458,6 @@
       const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
       const dx = cx - tx; const dy = cy - ty;
 
-      // LA VERA MAGIA: limitiamo matematicamente lo spostamento al 12% della larghezza/altezza dello schermo!
-      // In questo modo, pur zoomando forte, l'immagine non traslerà mai abbastanza da scoprire lo sfondo nero.
       const limitX = hero.clientWidth * 0.12; 
       const limitY = hero.clientHeight * 0.12;
       const safeDx = Math.max(-limitX, Math.min(limitX, dx)); 
