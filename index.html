@@ -69,12 +69,12 @@
     .layer.smooth-zoom { transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease, filter 0.3s ease !important; }
     .layer.is-moving { filter: blur(5px) !important; }
 
-    /* PARTICELLE: VISIBILITÀ AUMENTATA */
+    /* PARTICELLE BILANCIATE */
     #particles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 40; overflow: hidden; }
     .particle { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: floatParticle linear infinite; filter: blur(1.5px); }
     @keyframes floatParticle {
       0% { transform: translate3d(0, 0, 0); opacity: 0; }
-      20% { opacity: 0.45; } /* Aumentato dal 25% al 45% */
+      20% { opacity: 0.45; }
       80% { opacity: 0.45; }
       100% { transform: translate3d(40px, -200px, 0); opacity: 0; }
     }
@@ -107,15 +107,20 @@
     #audio-toggle.playing .icon-off { display: none; }
 
     /* =========================================
-       HOTSPOTS E POPUP (ROBUSTI)
+       HOTSPOTS (DOPPIO CONTROLLO RISOLTO)
        ========================================= */
     .hotspot {
-      position: absolute; left: 0; top: 0; width: 50px; height: 50px; border-radius: 50%; background: var(--main-color);
-      box-shadow: 0 0 20px var(--shadow-strong); transform: translate3d(-50%,-50%, 0); animation: pulse 2s infinite;
+      position: absolute; width: 50px; height: 50px; border-radius: 50%; background: var(--main-color);
+      box-shadow: 0 0 20px var(--shadow-strong); animation: pulse 2s infinite;
       z-index: 50; cursor: pointer; transition: opacity 0.3s ease;
     }
     .hotspot.hidden { opacity: 0; pointer-events: none; }
-    @keyframes pulse { 0%, 100% { transform: translate3d(-50%,-50%, 0) scale(1); } 50% { transform: translate3d(-50%,-50%, 0) scale(1.1); } }
+    
+    /* L'animazione muove solo ombra e scala, il JS gestisce left/top in tempo reale! */
+    @keyframes pulse { 
+      0%, 100% { transform: translate3d(-50%,-50%, 0) scale(1); box-shadow: 0 0 15px var(--shadow-color); } 
+      50% { transform: translate3d(-50%,-50%, 0) scale(1.1); box-shadow: 0 0 30px var(--shadow-strong); } 
+    }
     
     .hotspot[data-key="prenota"] {
       width: auto !important; min-width: 110px; height: 45px; border-radius: 30px !important;
@@ -130,6 +135,9 @@
     .hotspot-label::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border: 10px solid transparent; border-top-color: var(--main-color); }
     .hotspot:hover .hotspot-label, .hotspot-label.active { opacity: 1 !important; transform: translate3d(-50%, calc(-100% - 35px), 0) scale(1) !important; }
 
+    /* =========================================
+       POPUP E CONTENUTI
+       ========================================= */
     #content-overlay {
       position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,.5); display: flex;
       justify-content: center; align-items: center; z-index: 9000; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.4s;
@@ -140,7 +148,6 @@
     .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; transition: color 0.3s; }
     .close-btn:hover { color: var(--main-color); }
 
-    /* CONTENUTI POPUP */
     .elegant-content { padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .stagger-item { opacity: 0; transform: translateY(20px); transition: 0.6s; }
     .elegant-content.show .stagger-item { opacity: 1; transform: translateY(0); }
@@ -180,7 +187,7 @@
     #mobile-menu a { color: #fff; margin: 15px 0; font-size: 1.5rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px;}
 
     /* =========================================
-       FILTRI TEMPO (Saturazione giorno 0.35)
+       FILTRI TEMPO
        ========================================= */
     #timeControls { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 650; }
     #timeControls button { padding: 6px 12px; border: 1px solid rgba(255,255,255,0.4); border-radius: 15px; background: rgba(0,0,0,0.6); color: white; cursor: pointer; font-size: 11px; backdrop-filter: blur(4px); transition: all 0.3s ease; }
@@ -191,7 +198,7 @@
     body[data-time="chiuso"] #hero-layers { filter: brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg); }
 
     /* =========================================
-       FOOTER (COMPATTO E ALLINEATO)
+       FOOTER (ALLINEAMENTO SINGOLA RIGA)
        ========================================= */
     footer { background: #111; color: #ccc; width: 100vw; position: fixed; bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px; }
     
@@ -202,7 +209,6 @@
     .footer-social img { width: 22px; height: 22px; filter: brightness(0) invert(1); transition: transform 0.2s; }
     .footer-social a:hover img { transform: scale(1.2); }
     
-    /* FASCIA NERA SU SINGOLA RIGA */
     .footer-bottom { 
       display: flex; flex-direction: row; align-items: center; justify-content: center; 
       padding: 10px 25px; background: #000; gap: 20px; text-align: center; 
@@ -225,8 +231,7 @@
       .footer-social { gap: 10px; }
       .footer-social img { width: 16px; height: 16px; }
       
-      /* SU MOBILE CERCA DI TENERE LA SINGOLA RIGA, O SEPARA CON STILE SE TROPPO STRETTO */
-      .footer-bottom { padding: 8px 12px; font-size: 9px; gap: 10px; flex-wrap: wrap; }
+      .footer-bottom { padding: 8px 12px; font-size: 10px; gap: 10px; justify-content: center; }
     }
     @media (pointer: coarse), (max-width: 768px) { #custom-cursor { display: none !important; } }
     @media (min-width: 769px) { .mobile-layer { display: none; } }
@@ -358,7 +363,7 @@
       for(let i=0; i<count; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
-        const size = Math.random() * 3 + 1.5; // Leggermente più grandi
+        const size = Math.random() * 3 + 1.5;
         p.style.width = size + 'px'; p.style.height = size + 'px';
         p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
         p.style.animationDuration = (Math.random() * 15 + 10) + 's';
@@ -369,10 +374,10 @@
     createParticles();
 
     // =========================================
-    // MOTORE PARALLASSE 3D (BLINDATO)
+    // MOTORE PARALLASSE 3D E FIX POSIZIONAMENTO
     // =========================================
     function setLayers() {
-      const isMobile = window.innerWidth <= 768; // Usa la larghezza per massima affidabilità
+      const isMobile = window.innerWidth <= 768;
       layers = isMobile ? {
         background: heroLayers.querySelector('.mobile-layer.background'),
         midground: heroLayers.querySelector('.mobile-layer.midground'),
@@ -410,7 +415,11 @@
         if(h.classList.contains('hidden')) return;
         const ox = parseFloat(h.dataset.ox);
         const oy = parseFloat(h.dataset.oy);
-        h.style.transform = `translate3d(calc(-50% + ${ox + refX}px), calc(-50% + ${oy + refY}px), 0)`;
+        
+        // LA SOLUZIONE CHIAVE: posiziona l'hotspot usando left e top
+        // in questo modo l'animazione css 'transform' si occuperà solo di centrarlo (-50%) e farlo pulsare (scale)
+        h.style.left = `${ox + refX}px`;
+        h.style.top = `${oy + refY}px`;
       });
     }
 
@@ -444,10 +453,10 @@
 
       isZoomed = true; cancelAnimationFrame(rafId);
       const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
-      const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
+      const cx = window.innerWidth / 2; const cy = window.innerHeight / 2;
       const dx = cx - tx; const dy = cy - ty;
 
-      const limitX = hero.clientWidth * 0.22; const limitY = hero.clientHeight * 0.22;
+      const limitX = window.innerWidth * 0.22; const limitY = window.innerHeight * 0.22;
       const safeDx = Math.max(-limitX, Math.min(limitX, dx));
       const safeDy = Math.max(-limitY, Math.min(limitY, dy));
 
@@ -549,7 +558,6 @@
     function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
     window.onload = tryHideLoader; document.addEventListener('DOMContentLoaded', tryHideLoader);
     
-    // Al ridimensionamento della finestra ricalcoliamo il motore e l'interfaccia
     window.addEventListener('resize', () => { setLayers(); });
     
     setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); 
