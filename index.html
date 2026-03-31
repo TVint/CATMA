@@ -36,7 +36,6 @@
     html, body { margin: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
     body, body * { -webkit-user-select: none; user-select: none; cursor: none !important; }
 
-    /* Forziamo accelerazione hardware sui macro-contenitori */
     #hero-layers, #mobile-menu, #content-overlay {
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
@@ -44,7 +43,28 @@
     }
 
     /* =========================================
-       CURSORE E LOADER IRIS
+       BLOCCO ROTAZIONE (LANDSCAPE MOBILE)
+       ========================================= */
+    #rotate-device {
+      display: none; position: fixed; inset: 0; background: #0c0c0c; z-index: 99999999;
+      color: #fff; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 20px;
+    }
+    #rotate-device svg { width: 50px; height: 50px; margin-bottom: 20px; color: var(--main-color); animation: phoneRotate 2.5s infinite ease-in-out; }
+    #rotate-device p { font-size: 1.2rem; letter-spacing: 1px; line-height: 1.5; font-weight: 300; opacity: 0.8;}
+    
+    @keyframes phoneRotate {
+      0%, 15% { transform: rotate(0deg); }
+      45%, 55% { transform: rotate(-90deg); }
+      85%, 100% { transform: rotate(0deg); }
+    }
+
+    /* Si attiva solo su schermi mobile in orizzontale */
+    @media (max-width: 900px) and (orientation: landscape) {
+      #rotate-device { display: flex; }
+    }
+
+    /* =========================================
+       CURSORE E LOADER IRIS (SINCRONIZZATO)
        ========================================= */
     #custom-cursor {
       position: fixed; top: 0; left: 0; width: 25px; height: 25px; background: black;
@@ -60,6 +80,10 @@
       transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1);
       will-change: clip-path;
     }
+    
+    .logo-wrapper { transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); }
+    #loader.hidden .logo-wrapper { transform: scale(0); } /* Scala insieme al cerchio rosso */
+    
     #loader img { width: 150px; animation: rotateLogo 1.5s linear infinite; }
     @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     #loader.hidden { clip-path: circle(0% at 50% 50%); pointer-events: none; }
@@ -72,14 +96,10 @@
     
     .layer {
       position: absolute; width: 110%; height: 110%; top: -5%; left: -5%; object-fit: cover;
-      pointer-events: none;
-      /* Fix specifico per flicker durante il blur su Android */
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
+      pointer-events: none; -webkit-backface-visibility: hidden; backface-visibility: hidden;
     }
     
     .layer.smooth-zoom { 
-        /* RIPRISTINATO IL BLUR E IL BRIGHTNESS NELLA TRANSIZIONE */
         transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease !important; 
         will-change: transform, filter;
     }
@@ -242,11 +262,23 @@
 </head>
 <body data-time="sera">
 
+  <div id="rotate-device">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+      <line x1="12" y1="18" x2="12.01" y2="18"></line>
+    </svg>
+    <p>Per un'esperienza ottimale,<br>ruota il dispositivo in verticale.</p>
+  </div>
+
   <audio id="bg-audio" loop src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Jazz%20Brunch.mp3" preload="none"></audio>
   <audio id="hover-sfx" src="https://actions.google.com/sounds/v1/ui/button_click.ogg" preload="auto"></audio>
   <audio id="click-sfx" src="https://actions.google.com/sounds/v1/ui/pop_up_on.ogg" preload="auto"></audio>
 
-  <div id="loader"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo"></div>
+  <div id="loader">
+    <div class="logo-wrapper">
+      <img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo">
+    </div>
+  </div>
   
   <div id="gyro-overlay" class="active"><button id="gyro-btn">Esplora in 3D</button></div>
 
@@ -290,7 +322,7 @@
       <img class="layer mobile-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
       <img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774917597/Catma-midground-mobile_xvwur8.webp">
       <img class="layer mobile-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
-      </div>
+    </div>
 
     <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="15" data-y-mobile="35"></div>
     <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="75"></div>
@@ -359,10 +391,8 @@
     function playSfx(audioEl) { if(soundEnabled && audioEl) { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); } }
     audioToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } else { audioToggle.classList.remove('playing'); bgAudio.pause(); } });
 
-    // RIMOSSA LA FUNZIONE createParticles()
-
     // =========================================
-    // GIROSCOPIO E PARALLASSE (FIX BORDI NERI)
+    // GIROSCOPIO E PARALLASSE
     // =========================================
     if('ontouchstart' in window) {
       const gyroOverlay = document.getElementById('gyro-overlay'); const gyroBtn = document.getElementById('gyro-btn');
@@ -419,7 +449,7 @@
     hero.addEventListener('mousemove', e => { if('ontouchstart' in window) return; targetX = (e.clientX / window.innerWidth) - 0.5; targetY = (e.clientY / window.innerHeight) - 0.5; });
 
     // =========================================
-    // ZOOM CON BLOCCO ANTI-BORDO-NERO
+    // ZOOM ADATTIVO (SMARTPHONE = CENTRATO / DESKTOP = MIRATO)
     // =========================================
     function zoomTo(key) {
       playSfx(clickSfx);
@@ -431,23 +461,34 @@
       
       const h = Array.from(hotspots).find(el => el.dataset.key === key); if(!h) return;
       isZoomed = true; cancelAnimationFrame(rafId);
-      
-      const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
-      const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
-      const dx = cx - tx; const dy = cy - ty;
 
-      const limitX = hero.clientWidth * 0.12; 
-      const limitY = hero.clientHeight * 0.12;
-      const safeDx = Math.max(-limitX, Math.min(limitX, dx)); 
-      const safeDy = Math.max(-limitY, Math.min(limitY, dy));
+      const isMobile = window.innerWidth <= 768;
+      
+      // Valori di default per lo zoom in scala
+      let scaleBg = 1.2, scaleMid = 1.5, scaleFg = 2.2;
+      let safeDx = 0, safeDy = 0;
+
+      if (isMobile) {
+        // SU MOBILE: Nessuno spostamento laterale (meno calcoli), solo un morbido zoom centrale.
+        scaleBg = 1.05; scaleMid = 1.1; scaleFg = 1.15;
+      } else {
+        // SU DESKTOP: Zoom dinamico mirato sul pallino con blocco anti-bordo-nero.
+        const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
+        const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
+        const dx = cx - tx; const dy = cy - ty;
+
+        const limitX = hero.clientWidth * 0.12; 
+        const limitY = hero.clientHeight * 0.12;
+        safeDx = Math.max(-limitX, Math.min(limitX, dx)); 
+        safeDy = Math.max(-limitY, Math.min(limitY, dy));
+      }
 
       Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom'); });
       
       setTimeout(() => {
-        // Riapplica blur e luminosità ridotta
-        if(layers.background) { layers.background.style.transform = `translate3d(${safeDx*1.1}px,${safeDy*1.1}px, 0) scale(1.2)`; layers.background.style.filter = 'blur(5px) brightness(0.7)'; }
-        if(layers.midground) { layers.midground.style.transform = `translate3d(${safeDx*1.5}px,${safeDy*1.5}px, 0) scale(1.5)`; layers.midground.style.filter = 'blur(5px) brightness(0.7)'; }
-        if(layers.foreground) { layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(2.2)`; layers.foreground.style.filter = 'blur(5px) brightness(0.7)'; }
+        if(layers.background) { layers.background.style.transform = `translate3d(${safeDx*1.1}px,${safeDy*1.1}px, 0) scale(${scaleBg})`; layers.background.style.filter = 'blur(5px) brightness(0.7)'; }
+        if(layers.midground) { layers.midground.style.transform = `translate3d(${safeDx*1.5}px,${safeDy*1.5}px, 0) scale(${scaleMid})`; layers.midground.style.filter = 'blur(5px) brightness(0.7)'; }
+        if(layers.foreground) { layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(${scaleFg})`; layers.foreground.style.filter = 'blur(5px) brightness(0.7)'; }
       }, 10);
 
       contentBox.innerHTML = generateDynamicContent(key); overlay.classList.add('active');
@@ -473,7 +514,7 @@
         overlay.classList.remove('active');
         hotspots.forEach(hot => hot.classList.remove('hidden'));
         
-        Object.values(layers).forEach(l => { if(l) { l.classList.add('smooth-zoom'); l.style.filter = 'none'; } }); // Rimuove blur al reset
+        Object.values(layers).forEach(l => { if(l) { l.classList.add('smooth-zoom'); l.style.filter = 'none'; } });
         renderParallax(currentX, currentY);
 
         setTimeout(() => { 
@@ -484,7 +525,7 @@
       }, 300);
     }
 
-    // NESSUN DOPPIO CLICK - Apertura istantanea
+    // EVENT LISTENER HOTSPOTS E MENU
     hotspots.forEach(h => { 
       h.onmouseenter = () => playSfx(hoverSfx);
       if(h.dataset.key !== 'prenota') {
@@ -510,6 +551,7 @@
     document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px var(--shadow-strong)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
     document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px var(--shadow-color)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
 
+    // TIME VISUALS E INIT
     function setTimeVisuals(state) {
       document.body.setAttribute('data-time', state); void heroLayers.offsetWidth;
       const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
@@ -520,7 +562,6 @@
     function applyTimeFilter() { if (manualTimeOverride) return; const h = new Date().getHours(); setTimeVisuals((h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso'); }
     document.querySelectorAll('#timeControls button').forEach(btn => btn.onclick = e => { manualTimeOverride = true; setTimeVisuals(e.target.dataset.time); });
 
-    // CARICAMENTO INIT
     const loader = document.getElementById('loader'); const loaderStart = Date.now(); let isLoaderHidden = false;
     function tryHideLoader() { 
       if (isLoaderHidden) return; 
