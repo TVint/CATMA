@@ -91,18 +91,24 @@
        TESTI CENTRALI E CTA
        ========================================= */
     #hero-text {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      position: absolute; top: 50%; left: 50%; 
+      transform: translate(-50%, -50%); /* Start position, il JS lo aggiornerà in tempo reale */
       width: 100%; text-align: center; color: #fff; z-index: 90; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
+      
+      /* IL FIX CRITICO: Rende il contenitore "fantasma" ai clic, permettendo di cliccare gli hotspot sotto! */
+      pointer-events: none; 
       will-change: transform;
     }
     
-    #hero-text .title { font-size: 3vw; margin: 0; font-weight: 300; opacity: 0; animation: cinematicTracking 2s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards; }
-    #hero-text .title-big { font-size: 7vw; margin: 0; font-weight: bold; opacity: 0; animation: cinematicTrackingBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.8s forwards; letter-spacing: 0; }
+    /* Lettere spaziate staticamente. L'animazione muove solo la SCALA (GPU) e non i margini. */
+    #hero-text .title { font-size: 3vw; margin: 0; font-weight: 300; opacity: 0; letter-spacing: 4px; animation: cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) 0.1s forwards; }
+    #hero-text .title-big { font-size: 7vw; margin: 0; font-weight: bold; opacity: 0; letter-spacing: 8px; animation: cinematicFadeBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards; }
     #hero-text .subtitle { font-size: 1.2vw; margin-top: 15px; font-weight: 300; opacity: 0; animation: fadeUp 1s ease 1.5s forwards; }
 
-    @keyframes cinematicTracking { 0% { letter-spacing: -2px; opacity: 0; filter: blur(5px); transform: scale(0.95); } 100% { letter-spacing: 4px; opacity: 1; filter: blur(0px); transform: scale(1); } }
-    @keyframes cinematicTrackingBig { 0% { letter-spacing: 0px; opacity: 0; filter: blur(8px); transform: scale(0.95); } 100% { letter-spacing: 8px; opacity: 1; filter: blur(0px); transform: scale(1); } }
+    /* Animazione Fluida "Cinematic" accelerata dalla GPU (Scala invece di Letter Spacing) */
+    @keyframes cinematicFade { 0% { opacity: 0; filter: blur(10px); transform: scale(0.9); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
+    @keyframes cinematicFadeBig { 0% { opacity: 0; filter: blur(15px); transform: scale(0.9); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 0.8; transform: translateY(0); } }
 
     .hero-cta {
@@ -110,7 +116,10 @@
       font-weight: bold; letter-spacing: 2px; text-transform: uppercase;
       background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-      opacity: 0; animation: fadeUp 1s ease 2s forwards; cursor: pointer; pointer-events: auto;
+      opacity: 0; animation: fadeUp 1s ease 2s forwards; cursor: pointer; 
+      
+      /* Il bottone torna cliccabile nonostante il genitore sia "fantasma" */
+      pointer-events: auto; 
     }
     .hero-cta:hover { background: rgba(178, 34, 34, 0.6); border-color: rgba(255, 255, 255, 0.6); transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(178, 34, 34, 0.5); }
 
@@ -171,7 +180,7 @@
     .dynamic-badge { display: inline-block; padding: 5px 12px; border: 1px solid var(--main-color); border-radius: 20px; font-size: 0.9rem; margin-top: 15px; font-weight: bold;}
     
     .cta-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
-    .cta-btn { border: 2px solid #fff; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: 600; background: rgba(0,0,0,0.5); color: #fff; transition: all 0.25s ease; cursor: none; }
+    .cta-btn { border: 2px solid #fff; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: 600; background: rgba(0,0,0,0.5); color: #fff; transition: all 0.25s ease; cursor: none; pointer-events: auto;}
     .cta-btn:hover { background: var(--main-color); border-color: var(--main-color); transform: scale(1.05); box-shadow: 0 0 25px var(--shadow-strong); }
     .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
 
@@ -359,7 +368,7 @@
     let targetX = 0, targetY = 0, currentX = 0, currentY = 0, rafId = null;
     let isZoomed = false, manualTimeOverride = false, soundEnabled = false;
 
-    // ICONE SVG
+    // ICONE SVG E CONTENUTI
     const iconsMap = {
       chi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
       mescita: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"></path><path d="M12 15v7"></path><path d="M7 3h10v3a5 5 0 0 1-5 5v0a5 5 0 0 1-5-5V3z"></path></svg>`,
@@ -392,7 +401,7 @@
     audioToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } else { audioToggle.classList.remove('playing'); bgAudio.pause(); } });
 
     // =========================================
-    // CURSORE INTELLIGENTE (FIXATO)
+    // CURSORE INTELLIGENTE FIXATO
     // =========================================
     const customCursor = document.getElementById('custom-cursor');
     let isCursorInit = false;
@@ -456,9 +465,11 @@
       if(layers.midground) layers.midground.style.transform = `translate3d(${x*maxOffset.mx}px, ${y*maxOffset.my}px, 0)`;
       if(layers.foreground) layers.foreground.style.transform = `translate3d(${x*maxOffset.fx}px, ${y*maxOffset.fy}px, 0)`;
 
-      const textOffX = -x * maxOffset.mx * 0.8; 
-      const textOffY = -y * maxOffset.my * 0.8;
-      heroTextContainer.style.transform = `translate3d(calc(-50% + ${textOffX}px), calc(-50% + ${textOffY}px), 0)`;
+      // TESTO GALLEGGIANTE FLUIDO: Potenziato per essere ben visibile
+      // Usiamo moltiplicatori alti (-100, -80) ma fluidi
+      const textOffX = -x * 100; 
+      const textOffY = -y * 80;
+      heroTextContainer.style.transform = `translate(-50%, -50%) translate3d(${textOffX}px, ${textOffY}px, 0)`;
 
       const refX = x * maxOffset.mx; const refY = y * maxOffset.my;
       hotspots.forEach(h => {
@@ -576,8 +587,8 @@
       
       titleEl.innerHTML = t.title; titleBigEl.innerHTML = t.titleBig; subtitleEl.innerHTML = t.subtitle;
       
-      titleEl.style.animation = 'cinematicTracking 2s cubic-bezier(0.25, 1, 0.5, 1) 0.1s forwards';
-      titleBigEl.style.animation = 'cinematicTrackingBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards';
+      titleEl.style.animation = 'cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) 0.1s forwards';
+      titleBigEl.style.animation = 'cinematicFadeBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards';
       subtitleEl.style.animation = 'fadeUp 1s ease 0.8s forwards';
 
       document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug')); 
@@ -586,7 +597,7 @@
       const audioTracks = {
         giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3",
         sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3",
-        chiuso: "https://res.cloudinary.com/dkni7ncod/video/upload/v1774988445/seaguls_lsc1ou.mp3"
+        chiuso: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Night%20Cave.mp3"
       };
 
       const newTrack = audioTracks[state];
