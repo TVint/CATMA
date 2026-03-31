@@ -50,12 +50,13 @@
       will-change: filter;
     }
     .layer {
-      position: absolute; width: 115%; height: 115%; top: -7.5%; left: -7.5%;
+      /* DIMENSIONI AUMENTATE AL 120% PER NASCONDERE I BORDI NERI DURANTE LO ZOOM POTENTE */
+      position: absolute; width: 120%; height: 120%; top: -10%; left: -10%;
       object-fit: cover; pointer-events: none;
       transition: opacity 0.5s ease; 
       will-change: transform; 
     }
-    /* CLASSE PER GESTIRE LA TRANSIZIONE MORBIDA DURANTE LO ZOOM */
+    /* TRANSIZIONE MORBIDA DURANTE LO ZOOM AL CLICK */
     .layer.smooth-zoom {
       transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease !important;
     }
@@ -94,7 +95,7 @@
       50% { box-shadow: 0 0 30px rgba(178,34,34,1); }
       100% { box-shadow: 0 0 15px rgba(178,34,34,0.6); }
     }
-    /* STILE SPECIFICO PER IL BOTTONE PRENOTA */
+    /* BOTTONE PRENOTA ADATTIVO */
     .hotspot[data-key="prenota"] {
       width: auto !important; min-width: 110px; height: 45px; border-radius: 30px !important;
       padding: 0 15px; display: flex; justify-content: center; align-items: center;
@@ -102,15 +103,19 @@
     }
 
     /* =========================================
-       ETICHETTE HOTSPOT (EFFETTO GENIO / GOOGLE MAPS)
+       ETICHETTE HOTSPOT (EFFETTO GENIO POSIZIONATO AL CENTRO)
        ========================================= */
     .hotspot-label {
       position: absolute; pointer-events: none; background: #b22222; 
       color: #fff; padding: 8px 16px; border-radius: 12px; font-size: 14px;
       font-weight: bold; letter-spacing: 1px; white-space: nowrap;
       box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-      transform-origin: center center; 
-      transform: translate3d(-50%, -50%, 0) scale(0);
+      
+      /* POSIZIONAMENTO CENTRALE ASSOLUTO RISPETTO AL CERCHIO */
+      top: 50%; left: 50%;
+      transform-origin: 50% 100%; /* L'ANIMAZIONE NASCE DAL BASSO DELL'ETICHETTA (LA PUNTA DELLA FRECCIA) */
+      transform: translate3d(-50%, -20px, 0) scale(0); /* SCALA DA ZERO DA DENTRO IL CERCHIO */
+      
       opacity: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       z-index: 100; will-change: transform, opacity;
     }
@@ -119,9 +124,9 @@
       content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
       width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #b22222;
     }
-    /* HOVER / TOUCH SU ETICHETTA */
+    /* APERTURA: SALTA FUORI ESATTAMENTE SOPRA IL BORDO DELL'HOTSPOT (RAGGIO 25PX + FRECCIA 10PX = 35PX) */
     .hotspot:hover .hotspot-label, .hotspot-label.active {
-      opacity: 1 !important; transform: translate3d(-50%, -80px, 0) scale(1) !important;
+      opacity: 1 !important; transform: translate3d(-50%, calc(-100% - 35px), 0) scale(1) !important;
     }
 
     /* =========================================
@@ -153,22 +158,20 @@
     
     #mobile-logo { display: none; position: absolute; top: 20px; left: 20px; height: 40px; z-index: 101; }
     
-    /* HAMBURGER ICON */
+    /* ICONA HAMBURGER CON EFFETTO "X" */
     #hamburger {
       display: none; position: absolute; top: 25px; right: 25px; width: 30px; height: 22px;
       flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 801;
     }
     #hamburger div { height: 3px; background: #fff; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: left center; }
-    
-    /* ANIMAZIONE HAMBURGER IN "X" QUANDO APERTO */
     #hamburger.open div:nth-child(1) { transform: rotate(45deg) translate(0px, -2px); }
     #hamburger.open div:nth-child(2) { opacity: 0; width: 0; }
     #hamburger.open div:nth-child(3) { transform: rotate(-45deg) translate(0px, 2px); }
 
-    /* MENU MOBILE (OVERLAY CIRCOLARE) */
+    /* OVERLAY MENU MOBILE (LUMINOSITA' ABASSATA A 70% + EFFETTO VETRO) */
     #mobile-menu {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,.95); display: flex; justify-content: center;
+      background: rgba(0,0,0,.70); backdrop-filter: blur(8px); display: flex; justify-content: center;
       align-items: center; flex-direction: column; z-index: 800;
       clip-path: circle(0px at calc(100% - 40px) 35px);
       transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none;
@@ -177,13 +180,14 @@
     #mobile-menu a { color: #fff; margin: 15px 0; font-size: 1.5rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px;}
 
     /* =========================================
-       OVERLAY POPUP (QUANDO CLICCHI HOTSPOT)
+       OVERLAY POPUP (LUMINOSITA' ABASSATA A 50% + Z-INDEX SUPERIORE ALL'HAMBURGER)
        ========================================= */
     #content-overlay {
-      position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,.80);
+      position: fixed; width: 100%; height: 100%; 
+      background: rgba(0,0,0,.50); /* OPACITA' DIMEZZATA PER VEDERE LA SCENA */
       justify-content: center; align-items: center; 
       z-index: 9000; /* ALZATO Z-INDEX PER COPRIRE L'HAMBURGER */
-      backdrop-filter: blur(5px); display: flex; opacity: 0; visibility: hidden; 
+      backdrop-filter: blur(8px); display: flex; opacity: 0; visibility: hidden; 
       transition: opacity 0.4s ease, visibility 0.4s ease;
     }
     #content-overlay.active { opacity: 1; visibility: visible; }
@@ -223,11 +227,14 @@
     #gyroOverlay.active { opacity: 1; pointer-events: auto; }
 
     /* =========================================
-       FILTRI TEMPO (AGGIORNATI PIU' REALISTICI)
+       FILTRI TEMPO (PERFEZIONATI E REALISTICI)
        ========================================= */
-    body[data-time="giorno"] #hero-layers { filter: brightness(1.1) contrast(1.1) saturate(1.2) hue-rotate(0deg); }
+    /* GIORNO: Naturale, desaturato, freddo, simulazione luce porte/finestre */
+    body[data-time="giorno"] #hero-layers { filter: brightness(1.1) contrast(1.05) saturate(0.65); }
+    /* SERA: Caldo, ambrato, contrastato per luci interne e candele */
     body[data-time="sera"] #hero-layers { filter: brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg); }
-    body[data-time="chiuso"] #hero-layers { filter: brightness(0.25) contrast(1.2) saturate(0.3) sepia(0.5) hue-rotate(180deg); }
+    /* CHIUSO: Luce lunare, freddo ma ora visibile (0.4 invece di 0.25) */
+    body[data-time="chiuso"] #hero-layers { filter: brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg); }
 
     /* =========================================
        FOOTER
@@ -259,13 +266,15 @@
       #hero-text { top: 20%; } #hero-text .title-big { font-size: 12vw; }
       #hero-text .title { font-size: 6vw; } #hero-text .subtitle { font-size: 3vw; }
       
-      /* OTTIMIZZAZIONE FOOTER IN 1 RIGA SOPRA E 2 RIGHE SOTTO */
+      /* OTTIMIZZAZIONE FOOTER (1 RIGA ROSSA COMPATTA) */
       .footer-top {
         flex-direction: row; justify-content: space-between; 
         padding: 8px 12px; font-size: 9px; gap: 5px;
       }
+      .footer-top-info p { letter-spacing: 0; }
       .footer-social { gap: 8px; }
       .footer-social img { width: 16px; height: 16px; }
+      /* 2 RIGHE NERE SOTTO */
       .footer-bottom {
         flex-direction: column; padding: 8px 12px; font-size: 9px; gap: 5px;
       }
@@ -324,11 +333,11 @@
       <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
     </div>
 
-    <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="10" data-y-mobile="40"></div>
-    <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="65"></div>
+    <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="15" data-y-mobile="35"></div>
+    <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="75"></div>
     <div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
     <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="38" data-x-mobile="85" data-y-mobile="40"></div>
-    <div class="hotspot" data-key="bar" data-x-desktop="90" data-y-desktop="55" data-x-mobile="85" data-y-mobile="60"></div>
+    <div class="hotspot" data-key="bar" data-x-desktop="90" data-y-desktop="65" data-x-mobile="85" data-y-mobile="70"></div>
   </div>
 
   <footer>
@@ -349,7 +358,7 @@
     document.getElementById('year').innerText = new Date().getFullYear();
     
     // =========================================
-    // VARIABILI GLOBALI
+    // VARIABILI GLOBALI E SETTAGGI
     // =========================================
     const hero = document.getElementById('hero');
     const heroLayers = document.getElementById('hero-layers');
@@ -360,15 +369,12 @@
     let isZoomed = false;
     let manualTimeOverride = false;
 
-    // VARIABILI LERP PARALLASSE FLUIDO
     let targetX = 0, targetY = 0;
     let currentX = 0, currentY = 0;
     let rafId = null;
 
-    // MAPPA ETICHETTE
     const map = { chi: { label: 'CHI SIAMO' }, mescita: { label: 'MESCITA' }, prenota: { label: 'PRENOTA' }, eventi: { label: 'EVENTI' }, bar: { label: 'BAR' } };
 
-    // MAPPA CONTENUTI POPUP ELEGANTI
     const contentMap = {
       chi: `<div class="elegant-content"><h1 class="elegant-title">Chi siamo</h1><div class="elegant-divider"></div><p class="elegant-desc">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
       mescita: `<div class="elegant-content"><h1 class="elegant-title">Mescita</h1><div class="elegant-divider"></div><p class="elegant-desc">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
@@ -378,7 +384,7 @@
     };
 
     // =========================================
-    // MOTORE PARALLASSE
+    // MOTORE PARALLASSE 3D
     // =========================================
     function setLayers() {
       const isMobile = 'ontouchstart' in window;
@@ -433,9 +439,8 @@
       }
     }
     
-    rafId = requestAnimationFrame(parallaxLoop); // AVVIA LOOP
+    rafId = requestAnimationFrame(parallaxLoop);
 
-    // LETTURA MOUSE DESKTOP
     hero.addEventListener('mousemove', e => {
       if('ontouchstart' in window) return;
       const r = hero.getBoundingClientRect();
@@ -481,7 +486,7 @@
     }
 
     // =========================================
-    // LOGICA DI ZOOM PROFONDO AL CLICK
+    // LOGICA DI ZOOM SICURO AL CLICK 
     // =========================================
     function zoomTo(key) {
       if(isZoomed) {
@@ -494,24 +499,31 @@
       if(!h) return;
 
       isZoomed = true;
-      cancelAnimationFrame(rafId); // FERMA IL PARALLASSE
+      cancelAnimationFrame(rafId); // FERMA PARALLASSE FLUIDO
 
       const tx = parseFloat(h.dataset.ox);
       const ty = parseFloat(h.dataset.oy);
       const cx = hero.clientWidth / 2;
       const cy = hero.clientHeight / 2;
       
-      // CALCOLO DISTANZA DAL CENTRO
+      // DISTANZA ORIGINALE DAL CENTRO
       const dx = cx - tx;
       const dy = cy - ty;
 
+      // LIMITATORE DI SPOSTAMENTO (CLAMP): PREVIENE L'APPARIZIONE DEL BORDO NERO
+      // Limita lo spostamento fisico al 18% della larghezza e altezza dello schermo
+      const limitX = hero.clientWidth * 0.18;
+      const limitY = hero.clientHeight * 0.18;
+      const safeDx = Math.max(-limitX, Math.min(limitX, dx));
+      const safeDy = Math.max(-limitY, Math.min(limitY, dy));
+
       Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom', 'overlay-active'); });
 
-      // ZOOM PROFONDO: Moltiplicare la traslazione per il livello di scala assicura che il punto resti esattamente al centro!
+      // APPLICAZIONE DELLO ZOOM PROFONDO CON COORDINATE SICURE
       setTimeout(() => {
-        if(layers.background) layers.background.style.transform = `translate3d(${dx*1.3}px,${dy*1.3}px, 0) scale(1.3)`;
-        if(layers.midground) layers.midground.style.transform = `translate3d(${dx*1.8}px,${dy*1.8}px, 0) scale(1.8)`;
-        if(layers.foreground) layers.foreground.style.transform = `translate3d(${dx*2.5}px,${dy*2.5}px, 0) scale(2.5)`;
+        if(layers.background) layers.background.style.transform = `translate3d(${safeDx*1.2}px,${safeDy*1.2}px, 0) scale(1.3)`;
+        if(layers.midground) layers.midground.style.transform = `translate3d(${safeDx*1.6}px,${safeDy*1.6}px, 0) scale(1.7)`;
+        if(layers.foreground) layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(2.2)`;
       }, 10);
 
       contentBox.innerHTML = contentMap[key];
@@ -526,17 +538,17 @@
       hotspots.forEach(hot => hot.classList.remove('hidden'));
       Object.values(layers).forEach(l => { if(l) l.classList.remove('overlay-active'); });
       
-      renderParallax(currentX, currentY); // TORNA ALLA POSIZIONE CORRENTE
+      renderParallax(currentX, currentY);
 
       setTimeout(() => {
         Object.values(layers).forEach(l => { if(l) l.classList.remove('smooth-zoom'); });
         isZoomed = false;
-        rafId = requestAnimationFrame(parallaxLoop); // RIATTIVA IL PARALLASSE
+        rafId = requestAnimationFrame(parallaxLoop);
       }, 800);
     }
 
     // =========================================
-    // LISTENER MENU E AZIONI CLICK
+    // EVENT LISTENER E HAMBURGER MENU
     // =========================================
     hotspots.forEach(h => h.addEventListener('click', () => zoomTo(h.dataset.key)));
     document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
@@ -547,7 +559,6 @@
       });
     });
 
-    // HAMBURGER TOGGLE CON CAMBIO IN "X"
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
     hamburger.onclick = () => {
@@ -588,7 +599,7 @@
     }
 
     // =========================================
-    // CURSORE PERSONALIZZATO 
+    // CURSORE CUSTOM
     // =========================================
     const customCursor = document.createElement('div');
     customCursor.id = 'custom-cursor';
@@ -600,15 +611,15 @@
     document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
 
     // =========================================
-    // FILTRI TEMPO AVANZATI
+    // GESTIONE FILTRI TEMPO
     // =========================================
     function setTimeVisuals(state) {
       document.body.setAttribute('data-time', state);
       void heroLayers.offsetWidth;
       requestAnimationFrame(() => {
-        if(state === 'giorno') heroLayers.style.filter = 'brightness(1.1) contrast(1.1) saturate(1.2) hue-rotate(0deg)';
+        if(state === 'giorno') heroLayers.style.filter = 'brightness(1.1) contrast(1.05) saturate(0.65)';
         else if(state === 'sera') heroLayers.style.filter = 'brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg)';
-        else heroLayers.style.filter = 'brightness(0.25) contrast(1.2) saturate(0.3) sepia(0.5) hue-rotate(180deg)';
+        else heroLayers.style.filter = 'brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg)';
       });
       const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
       const heroText = document.getElementById('hero-text');
@@ -628,13 +639,13 @@
 
     document.querySelectorAll('#timeControls button').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        manualTimeOverride = true; // DISABILITA AUTO-SWITCH
+        manualTimeOverride = true; 
         setTimeVisuals(e.target.dataset.time);
       });
     });
 
     // =========================================
-    // INIZIALIZZAZIONE E CARICAMENTO
+    // INIZIALIZZAZIONE
     // =========================================
     const loader = document.getElementById('loader');
     const loaderStart = Date.now();
