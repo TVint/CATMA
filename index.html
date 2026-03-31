@@ -55,10 +55,16 @@
     #hero-layers, #mobile-menu, #content-overlay { -webkit-backface-visibility: hidden; backface-visibility: hidden; transform: translateZ(0); }
 
     /* =========================================
-       ATMOSFERA
+       ATMOSFERA E FILTRI SCENE (FIXATI)
        ========================================= */
     #vignette { position: absolute; inset: 0; pointer-events: none; z-index: 85; background: radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%); }
     #film-noise { position: absolute; inset: 0; pointer-events: none; z-index: 86; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+    /* FILTRI DELLE SCENE RIPRISTINATI CON TRANSIZIONE FLUIDA */
+    #hero-layers { transition: filter 1s ease; }
+    body[data-time="giorno"] #hero-layers { filter: brightness(1.1) contrast(1.05) saturate(0.35); }
+    body[data-time="sera"] #hero-layers { filter: brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg); }
+    body[data-time="chiuso"] #hero-layers { filter: brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg); }
 
     /* =========================================
        UI ELEMENTS (Cursore, Lang, Loader)
@@ -126,7 +132,7 @@
     .hero-cta:hover { background: rgba(178, 34, 34, 0.6); border-color: rgba(255, 255, 255, 0.6); transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(178, 34, 34, 0.5); }
 
     /* =========================================
-       AUDIO, HOTSPOTS E MENU
+       AUDIO E HOTSPOTS
        ========================================= */
     #audio-toggle { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 600; background: #000; border: 1px solid rgba(255,255,255,0.3); border-radius: 40px; padding: 8px 16px; color: #fff; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     #audio-toggle:hover { transform: translateX(-50%) scale(1.05); }
@@ -144,12 +150,19 @@
     .hotspot-label::after { content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid var(--main-color); }
     .hotspot:hover .hotspot-label { opacity: 1 !important; transform: translate3d(-50%, -45px, 0) scale(1) !important; }
 
+    /* =========================================
+       NAVBAR E MENU MULTILINGUA (LOGO FIXATO)
+       ========================================= */
     #menu { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 80%; display: flex; align-items: center; z-index: 100; }
     #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; transition: color 0.3s;}
     #menu a:hover { color: var(--main-color); }
-    .logo-center { flex: 1; display: flex; justify-content: center; align-items: center; }
-    .logo-center img { height: 60px; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; }
-    .logo-center img:hover { filter: brightness(0) saturate(100%) invert(18%) sepia(55%) saturate(5451%) hue-rotate(345deg) brightness(93%) contrast(100%); transform: scale(1.08); }
+    
+    /* Cross-fade Logo per evitare il Viola */
+    .logo-center { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; height: 60px; cursor: pointer; }
+    .logo-center img { position: absolute; height: 100%; transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+    .logo-red { opacity: 0; filter: brightness(0) saturate(100%) invert(18%) sepia(55%) saturate(5451%) hue-rotate(345deg) brightness(93%) contrast(100%); }
+    .logo-center:hover .logo-white { opacity: 0; transform: scale(1.08); }
+    .logo-center:hover .logo-red { opacity: 1; transform: scale(1.08); }
     
     #mobile-logo { display: none; position: absolute; top: 20px; left: 20px; height: 50px; z-index: 101; }
     #hamburger { display: none; position: absolute; top: 15px; right: 15px; width: 35px; height: 26px; padding: 15px; box-sizing: content-box; flex-direction: column; justify-content: space-between; align-items: center; cursor: pointer; z-index: 801; }
@@ -234,7 +247,10 @@
   <div id="menu">
     <a href="#" data-key="chi" class="i18n-menu" data-i18n="chi">CHI SIAMO</a>
     <a href="#" data-key="mescita" class="i18n-menu" data-i18n="mescita">MESCITA</a>
-    <div class="logo-center"><img id="desktop-logo" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo"></div>
+    <div class="logo-center">
+      <img class="logo-white" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo">
+      <img class="logo-red" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo">
+    </div>
     <a href="#" data-key="bar" class="i18n-menu" data-i18n="bar">HI-FI BAR</a>
     <a href="#" data-key="eventi" class="i18n-menu" data-i18n="eventi">EVENTI</a>
   </div>
@@ -471,8 +487,19 @@
       }
 
       document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug')); document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
-      const audioTracks = { giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3", sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3", chiuso: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Night%20Cave.mp3" };
-      const newTrack = audioTracks[state]; if (bgAudio.getAttribute('src') !== newTrack) { bgAudio.src = newTrack; bgAudio.load(); if (soundEnabled) bgAudio.play().catch(()=>{}); }
+      
+      const audioTracks = { 
+        giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3", 
+        sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3", 
+        chiuso: "https://res.cloudinary.com/dkni7ncod/video/upload/v1774988445/seaguls_lsc1ou.mp3" 
+      };
+
+      const newTrack = audioTracks[state]; 
+      if (bgAudio.getAttribute('src') !== newTrack) { 
+        bgAudio.src = newTrack; 
+        bgAudio.load(); 
+        if (soundEnabled) bgAudio.play().catch(()=>{}); 
+      }
     }
 
     function applyTimeFilter() { if (manualTimeOverride) return; const h = new Date().getHours(); setTimeVisuals((h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso'); }
