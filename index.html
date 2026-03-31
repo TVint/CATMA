@@ -3,43 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
   <title>Catma Bar | Hi-Fi Bar & Live Music a Jesolo Lido</title>
   <meta name="description" content="Catma Bar in Piazza Marconi a Jesolo Lido. Hi-Fi Bar, vini naturali, cucina di alto livello, live music e dj-set di nicchia. L'oste Giovanni ti aspetta.">
-  <meta name="keywords" content="bar Jesolo Lido, Hi-Fi bar, live music Jesolo, dj set jazz, vini naturali, cocktail bar Piazza Marconi, Giovanni Catma">
   
-  <link rel="alternate" hreflang="it" href="https://www.catmabar.it/" />
-  <link rel="alternate" hreflang="en" href="https://www.catmabar.it/en/" />
-  <link rel="alternate" hreflang="de" href="https://www.catmabar.it/de/" />
-  <link rel="alternate" hreflang="x-default" href="https://www.catmabar.it/" />
-
   <link rel="icon" href="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" type="image/png">
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BarOrPub",
-    "name": "Catma Bar",
-    "image": "https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png",
-    "description": "Hi-Fi Bar elegante a Jesolo Lido. Musica live, dj-set di nicchia, cucina di alto livello e vini naturali.",
-    "address": { 
-      "@type": "PostalAddress", 
-      "streetAddress": "Piazza Marconi, Via delle Sirene 13", 
-      "addressLocality": "Lido di Jesolo", 
-      "addressRegion": "VE", 
-      "postalCode": "30016",
-      "addressCountry": "IT" 
-    },
-    "founder": { "@type": "Person", "name": "Giovanni Catma" },
-    "servesCuisine": "Cucina semplice di alto livello, Vini Naturali, Cocktail",
-    "priceRange": "$$"
-  }
-  </script>
-
   <style>
-    /* =========================================
-       VARIABILI E RESET
-       ========================================= */
     :root {
       --main-color: #b22222; 
       --shadow-color: rgba(178,34,34,0.6);
@@ -53,9 +22,7 @@
     html, body { margin: 0; height: 100%; width: 100%; overflow: hidden; background: #000; font-family: sans-serif; position: fixed; }
     body, body * { -webkit-user-select: none; user-select: none; cursor: none !important; }
 
-    /* =========================================
-       ATMOSFERA E FILTRI SCENE
-       ========================================= */
+    /* ATMOSFERA */
     #vignette { position: absolute; inset: 0; pointer-events: none; z-index: 85; background: radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%); }
     #film-noise { position: absolute; inset: 0; pointer-events: none; z-index: 86; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
     #hero-layers { transition: filter 1s ease; will-change: filter; }
@@ -63,129 +30,92 @@
     body[data-time="sera"] #hero-layers { filter: brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg); }
     body[data-time="chiuso"] #hero-layers { filter: brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg); }
 
-    /* =========================================
-       UI ELEMENTS
-       ========================================= */
-    #rotate-device { display: none; position: fixed; inset: 0; background: #0c0c0c; z-index: 99999999; color: #fff; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 20px; }
-    #rotate-device svg { width: 50px; height: 50px; margin-bottom: 20px; color: var(--main-color); animation: phoneRotate 2.5s infinite ease-in-out; }
-    @keyframes phoneRotate { 0%, 15% { transform: rotate(0deg); } 45%, 55% { transform: rotate(-90deg); } 85%, 100% { transform: rotate(0deg); } }
-    @media (max-width: 900px) and (orientation: landscape) { #rotate-device { display: flex; } }
-
-    #custom-cursor { position: fixed; width: 25px; height: 25px; background: black; border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 0 10px 3px var(--shadow-color); }
-    #custom-cursor.pulsing { animation: softPulse 2s cubic-bezier(0.25, 1, 0.5, 1) infinite; transition: none; }
-    @keyframes softPulse { 0%, 100% { transform: translate3d(-50%, -50%, 0) scale(1); box-shadow: 0 0 10px 3px var(--shadow-color); } 50% { transform: translate3d(-50%, -50%, 0) scale(1.4); box-shadow: 0 0 20px 5px var(--shadow-strong); } }
-
-    #loader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--main-color); display: flex; justify-content: center; align-items: center; z-index: 999999; clip-path: circle(150% at 50% 50%); transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1); will-change: clip-path; }
-    .logo-wrapper { transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); }
-    #loader.hidden .logo-wrapper { transform: scale(0); }
+    /* LOADER & CURSOR */
+    #loader { position: fixed; inset: 0; background: var(--main-color); display: flex; justify-content: center; align-items: center; z-index: 999999; clip-path: circle(150% at 50% 50%); transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1); }
+    #loader.hidden { clip-path: circle(0% at 50% 50%); pointer-events: none; }
     #loader img { width: 150px; animation: rotateLogo 1.5s linear infinite; }
     @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    #loader.hidden { clip-path: circle(0% at 50% 50%); pointer-events: none; }
 
+    #custom-cursor { position: fixed; width: 25px; height: 25px; background: black; border-radius: 50%; pointer-events: none; z-index: 99999; box-shadow: 0 0 10px 3px var(--shadow-color); transition: transform 0.1s ease; }
+
+    /* LANG SELECTOR */
     #lang-selector { position: absolute; top: 40px; right: 40px; z-index: 802; display: flex; gap: 10px; }
     #lang-selector button { background: none; border: none; color: rgba(255,255,255,0.5); font-weight: bold; font-size: 14px; cursor: pointer; transition: color 0.3s; pointer-events: auto; }
     #lang-selector button.active { color: var(--main-color); }
 
-    /* =========================================
-       SCENA E LAYERS
-       ========================================= */
-    #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
-    #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; }
-    .layer { position: absolute; top: -5%; left: -5%; object-fit: cover; pointer-events: none; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-    .desktop-layer { width: 110%; height: 110%; }
-    .mobile-layer { width: 115%; height: 115%; top: -7.5%; left: -7.5%; }
-    .mobile-layer.foreground { width: 130%; height: 130%; top: -15%; left: -15%; }
-    .layer.smooth-zoom { transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease !important; will-change: transform, filter; }
+    /* MENU & LOGO */
+    #menu { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 80%; display: flex; align-items: center; z-index: 100; }
+    #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; transition: color 0.3s; pointer-events: auto; }
+    #menu a:hover { color: var(--main-color); }
+    .logo-center { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; height: 60px; cursor: pointer; pointer-events: auto; }
+    .logo-center img { position: absolute; height: 100%; transition: opacity 0.3s ease, transform 0.3s ease; }
+    .logo-red { opacity: 0; filter: brightness(0) saturate(100%) invert(16%) sepia(91%) saturate(3200%) hue-rotate(345deg) brightness(80%) contrast(95%); }
+    .logo-center:hover .logo-white { opacity: 0; transform: scale(1.08); }
+    .logo-center:hover .logo-red { opacity: 1; transform: scale(1.08); }
 
-    /* =========================================
-       TESTI CENTRALI E SCIA
-       ========================================= */
-    #hero-text-trail, #hero-text {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; will-change: transform;
-    }
+    /* HERO TEXT & TRAIL */
+    #hero-text, #hero-text-trail { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
     #hero-text-trail { color: var(--main-color); z-index: 89; filter: blur(12px); opacity: 0; mix-blend-mode: screen; }
     #hero-text { color: #fff; z-index: 90; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
     
     #hero-text .title, #hero-text .title-big, #hero-text .subtitle, .hero-cta { opacity: 0; transform: translateY(20px); }
     #hero-text .title, #hero-text-trail .title { font-size: 3vw; margin: 0; font-weight: 300; letter-spacing: 4px; }
     #hero-text .title-big, #hero-text-trail .title-big { font-size: 7vw; margin: 0; font-weight: bold; letter-spacing: 8px; }
-    #hero-text .subtitle { font-size: 1.2vw; margin-top: 15px; font-weight: 300; text-shadow: 1px 1px 5px #000; }
+    #hero-text .subtitle { font-size: 1.2vw; margin-top: 15px; font-weight: 300; }
 
-    body.app-loaded #hero-text .title { animation: cinematicFade 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-    body.app-loaded #hero-text .title-big { animation: cinematicFadeBig 2s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards; }
-    body.app-loaded #hero-text .subtitle { animation: fadeUp 0.8s ease 0.6s forwards; }
-    body.app-loaded .hero-cta { animation: fadeUp 0.8s ease 1s forwards; }
-    body.app-loaded #hero-text-trail { animation: fadeInTrail 2.5s ease 0.5s forwards; }
+    body.app-loaded #hero-text .title { animation: cinFade 1.5s ease forwards; }
+    body.app-loaded #hero-text .title-big { animation: cinFade 2s ease 0.2s forwards; }
+    body.app-loaded #hero-text .subtitle { animation: cinUp 1s ease 0.6s forwards; }
+    body.app-loaded .hero-cta { animation: cinUp 1s ease 1s forwards; pointer-events: auto; }
+    body.app-loaded #hero-text-trail { animation: cinTrail 3s ease 0.5s forwards; }
 
-    @keyframes cinematicFade { 0% { opacity: 0; filter: blur(10px); transform: scale(0.9) translateY(20px); } 100% { opacity: 1; filter: blur(0px); transform: scale(1) translateY(0); } }
-    @keyframes cinematicFadeBig { 0% { opacity: 0; filter: blur(15px); transform: scale(0.9) translateY(20px); } 100% { opacity: 1; filter: blur(0px); transform: scale(1) translateY(0); } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 0.8; transform: translateY(0); } }
-    @keyframes fadeInTrail { to { opacity: 0.6; } }
+    @keyframes cinFade { 0% { opacity: 0; filter: blur(10px); transform: scale(0.9) translateY(20px); } 100% { opacity: 1; filter: blur(0px); transform: scale(1) translateY(0); } }
+    @keyframes cinUp { to { opacity: 0.8; transform: translateY(0); } }
+    @keyframes cinTrail { to { opacity: 0.6; } }
 
-    .hero-cta { margin-top: 40px; padding: 16px 45px; border-radius: 40px; text-decoration: none; color: #fff; font-size: 1.1rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; pointer-events: auto; }
-    .hero-cta:hover { background: rgba(178, 34, 34, 0.6); border-color: rgba(255, 255, 255, 0.6); transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(178, 34, 34, 0.5); }
+    .hero-cta { margin-top: 40px; padding: 16px 45px; border-radius: 40px; text-decoration: none; color: #fff; font-size: 1.1rem; font-weight: bold; text-transform: uppercase; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); transition: all 0.4s ease; backdrop-filter: blur(10px); }
+    .hero-cta:hover { background: var(--main-color); transform: scale(1.05); }
 
-    /* =========================================
-       MENU E LOGO
-       ========================================= */
-    #menu { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 80%; display: flex; align-items: center; z-index: 100; }
-    #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; transition: color 0.3s;}
-    #menu a:hover { color: var(--main-color); }
-    .logo-center { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; height: 60px; cursor: pointer; }
-    .logo-center img { position: absolute; height: 100%; transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
-    .logo-red { opacity: 0; filter: brightness(0) saturate(100%) invert(16%) sepia(91%) saturate(3200%) hue-rotate(345deg) brightness(80%) contrast(95%); }
-    .logo-center:hover .logo-white { opacity: 0; transform: scale(1.08); }
-    .logo-center:hover .logo-red { opacity: 1; transform: scale(1.08); }
+    /* HOTSPOTS */
+    .hotspot { position: absolute; width: 45px; height: 45px; border-radius: 50%; background: var(--main-color); display: flex; justify-content: center; align-items: center; z-index: 50; color: #fff; pointer-events: auto; }
+    .hotspot.hidden { opacity: 0; pointer-events: none; }
+    .hotspot-label { position: absolute; background: var(--main-color); padding: 5px 12px; border-radius: 10px; font-size: 12px; font-weight: bold; top: -40px; opacity: 0; transition: 0.3s; white-space: nowrap; }
+    .hotspot:hover .hotspot-label { opacity: 1; }
 
-    #hamburger { display: none; position: absolute; top: 15px; right: 15px; width: 35px; height: 26px; padding: 15px; box-sizing: content-box; flex-direction: column; justify-content: space-between; align-items: center; cursor: pointer; z-index: 801; }
-    #hamburger div { height: 3px; width: 100%; background: #fff; transition: all 0.4s; transform-origin: left center; will-change: transform, opacity; }
-    #hamburger.open div:nth-child(1) { transform: rotate(45deg) translate(0px, -2px); }
-    #hamburger.open div:nth-child(2) { opacity: 0; }
-    #hamburger.open div:nth-child(3) { transform: rotate(-45deg) translate(0px, 2px); }
-
-    #mobile-menu { position: fixed; inset: 0; background: rgba(12, 12, 12, 0.98); display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 800; clip-path: circle(0px at calc(100% - 40px) 40px); transition: clip-path 0.6s ease-in-out; pointer-events: none; will-change: clip-path; }
-    #mobile-menu.open { clip-path: circle(150% at calc(100% - 40px) 40px); pointer-events: auto; }
-    #mobile-menu a { display: flex; align-items: center; gap: 15px; color: #fff; margin: 15px 0; font-size: 1.3rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; }
-
-    /* POPUP */
-    #content-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: flex; justify-content: center; align-items: center; z-index: 9000; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.5s ease; }
-    #content-overlay.active { opacity: 1; visibility: visible; }
-    .content-box { color: #fff; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
-    #content-overlay.active .content-box { transform: scale(1); opacity: 1; }
-    .close-btn { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); font-size: 3.5rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; transition: all 0.3s ease; padding: 20px; line-height: 0.5; }
-    .close-btn:hover { color: var(--main-color); transform: translateX(-50%) scale(1.2); }
-
-    /* FOOTER E CONTROLS */
-    #audio-toggle { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 600; background: #000; border: 1px solid rgba(255,255,255,0.3); border-radius: 40px; padding: 8px 16px; color: #fff; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-    #timeControls { position: fixed; top: 115px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 650; }
-    #timeControls button { padding: 6px 12px; border: 1px solid rgba(255,255,255,0.4); border-radius: 15px; background: rgba(0,0,0,0.6); color: white; cursor: pointer; font-size: 11px; backdrop-filter: blur(4px); transition: all 0.3s ease; }
-    #timeControls button.active-debug { background: var(--main-color); border-color: var(--main-color); }
-    
-    footer { background: #111; color: #ccc; width: 100vw; position: fixed; bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px; pointer-events: auto; }
-    .footer-top { display: flex; justify-content: center; align-items: center; padding: 10px 25px; background: var(--main-color); color: #fff; gap: 20px; }
-    .footer-bottom { display: flex; justify-content: center; align-items: center; padding: 10px 25px; background: #000; gap: 15px; }
-
-    /* MOBILE OVERRIDES */
+    /* MOBILE SETTINGS */
     @media (max-width: 768px) {
       #menu { display: none; }
-      #hamburger { display: flex; }
-      #mobile-logo { display: block; position: absolute; top: 20px; left: 20px; height: 50px; z-index: 101; }
-      #lang-selector { top: 22px; right: 80px; left: 50%; transform: translateX(-50%); width: fit-content; justify-content: center; }
+      #hamburger { display: flex; position: absolute; top: 15px; right: 15px; z-index: 801; width: 30px; height: 25px; flex-direction: column; justify-content: space-between; pointer-events: auto; }
+      #hamburger div { height: 3px; width: 100%; background: #fff; transition: 0.3s; }
+      #mobile-logo { display: block; position: absolute; top: 15px; left: 15px; height: 45px; z-index: 101; }
+      #lang-selector { top: 20px; right: auto; left: 50%; transform: translateX(-50%); width: fit-content; }
       #hero-text .title, #hero-text-trail .title { font-size: 6vw; }
       #hero-text .title-big, #hero-text-trail .title-big { font-size: 12vw; }
-      #hero-text .subtitle { font-size: 3.5vw; width: 80%; }
-      #audio-toggle { bottom: 110px; }
-      footer { font-size: 10px; }
-      .footer-top, .footer-bottom { flex-wrap: wrap; text-align: center; padding: 8px; }
+      #hero-text .subtitle { font-size: 4vw; width: 85%; }
+      #mobile-menu { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 800; display: flex; flex-direction: column; justify-content: center; align-items: center; clip-path: circle(0% at 100% 0%); transition: 0.6s ease-in-out; }
+      #mobile-menu.open { clip-path: circle(150% at 100% 0%); }
+      #mobile-menu a { color: #fff; font-size: 1.5rem; text-decoration: none; margin: 15px; text-transform: uppercase; font-weight: bold; }
     }
+
+    /* POPUP & CLOSE BTN */
+    #content-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.5s; backdrop-filter: blur(10px); }
+    #content-overlay.active { opacity: 1; visibility: visible; }
+    .content-box { color: #fff; text-align: center; max-width: 500px; padding: 20px; }
+    .close-btn { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); font-size: 40px; color: #fff; pointer-events: auto; transition: 0.3s; }
+    .close-btn:hover { color: var(--main-color); transform: translateX(-50%) scale(1.2); }
+
+    /* FOOTER */
+    footer { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; z-index: 500; font-size: 11px; color: #888; }
+    .footer-top { background: var(--main-color); color: #fff; padding: 8px; text-align: center; font-weight: bold; }
+    .footer-bottom { background: #000; padding: 8px; text-align: center; }
+
+    #audio-toggle { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 600; background: #000; color: #fff; padding: 10px 20px; border-radius: 30px; border: 1px solid #444; pointer-events: auto; }
   </style>
 </head>
 <body data-time="sera">
 
-  <div id="loader"><div class="logo-wrapper"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo"></div></div>
-  <div id="gyro-overlay" class="active"><button id="gyro-btn">Esplora in 3D</button></div>
-  <div id="custom-cursor" class="pulsing"></div>
+  <div id="loader"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo"></div>
+  <div id="gyro-overlay" class="active" style="position:fixed; inset:0; z-index:99999; display:flex; justify-content:center; align-items:center; background:rgba(0,0,0,0.8);"><button id="gyro-btn" style="padding:20px 40px; border-radius:40px; background:var(--main-color); color:#fff; border:none; font-weight:bold;">ATTIVA ESPERIENZA 3D</button></div>
 
   <div id="lang-selector">
     <button class="active" data-lang="it">IT</button>
@@ -194,248 +124,158 @@
   </div>
 
   <div id="menu">
-    <a href="#" data-key="chi" class="i18n-menu" data-i18n="chi">CHI SIAMO</a>
-    <a href="#" data-key="mescita" class="i18n-menu" data-i18n="mescita">MESCITA</a>
+    <a href="#" data-key="chi">CHI SIAMO</a>
+    <a href="#" data-key="mescita">MESCITA</a>
     <div class="logo-center">
       <img class="logo-white" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo">
       <img class="logo-red" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo">
     </div>
-    <a href="#" data-key="bar" class="i18n-menu" data-i18n="bar">HI-FI BAR</a>
-    <a href="#" data-key="eventi" class="i18n-menu" data-i18n="eventi">EVENTI</a>
+    <a href="#" data-key="bar">HI-FI BAR</a>
+    <a href="#" data-key="eventi">EVENTI</a>
   </div>
 
-  <img id="mobile-logo" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo Mobile">
+  <img id="mobile-logo" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo">
   <div id="hamburger"><div></div><div></div><div></div></div>
   <div id="mobile-menu"></div>
 
-  <div id="vignette"></div>
-  <div id="film-noise"></div>
-
-  <div id="hero-text-trail">
-    <h2 class="title" id="trail-title"></h2>
-    <h1 class="title-big" id="trail-title-big">CATMA BAR</h1>
-    <p class="subtitle" id="trail-subtitle" style="visibility: hidden;"></p>
-    <a href="#" class="hero-cta" id="trail-cta" style="visibility: hidden;">PRENOTA UN TAVOLO</a>
-  </div>
-
-  <div id="hero-text">
-    <h2 class="title" id="text-title"></h2>
-    <h1 class="title-big" id="text-title-big">CATMA BAR</h1>
-    <p class="subtitle" id="text-subtitle"></p>
-    <a href="#" class="hero-cta i18n-cta" data-key="prenota">PRENOTA UN TAVOLO</a>
-  </div>
-
-  <div id="audio-toggle"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg><div class="switch-track"><div class="switch-knob"></div></div></div>
-  <div id="timeControls"><button data-time="giorno">Giorno</button><button data-time="sera">Sera</button><button data-time="chiuso">Chiuso</button></div>
-  <div id="content-overlay"><div class="close-btn">&times;</div><div class="content-box"></div></div>
-
   <div id="hero">
     <div id="hero-layers">
-      <img class="layer desktop-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp">
-      <img class="layer desktop-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774821283/Catma-midground_zjbznb.webp">
-      <img class="layer desktop-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp">
-      <img class="layer mobile-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
-      <img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774917597/Catma-midground-mobile_xvwur8.webp">
-      <img class="layer mobile-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
+      <img class="layer desktop-layer" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp" style="z-index:1">
+      <img class="layer desktop-layer" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774821283/Catma-midground_zjbznb.webp" style="z-index:2">
+      <img class="layer desktop-layer" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp" style="z-index:3">
+      <img class="layer mobile-layer" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp" style="z-index:1">
+      <img class="layer mobile-layer" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774917597/Catma-midground-mobile_xvwur8.webp" style="z-index:2">
+      <img class="layer mobile-layer" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp" style="z-index:3">
     </div>
-    <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="15" data-y-mobile="35"></div>
-    <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="75"></div>
-    <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="38" data-x-mobile="85" data-y-mobile="40"></div>
-    <div class="hotspot" data-key="bar" data-x-desktop="90" data-y-desktop="65" data-x-mobile="85" data-y-mobile="70"></div>
+
+    <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="15" data-y-mobile="35"></div>
+    <div class="hotspot" data-key="mescita" data-x-desktop="30" data-y-desktop="60" data-x-mobile="25" data-y-mobile="70"></div>
+    <div class="hotspot" data-key="eventi" data-x-desktop="75" data-y-desktop="35" data-x-mobile="75" data-y-mobile="40"></div>
+    <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="80" data-y-mobile="75"></div>
   </div>
 
+  <div id="hero-text-trail"><h2 class="title"></h2><h1 class="title-big">CATMA BAR</h1><p class="subtitle" style="visibility:hidden"></p><a href="#" class="hero-cta" style="visibility:hidden">PRENOTA</a></div>
+  <div id="hero-text"><h2 class="title"></h2><h1 class="title-big">CATMA BAR</h1><p class="subtitle"></p><a href="#" class="hero-cta" data-key="prenota">PRENOTA UN TAVOLO</a></div>
+
+  <div id="audio-toggle">AUDIO OFF</div>
+  <audio id="bg-audio" loop></audio>
+
+  <div id="content-overlay"><div class="close-btn">&times;</div><div class="content-box"></div></div>
+
   <footer>
-    <div class="footer-top"><p>Piazza Marconi, Via delle Sirene 13, Lido di Jesolo (VE)</p></div>
-    <div class="footer-bottom"><div>&copy; <span id="year"></span> Catma Bar.</div></div>
+    <div class="footer-top">Via delle Sirene 13, Lido di Jesolo</div>
+    <div class="footer-bottom">&copy; 2026 Catma Bar.</div>
   </footer>
 
   <script>
-    document.getElementById('year').innerText = new Date().getFullYear();
-    let currentLang = 'it';
     const i18n = {
       it: {
         menu: { chi: "CHI SIAMO", mescita: "MESCITA", bar: "HI-FI BAR", eventi: "LIVE MUSIC", prenota: "PRENOTA UN TAVOLO" },
         hero: {
           giorno: { t: "BUONGIORNO DA", sub: "Cucina di alto livello e Vini Naturali a Jesolo Lido" },
           sera: { t: "BENVENUTI AL", sub: "L'Hi-Fi Bar di Piazza Marconi. Dj-set di nicchia e Live Music." },
-          chiuso: { t: "IL CATMA È<br>CHIUSO", sub: "Giovanni ti aspetta domani. Friendly vibes e classe al Catma." }
-        },
-        popups: {
-          chi: { title: "Chi siamo", desc: "Guidati dall'oste Giovanni Catma, siamo un Hi-Fi Bar nel cuore di Jesolo Lido. Un rifugio per anime notturne, dove la ricerca musicale incontra la cultura del bere di qualità." },
-          mescita: { title: "Mescita & Cucina", desc: "Cucina semplice ma di altissimo livello. Vini naturali e birre artigianali di carattere." },
-          eventi: { title: "Live Music & DJ", desc: "Selezioni eleganti: dal Jazz al Retro, dalla World Music al Funk e alla Disco di nicchia." },
-          bar: { title: "Hi-Fi Bar", desc: "Uno spazio progettato per l'eccellenza sonora. Ambiente avvolgente e raffinato." },
-          prenota: { title: "Prenota", desc: "Scrivici su WhatsApp o chiamaci.", ctaW: "WhatsApp", ctaC: "Chiama" }
+          chiuso: { t: "IL CATMA È CHIUSO", sub: "Giovanni ti aspetta domani. Friendly vibes." }
         }
       },
       en: {
-        menu: { chi: "ABOUT US", mescita: "FOOD & WINE", bar: "HI-FI BAR", eventi: "LIVE MUSIC", prenota: "BOOK A TABLE" },
+        menu: { chi: "ABOUT US", mescita: "MESCITA", bar: "HI-FI BAR", eventi: "LIVE MUSIC", prenota: "BOOK A TABLE" },
         hero: {
-          giorno: { t: "GOOD MORNING", sub: "High-level cuisine and Natural Wines in Jesolo Lido" },
-          sera: { t: "WELCOME TO", sub: "The Hi-Fi Bar in Piazza Marconi. Niche Dj-sets and Live Music." },
-          chiuso: { t: "CATMA IS<br>CLOSED", sub: "Giovanni awaits you tomorrow. Friendly vibes and class." }
-        }
-      },
-      de: {
-        menu: { chi: "ÜBER UNS", mescita: "ESSEN & WEIN", bar: "HI-FI BAR", eventi: "LIVE MUSIC", prenota: "TISCH RESERVIEREN" },
-        hero: {
-          giorno: { t: "GUTEN MORGEN", sub: "Gehobene Küche und Naturweine in Jesolo Lido" },
-          sera: { t: "WILLKOMMEN IM", sub: "Die Hi-Fi Bar an der Piazza Marconi. Nischen-DJ-Sets & Live Music." },
-          chiuso: { t: "CATMA IST<br>GESCHLOSSEN", sub: "Giovanni erwartet Sie morgen. Freundliche Vibes und Klasse." }
+          giorno: { t: "GOOD MORNING", sub: "High-level cuisine and Natural Wines" },
+          sera: { t: "WELCOME TO", sub: "Hi-Fi Bar at Piazza Marconi. Niche Dj-sets." },
+          chiuso: { t: "CATMA IS CLOSED", sub: "Giovanni waits for you tomorrow." }
         }
       }
     };
 
-    const iconsMap = {
-      chi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
-      mescita: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 22h8M12 15v7M7 3h10v3a5 5 0 0 1-5 5v0a5 5 0 0 1-5-5V3z"/></svg>`,
-      bar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11h1a3 3 0 0 1 0 6h-1M9 12v6M13 12v6M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 5 0c.81 0 1.5-.5 2.5-.5a2.5 2.5 0 0 1 5 0c.81 0 1.5-.5 2.5-.5zM5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/></svg>`,
-      eventi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`
-    };
+    let currentLang = 'it';
+    let targetX = 0, targetY = 0, curX = 0, curY = 0, trailX = 0, trailY = 0;
+    const isMobile = window.innerWidth <= 768;
 
-    const heroLayers = document.getElementById('hero-layers');
-    const heroText = document.getElementById('hero-text');
-    const heroTrail = document.getElementById('hero-text-trail');
-    const hotspots = document.querySelectorAll('.hotspot');
-    const bgAudio = document.getElementById('bg-audio');
-    const loader = document.getElementById('loader');
+    function applyTime() {
+      const h = new Date().getHours();
+      const state = (h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso';
+      document.body.setAttribute('data-time', state);
+      const content = i18n[currentLang].hero[state];
+      document.querySelectorAll('#hero-text .title, #hero-text-trail .title').forEach(el => el.innerHTML = content.t);
+      document.querySelectorAll('#hero-text .subtitle, #hero-text-trail .subtitle').forEach(el => el.innerHTML = content.sub);
+      
+      const audio = document.getElementById('bg-audio');
+      const tracks = { giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3", sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3", chiuso: "https://res.cloudinary.com/dkni7ncod/video/upload/v1774988445/seaguls_lsc1ou.mp3" };
+      audio.src = tracks[state];
+    }
 
-    let targetX = 0, targetY = 0, currentX = 0, currentY = 0, trailX = 0, trailY = 0, rafId = null;
-    let isZoomed = false, soundEnabled = false, manualTime = false;
-    const isTouch = 'ontouchstart' in window;
+    function loop() {
+      curX += (targetX - curX) * 0.1;
+      curY += (targetY - curY) * 0.1;
+      trailX += (targetX - trailX) * 0.05;
+      trailY += (targetY - trailY) * 0.05;
 
-    function renderParallax() {
-      if (isZoomed) return;
-      const x = currentX, y = currentY;
-      const tx = trailX, ty = trailY;
-      const isMobile = window.innerWidth <= 768;
-
-      // Layers Background
       const layers = isMobile ? document.querySelectorAll('.mobile-layer') : document.querySelectorAll('.desktop-layer');
-      if (layers[0]) layers[0].style.transform = `translate3d(${x*15}px, ${y*8}px, 0)`;
-      if (layers[1]) layers[1].style.transform = `translate3d(${x*25}px, ${y*12}px, 0)`;
-      if (layers[2]) layers[2].style.transform = `translate3d(${x*40}px, ${y*20}px, 0)`;
+      layers.forEach((l, i) => {
+        const factor = (i + 1) * 20;
+        l.style.transform = `translate3d(${curX * factor}px, ${curY * (factor/2)}px, 0) scale(1.1)`;
+      });
 
-      // Text Movement - SOLO DESKTOP per stabilità footer
-      if (!isTouch) {
-        heroText.style.transform = `translate(-50%, -50%) translate3d(${-x*100}px, ${-y*80}px, 0)`;
-        heroTrail.style.transform = `translate(-50%, -50%) translate3d(${-tx*100}px, ${-ty*80}px, 0)`;
+      if(!isMobile) {
+        document.getElementById('hero-text').style.transform = `translate(-50%, -50%) translate3d(${-curX * 80}px, ${-curY * 40}px, 0)`;
+        document.getElementById('hero-text-trail').style.transform = `translate(-50%, -50%) translate3d(${-trailX * 80}px, ${-trailY * 40}px, 0)`;
       }
 
-      hotspots.forEach(h => {
-        if(!h.classList.contains('hidden')) {
-          const ox = parseFloat(h.dataset.ox), oy = parseFloat(h.dataset.oy);
-          h.style.left = `${ox + (x*25)}px`; h.style.top = `${oy + (y*12)}px`;
-        }
+      document.querySelectorAll('.hotspot').forEach(h => {
+        const ox = isMobile ? h.dataset.xMobile : h.dataset.xDesktop;
+        const oy = isMobile ? h.dataset.yMobile : h.dataset.yDesktop;
+        h.style.left = `calc(${ox}% + ${curX * 30}px)`;
+        h.style.top = `calc(${oy}% + ${curY * 15}px)`;
       });
-      rafId = requestAnimationFrame(updateLoop);
+
+      requestAnimationFrame(loop);
     }
 
-    function updateLoop() {
-      currentX += (targetX - currentX) * 0.15;
-      currentY += (targetY - currentY) * 0.15;
-      trailX += (targetX - trailX) * 0.10;
-      trailY += (targetY - trailY) * 0.10;
-      renderParallax();
-    }
-
-    document.addEventListener('mousemove', e => {
-      if(isTouch) return;
+    window.addEventListener('mousemove', e => {
       targetX = (e.clientX / window.innerWidth) - 0.5;
       targetY = (e.clientY / window.innerHeight) - 0.5;
     });
 
-    function updateUI() {
-      document.querySelectorAll('.i18n-menu').forEach(el => el.innerText = i18n[currentLang].menu[el.dataset.i18n]);
-      document.getElementById('mobile-menu').innerHTML = `
-        <a href="#" data-key="chi">${iconsMap.chi} ${i18n[currentLang].menu.chi}</a>
-        <a href="#" data-key="mescita">${iconsMap.mescita} ${i18n[currentLang].menu.mescita}</a>
-        <a href="#" data-key="bar">${iconsMap.bar} ${i18n[currentLang].menu.bar}</a>
-        <a href="#" data-key="eventi">${iconsMap.eventi} ${i18n[currentLang].menu.eventi}</a>
-        <a href="#" class="cta" data-key="prenota">${i18n[currentLang].menu.prenota}</a>
-      `;
-      document.querySelector('.i18n-cta').innerText = i18n[currentLang].menu.prenota;
-      document.getElementById('trail-cta').innerText = i18n[currentLang].menu.prenota;
-      applyTimeFilter();
-      bindEvents();
-    }
-
-    function setTimeVisuals(state) {
-      document.body.setAttribute('data-time', state);
-      const t = i18n[currentLang].hero[state] || i18n['it'].hero[state];
-      document.getElementById('text-title').innerHTML = t.t;
-      document.getElementById('trail-title').innerHTML = t.t;
-      document.getElementById('text-subtitle').innerHTML = t.sub;
-      document.getElementById('trail-subtitle').innerHTML = t.sub;
-
-      const tracks = { 
-        giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3",
-        sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3",
-        chiuso: "https://res.cloudinary.com/dkni7ncod/video/upload/v1774988445/seaguls_lsc1ou.mp3"
-      };
-      if(bgAudio.src !== tracks[state]) { bgAudio.src = tracks[state]; bgAudio.load(); if(soundEnabled) bgAudio.play(); }
-    }
-
-    function applyTimeFilter() { if(!manualTime) { const h = new Date().getHours(); setTimeVisuals((h>=9&&h<18)?'giorno':(h>=18||h<2)?'sera':'chiuso'); } }
-
-    function bindEvents() {
-      document.querySelectorAll('[data-key]').forEach(el => {
-        el.onclick = e => { e.preventDefault(); if(el.dataset.key) zoomTo(el.dataset.key); document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('hamburger').classList.remove('open'); };
-      });
-    }
-
-    function zoomTo(key) {
-      if(isZoomed) return;
-      isZoomed = true;
-      document.getElementById('content-overlay').classList.add('active');
-      const t = i18n[currentLang].popups[key] || i18n['it'].popups[key];
-      document.querySelector('.content-box').innerHTML = `<h1>${t.title}</h1><p>${t.desc}</p>`;
-      setTimeout(() => document.querySelector('.content-box').classList.add('show'), 100);
-    }
+    document.getElementById('gyro-btn').onclick = () => {
+      document.getElementById('gyro-overlay').classList.remove('active');
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().then(res => {
+          if (res === 'granted') window.addEventListener('deviceorientation', e => { targetX = e.gamma / 45; targetY = e.beta / 45; });
+        });
+      } else { window.addEventListener('deviceorientation', e => { targetX = e.gamma / 45; targetY = e.beta / 45; }); }
+    };
 
     document.getElementById('hamburger').onclick = () => {
       document.getElementById('mobile-menu').classList.toggle('open');
-      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobile-menu').innerHTML = document.getElementById('menu').innerHTML;
+      document.querySelectorAll('#mobile-menu a').forEach(a => a.onclick = () => document.getElementById('mobile-menu').classList.remove('open'));
     };
 
-    document.querySelectorAll('#lang-selector button').forEach(btn => {
-      btn.onclick = () => {
-        document.querySelectorAll('#lang-selector button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentLang = btn.dataset.lang;
-        updateUI();
+    document.querySelectorAll('[data-key]').forEach(el => {
+      el.onclick = e => {
+        e.preventDefault();
+        const key = el.dataset.key;
+        document.getElementById('content-overlay').classList.add('active');
+        document.querySelector('.content-box').innerHTML = `<h1>${key.toUpperCase()}</h1><p>Contenuto in fase di caricamento per ${key}...</p>`;
       };
     });
 
-    document.getElementById('audio-toggle').onclick = () => {
-      soundEnabled = !soundEnabled;
-      document.getElementById('audio-toggle').classList.toggle('playing');
-      soundEnabled ? bgAudio.play() : bgAudio.pause();
+    document.querySelector('.close-btn').onclick = () => document.getElementById('content-overlay').classList.remove('active');
+
+    document.getElementById('audio-toggle').onclick = function() {
+      const audio = document.getElementById('bg-audio');
+      if(audio.paused) { audio.play(); this.innerHTML = "AUDIO ON"; }
+      else { audio.pause(); this.innerHTML = "AUDIO OFF"; }
     };
 
     window.onload = () => {
+      applyTime();
+      loop();
       setTimeout(() => {
-        loader.classList.add('hidden');
+        document.getElementById('loader').classList.add('hidden');
         document.body.classList.add('app-loaded');
-        setLayers();
-        updateLoop();
       }, 1500);
     };
-
-    function setLayers() {
-      const isMobile = window.innerWidth <= 768;
-      hotspots.forEach(h => {
-        h.dataset.ox = (parseFloat(isMobile ? h.dataset.xMobile : h.dataset.xDesktop)/100) * window.innerWidth;
-        h.dataset.oy = (parseFloat(isMobile ? h.dataset.yMobile : h.dataset.yDesktop)/100) * window.innerHeight;
-      });
-    }
-
-    document.querySelector('.close-btn').onclick = () => {
-      document.getElementById('content-overlay').classList.remove('active');
-      isZoomed = false;
-    };
-
-    updateUI();
   </script>
 </body>
 </html>
