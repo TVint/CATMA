@@ -270,7 +270,7 @@
     <p>Per un'esperienza ottimale,<br>ruota il dispositivo in verticale.</p>
   </div>
 
-  <audio id="bg-audio" loop src="https://incompetech.com/music/royalty-free/mp3-royaltyfree/Jazz%20Brunch.mp3" preload="none"></audio>
+  <audio id="bg-audio" loop preload="none"></audio>
   <audio id="hover-sfx" src="https://actions.google.com/sounds/v1/ui/button_click.ogg" preload="auto"></audio>
   <audio id="click-sfx" src="https://actions.google.com/sounds/v1/ui/pop_up_on.ogg" preload="auto"></audio>
 
@@ -384,12 +384,21 @@
       prenota: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Prenota un tavolo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group stagger-item stagger-4"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
     };
 
-    // GESTIONE AUDIO
+    // GESTIONE AUDIO DI BASE
     const bgAudio = document.getElementById('bg-audio'); const hoverSfx = document.getElementById('hover-sfx'); const clickSfx = document.getElementById('click-sfx'); const audioToggle = document.getElementById('audio-toggle');
     bgAudio.volume = 0.7; hoverSfx.volume = 0.3; clickSfx.volume = 0.5;
 
     function playSfx(audioEl) { if(soundEnabled && audioEl) { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); } }
-    audioToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } else { audioToggle.classList.remove('playing'); bgAudio.pause(); } });
+    audioToggle.addEventListener('click', () => { 
+      soundEnabled = !soundEnabled; 
+      if (soundEnabled) { 
+        audioToggle.classList.add('playing'); 
+        bgAudio.play().catch(()=>{}); 
+      } else { 
+        audioToggle.classList.remove('playing'); 
+        bgAudio.pause(); 
+      } 
+    });
 
     // =========================================
     // GIROSCOPIO E PARALLASSE
@@ -464,15 +473,12 @@
 
       const isMobile = window.innerWidth <= 768;
       
-      // Valori di default per lo zoom in scala
       let scaleBg = 1.2, scaleMid = 1.5, scaleFg = 2.2;
       let safeDx = 0, safeDy = 0;
 
       if (isMobile) {
-        // SU MOBILE: Nessuno spostamento laterale (meno calcoli), solo un morbido zoom centrale.
         scaleBg = 1.05; scaleMid = 1.1; scaleFg = 1.15;
       } else {
-        // SU DESKTOP: Zoom dinamico mirato sul pallino con blocco anti-bordo-nero.
         const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
         const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
         const dx = cx - tx; const dy = cy - ty;
@@ -525,7 +531,6 @@
       }, 300);
     }
 
-    // EVENT LISTENER HOTSPOTS E MENU
     hotspots.forEach(h => { 
       h.onmouseenter = () => playSfx(hoverSfx);
       if(h.dataset.key !== 'prenota') {
@@ -545,20 +550,42 @@
     overlay.querySelector('.close-btn').onclick = resetZoom; document.addEventListener('keydown', e => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
     overlay.onclick = e => { if(!contentBox.contains(e.target)) resetZoom(); }; overlay.querySelector('.close-btn').onclick = e => { e.stopPropagation(); resetZoom(); };
 
-    // CURSORE
     const customCursor = document.createElement('div'); customCursor.id = 'custom-cursor'; document.body.appendChild(customCursor);
     document.addEventListener('mousemove', e => customCursor.style.transform = `translate3d(calc(-50% + ${e.clientX}px), calc(-50% + ${e.clientY}px), 0)`);
     document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px var(--shadow-strong)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
     document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px var(--shadow-color)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
 
-    // TIME VISUALS E INIT
+    // =========================================
+    // GESTIONE TEMPO + AUDIO DINAMICO
+    // =========================================
     function setTimeVisuals(state) {
       document.body.setAttribute('data-time', state); void heroLayers.offsetWidth;
+      
+      // Testi e Titoli
       const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
       const heroText = document.getElementById('hero-text'); heroText.style.opacity = 0;
       setTimeout(() => { heroText.innerHTML = `<h2 class="title">${t.title}</h2><h1 class="title-big">${t.titleBig}</h1><p class="subtitle">${t.subtitle}</p>`; heroText.style.opacity = 1; }, 250);
-      document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug')); document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
+      
+      // Aggiorna Bottoni
+      document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug')); 
+      document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
+
+      // Gestione Audio Dinamico
+      const audioTracks = {
+        giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3",
+        sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3",
+        chiuso: "https://actions.google.com/sounds/v1/nature/night_crickets_loop.ogg"
+      };
+
+      const newTrack = audioTracks[state];
+      if (bgAudio.getAttribute('src') !== newTrack) {
+        bgAudio.src = newTrack;
+        if (soundEnabled) {
+          bgAudio.play().catch(()=>{});
+        }
+      }
     }
+
     function applyTimeFilter() { if (manualTimeOverride) return; const h = new Date().getHours(); setTimeVisuals((h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso'); }
     document.querySelectorAll('#timeControls button').forEach(btn => btn.onclick = e => { manualTimeOverride = true; setTimeVisuals(e.target.dataset.time); });
 
