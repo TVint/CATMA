@@ -30,7 +30,7 @@
     }
 
     /* =========================================
-       ATMOSFERA: VIGNETTATURA E GRANA PELLICOLA (ZERO LAG)
+       ATMOSFERA: VIGNETTATURA E GRANA PELLICOLA
        ========================================= */
     #vignette {
       position: absolute; inset: 0; pointer-events: none; z-index: 85;
@@ -54,13 +54,12 @@
     @media (max-width: 900px) and (orientation: landscape) { #rotate-device { display: flex; } }
 
     /* =========================================
-       CURSORE CENTRATO "SOFT PULSE" E LOADER
+       CURSORE E LOADER
        ========================================= */
     #custom-cursor {
       position: fixed; width: 25px; height: 25px; background: black; border-radius: 50%; pointer-events: none; 
       z-index: 99999; transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 0 10px 3px var(--shadow-color);
     }
-    /* Classe speciale per l'apertura */
     #custom-cursor.pulsing { animation: softPulse 2s cubic-bezier(0.25, 1, 0.5, 1) infinite; transition: none; }
     @keyframes softPulse { 0%, 100% { transform: translate3d(-50%, -50%, 0) scale(1); box-shadow: 0 0 10px 3px var(--shadow-color); } 50% { transform: translate3d(-50%, -50%, 0) scale(1.4); box-shadow: 0 0 20px 5px var(--shadow-strong); } }
 
@@ -76,27 +75,25 @@
     #loader.hidden { clip-path: circle(0% at 50% 50%); pointer-events: none; }
 
     /* =========================================
-       SCENA E LAYERS (DIETA VISIVA MOBILE)
+       SCENA E LAYERS
        ========================================= */
     #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
     #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; }
     
     .layer { position: absolute; top: -5%; left: -5%; object-fit: cover; pointer-events: none; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
     .desktop-layer { width: 110%; height: 110%; }
-    /* Su mobile il bancone copre ancora più spazio (130%) per evitare bordi neri */
     .mobile-layer { width: 115%; height: 115%; top: -7.5%; left: -7.5%; }
     .mobile-layer.foreground { width: 130%; height: 130%; top: -15%; left: -15%; }
 
     .layer.smooth-zoom { transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease !important; will-change: transform, filter; }
 
     /* =========================================
-       TESTI CENTRALI: CINEMATIC TRACKING E CTA GLASSMORPHISM
+       TESTI CENTRALI E CTA
        ========================================= */
     #hero-text {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); /* Centratura assoluta */
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       width: 100%; text-align: center; color: #fff; z-index: 90; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      /* Il Floating Parallax modificherà questo transform via JS */
       will-change: transform;
     }
     
@@ -104,27 +101,18 @@
     #hero-text .title-big { font-size: 7vw; margin: 0; font-weight: bold; opacity: 0; animation: cinematicTrackingBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.8s forwards; letter-spacing: 0; }
     #hero-text .subtitle { font-size: 1.2vw; margin-top: 15px; font-weight: 300; opacity: 0; animation: fadeUp 1s ease 1.5s forwards; }
 
-    /* L'Effetto Cinematografico di dilatazione dello spazio */
     @keyframes cinematicTracking { 0% { letter-spacing: -2px; opacity: 0; filter: blur(5px); transform: scale(0.95); } 100% { letter-spacing: 4px; opacity: 1; filter: blur(0px); transform: scale(1); } }
     @keyframes cinematicTrackingBig { 0% { letter-spacing: 0px; opacity: 0; filter: blur(8px); transform: scale(0.95); } 100% { letter-spacing: 8px; opacity: 1; filter: blur(0px); transform: scale(1); } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 0.8; transform: translateY(0); } }
 
-    /* Pulsante CTA Glassmorphism */
     .hero-cta {
       margin-top: 40px; padding: 16px 45px; border-radius: 40px; text-decoration: none; color: #fff; font-size: 1.1rem;
       font-weight: bold; letter-spacing: 2px; text-transform: uppercase;
-      background: rgba(255, 255, 255, 0.05); /* Vetro scuro */
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); /* Effetto Satinato */
-      border: 1px solid rgba(255, 255, 255, 0.25); /* Bordino di luce */
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
       opacity: 0; animation: fadeUp 1s ease 2s forwards; cursor: pointer; pointer-events: auto;
     }
-    .hero-cta:hover {
-      background: rgba(178, 34, 34, 0.6); /* Si tinge del brand color al passaggio */
-      border-color: rgba(255, 255, 255, 0.6);
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 15px 40px rgba(178, 34, 34, 0.5);
-    }
+    .hero-cta:hover { background: rgba(178, 34, 34, 0.6); border-color: rgba(255, 255, 255, 0.6); transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(178, 34, 34, 0.5); }
 
     #audio-toggle {
       position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 600; background: #000; 
@@ -138,7 +126,7 @@
     #audio-toggle.playing .switch-knob { transform: translateX(16px); }
 
     /* =========================================
-       HOTSPOTS (Prenota rimosso da qui)
+       HOTSPOTS
        ========================================= */
     .hotspot {
       position: absolute; left: 0; top: 0; width: 45px; height: 45px; border-radius: 50%; background: var(--main-color);
@@ -163,8 +151,7 @@
        POPUP ANIMATO
        ========================================= */
     #content-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.85); display: flex;
-      justify-content: center; align-items: center; z-index: 9000; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.5s ease;
+      position: fixed; inset: 0; background: rgba(0,0,0,.85); display: flex; justify-content: center; align-items: center; z-index: 9000; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.5s ease;
     }
     #content-overlay.active { opacity: 1; visibility: visible; }
     .content-box { color: #fff; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
@@ -189,14 +176,12 @@
     .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
 
     /* =========================================
-       NAVBAR E MENU MOBILE (LOGO MAGNETICO DESKTOP)
+       NAVBAR E MENU MOBILE
        ========================================= */
     #menu { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 90%; display: flex; align-items: center; z-index: 100; }
     #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; transition: color 0.3s;}
     #menu a:hover { color: var(--main-color); }
-    
     .logo-center { flex: 1; display: flex; justify-content: center; align-items: center; }
-    /* Transizione morbida per l'effetto magnetico del logo */
     .logo-center img { height: 60px; transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; }
     
     #mobile-logo { display: none; position: absolute; top: 20px; left: 20px; height: 50px; z-index: 101; }
@@ -400,7 +385,6 @@
       prenota: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Prenota un tavolo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group stagger-item stagger-4"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
     };
 
-    // GESTIONE AUDIO
     const bgAudio = document.getElementById('bg-audio'); const hoverSfx = document.getElementById('hover-sfx'); const clickSfx = document.getElementById('click-sfx'); const audioToggle = document.getElementById('audio-toggle');
     bgAudio.volume = 0.7; hoverSfx.volume = 0.3; clickSfx.volume = 0.5;
 
@@ -408,12 +392,17 @@
     audioToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } else { audioToggle.classList.remove('playing'); bgAudio.pause(); } });
 
     // =========================================
-    // CURSORE INTELLIGENTE
+    // CURSORE INTELLIGENTE (FIXATO)
     // =========================================
     const customCursor = document.getElementById('custom-cursor');
     let isCursorInit = false;
     document.addEventListener('mousemove', e => { 
-      if(!isCursorInit) { customCursor.classList.remove('pulsing'); isCursorInit = true; }
+      if(!isCursorInit) { 
+        customCursor.classList.remove('pulsing'); 
+        customCursor.style.top = '0px'; 
+        customCursor.style.left = '0px';
+        isCursorInit = true; 
+      }
       customCursor.style.transform = `translate3d(calc(-50% + ${e.clientX}px), calc(-50% + ${e.clientY}px), 0)`; 
     });
     document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px var(--shadow-strong)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
@@ -431,9 +420,6 @@
     });
     desktopLogo.addEventListener('mouseleave', () => { desktopLogo.style.transform = `translate(0px, 0px)`; });
 
-    // =========================================
-    // GIROSCOPIO E PARALLASSE
-    // =========================================
     if('ontouchstart' in window) {
       const gyroOverlay = document.getElementById('gyro-overlay'); const gyroBtn = document.getElementById('gyro-btn');
       gyroBtn.onclick = () => {
@@ -467,11 +453,9 @@
       const maxOffset = isMobile ? {x:15,y:8, mx:15,my:8, fx:40,fy:20} : {x:15,y:7, mx:30,my:15, fx:45,fy:22};
       
       if(layers.background) layers.background.style.transform = `translate3d(${x*maxOffset.x}px, ${y*maxOffset.y}px, 0)`;
-      // Dieta Visiva Mobile: Il midground si muove come il background per azzerare i lag
       if(layers.midground) layers.midground.style.transform = `translate3d(${x*maxOffset.mx}px, ${y*maxOffset.my}px, 0)`;
       if(layers.foreground) layers.foreground.style.transform = `translate3d(${x*maxOffset.fx}px, ${y*maxOffset.fy}px, 0)`;
 
-      // Floating Parallax del testo centrale (Si muove in direzione OPPOSTA allo sfondo)
       const textOffX = -x * maxOffset.mx * 0.8; 
       const textOffY = -y * maxOffset.my * 0.8;
       heroTextContainer.style.transform = `translate3d(calc(-50% + ${textOffX}px), calc(-50% + ${textOffY}px), 0)`;
@@ -485,19 +469,14 @@
 
     function parallaxLoop() {
       if (!isZoomed) { 
-        currentX += (targetX - currentX) * 0.15; 
-        currentY += (targetY - currentY) * 0.15; 
-        renderParallax(currentX, currentY); 
-        rafId = requestAnimationFrame(parallaxLoop); 
+        currentX += (targetX - currentX) * 0.15; currentY += (targetY - currentY) * 0.15; 
+        renderParallax(currentX, currentY); rafId = requestAnimationFrame(parallaxLoop); 
       }
     }
     rafId = requestAnimationFrame(parallaxLoop);
 
     hero.addEventListener('mousemove', e => { if('ontouchstart' in window) return; targetX = (e.clientX / window.innerWidth) - 0.5; targetY = (e.clientY / window.innerHeight) - 0.5; });
 
-    // =========================================
-    // ZOOM ADATTIVO E GESTIONE POPUP
-    // =========================================
     function zoomTo(key) {
       playSfx(clickSfx);
       if(isZoomed) {
@@ -511,7 +490,6 @@
       let safeDx = 0, safeDy = 0;
       let scaleBg = 1.2, scaleMid = 1.5, scaleFg = 2.2;
 
-      // Se è il tasto Prenota (centrale) o siamo da mobile, zoom dritto al centro.
       if (key !== 'prenota' && !isMobile) {
         const h = Array.from(hotspots).find(el => el.dataset.key === key); 
         if(h) {
@@ -567,7 +545,6 @@
       }, 300);
     }
 
-    // EVENT LISTENER HOTSPOTS E CTA
     hotspots.forEach(h => { 
       h.onmouseenter = () => playSfx(hoverSfx);
       h.innerHTML = iconsMap[h.dataset.key]; 
@@ -585,9 +562,6 @@
     overlay.querySelector('.close-btn').onclick = resetZoom; document.addEventListener('keydown', e => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
     overlay.onclick = e => { if(!contentBox.contains(e.target)) resetZoom(); }; overlay.querySelector('.close-btn').onclick = e => { e.stopPropagation(); resetZoom(); };
 
-    // =========================================
-    // GESTIONE TEMPO + AUDIO DINAMICO
-    // =========================================
     function setTimeVisuals(state) {
       document.body.setAttribute('data-time', state); void heroLayers.offsetWidth;
       
@@ -597,9 +571,8 @@
       const titleBigEl = document.getElementById('text-title-big');
       const subtitleEl = document.getElementById('text-subtitle');
 
-      // Ri-attiva le animazioni resettando l'elemento HTML
       titleEl.style.animation = 'none'; titleBigEl.style.animation = 'none'; subtitleEl.style.animation = 'none';
-      titleEl.offsetHeight; /* trigger reflow */
+      titleEl.offsetHeight; 
       
       titleEl.innerHTML = t.title; titleBigEl.innerHTML = t.titleBig; subtitleEl.innerHTML = t.subtitle;
       
