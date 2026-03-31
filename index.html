@@ -58,7 +58,7 @@
     #loader.hidden { transform: translateY(-100%); pointer-events: none; }
 
     /* =========================================
-       SCENA, LAYERS E PARTICELLE
+       SCENA E LAYERS
        ========================================= */
     #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
     #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; transition: filter 0.5s ease; }
@@ -69,12 +69,13 @@
     .layer.smooth-zoom { transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease, filter 0.3s ease !important; }
     .layer.is-moving { filter: blur(5px) !important; }
 
+    /* PARTICELLE: VISIBILITÀ AUMENTATA */
     #particles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 40; overflow: hidden; }
-    .particle { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: floatParticle linear infinite; filter: blur(2px); }
+    .particle { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: floatParticle linear infinite; filter: blur(1.5px); }
     @keyframes floatParticle {
       0% { transform: translate3d(0, 0, 0); opacity: 0; }
-      20% { opacity: 0.25; }
-      80% { opacity: 0.25; }
+      20% { opacity: 0.45; } /* Aumentato dal 25% al 45% */
+      80% { opacity: 0.45; }
       100% { transform: translate3d(40px, -200px, 0); opacity: 0; }
     }
 
@@ -106,7 +107,7 @@
     #audio-toggle.playing .icon-off { display: none; }
 
     /* =========================================
-       HOTSPOTS E POPUP (FIXATI CON LEFT 0 TOP 0)
+       HOTSPOTS E POPUP (ROBUSTI)
        ========================================= */
     .hotspot {
       position: absolute; left: 0; top: 0; width: 50px; height: 50px; border-radius: 50%; background: var(--main-color);
@@ -179,7 +180,7 @@
     #mobile-menu a { color: #fff; margin: 15px 0; font-size: 1.5rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px;}
 
     /* =========================================
-       FILTRI TEMPO (GIORNO MOLTO PIU' SPENTO)
+       FILTRI TEMPO (Saturazione giorno 0.35)
        ========================================= */
     #timeControls { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 650; }
     #timeControls button { padding: 6px 12px; border: 1px solid rgba(255,255,255,0.4); border-radius: 15px; background: rgba(0,0,0,0.6); color: white; cursor: pointer; font-size: 11px; backdrop-filter: blur(4px); transition: all 0.3s ease; }
@@ -190,16 +191,24 @@
     body[data-time="chiuso"] #hero-layers { filter: brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg); }
 
     /* =========================================
-       FOOTER (ALLINEATO)
+       FOOTER (COMPATTO E ALLINEATO)
        ========================================= */
     footer { background: #111; color: #ccc; width: 100vw; position: fixed; bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px; }
+    
     .footer-top { display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 10px 25px; background: var(--main-color); color: #fff; gap: 20px; transition: background-color 0.5s ease; }
     .footer-top-info p { margin: 0; font-weight: bold; letter-spacing: 0.5px; }
+    
     .footer-social { display: flex; gap: 15px; align-items: center; }
     .footer-social img { width: 22px; height: 22px; filter: brightness(0) invert(1); transition: transform 0.2s; }
     .footer-social a:hover img { transform: scale(1.2); }
-    .footer-bottom { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 25px; background: #000; gap: 8px; text-align: center; }
-    .footer-links a { color: #888; text-decoration: none; margin: 0 10px; transition: color 0.2s;}
+    
+    /* FASCIA NERA SU SINGOLA RIGA */
+    .footer-bottom { 
+      display: flex; flex-direction: row; align-items: center; justify-content: center; 
+      padding: 10px 25px; background: #000; gap: 20px; text-align: center; 
+    }
+    .footer-links { display: flex; gap: 10px; align-items: center; }
+    .footer-links a { color: #888; text-decoration: none; transition: color 0.2s;}
     .footer-links a:hover { color: #fff; }
 
     /* =========================================
@@ -216,7 +225,8 @@
       .footer-social { gap: 10px; }
       .footer-social img { width: 16px; height: 16px; }
       
-      .footer-bottom { padding: 8px 12px; font-size: 9px; gap: 5px; }
+      /* SU MOBILE CERCA DI TENERE LA SINGOLA RIGA, O SEPARA CON STILE SE TROPPO STRETTO */
+      .footer-bottom { padding: 8px 12px; font-size: 9px; gap: 10px; flex-wrap: wrap; }
     }
     @media (pointer: coarse), (max-width: 768px) { #custom-cursor { display: none !important; } }
     @media (min-width: 769px) { .mobile-layer { display: none; } }
@@ -297,7 +307,9 @@
     </div>
     <div class="footer-bottom">
       <div>&copy; <span id="year"></span> Catma Bar. Tutti i diritti riservati.</div>
-      <div class="footer-links"><a href="#">Privacy Policy</a> | <a href="#">Cookie Policy</a></div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a> <span style="color:#555">|</span> <a href="#">Cookie Policy</a>
+      </div>
     </div>
   </footer>
 
@@ -339,14 +351,14 @@
       prenota: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Prenota un tavolo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group stagger-item stagger-4"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
     };
 
-    // PARTICELLE AMMORBIDITE (meno impattanti)
+    // PARTICELLE 
     function createParticles() {
       const container = document.getElementById('particles-container');
-      const count = window.innerWidth < 768 ? 20 : 40;
+      const count = window.innerWidth <= 768 ? 25 : 50;
       for(let i=0; i<count; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
-        const size = Math.random() * 2 + 1;
+        const size = Math.random() * 3 + 1.5; // Leggermente più grandi
         p.style.width = size + 'px'; p.style.height = size + 'px';
         p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
         p.style.animationDuration = (Math.random() * 15 + 10) + 's';
@@ -357,10 +369,10 @@
     createParticles();
 
     // =========================================
-    // MOTORE PARALLASSE 3D (ROBUSTO)
+    // MOTORE PARALLASSE 3D (BLINDATO)
     // =========================================
     function setLayers() {
-      const isMobile = 'ontouchstart' in window;
+      const isMobile = window.innerWidth <= 768; // Usa la larghezza per massima affidabilità
       layers = isMobile ? {
         background: heroLayers.querySelector('.mobile-layer.background'),
         midground: heroLayers.querySelector('.mobile-layer.midground'),
@@ -374,10 +386,10 @@
     }
 
     function updateHotspots() {
-      const isMobile = 'ontouchstart' in window;
+      const isMobile = window.innerWidth <= 768;
       hotspots.forEach(h => {
-        const ox = isMobile ? h.dataset.xMobile/100 * hero.clientWidth : h.dataset.xDesktop/100 * hero.clientWidth;
-        const oy = isMobile ? h.dataset.yMobile/100 * hero.clientHeight : h.dataset.yDesktop/100 * hero.clientHeight;
+        const ox = isMobile ? (parseFloat(h.dataset.xMobile)/100 * hero.clientWidth) : (parseFloat(h.dataset.xDesktop)/100 * hero.clientWidth);
+        const oy = isMobile ? (parseFloat(h.dataset.yMobile)/100 * hero.clientHeight) : (parseFloat(h.dataset.yDesktop)/100 * hero.clientHeight);
         h.dataset.ox = ox; h.dataset.oy = oy;
       });
       renderParallax(targetX, targetY);
@@ -398,7 +410,6 @@
         if(h.classList.contains('hidden')) return;
         const ox = parseFloat(h.dataset.ox);
         const oy = parseFloat(h.dataset.oy);
-        // I css left:0 e top:0 permettono al translate3d di calcolare precisamente dal bordo
         h.style.transform = `translate3d(calc(-50% + ${ox + refX}px), calc(-50% + ${oy + refY}px), 0)`;
       });
     }
@@ -433,10 +444,10 @@
 
       isZoomed = true; cancelAnimationFrame(rafId);
       const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
-      const cx = window.innerWidth / 2; const cy = window.innerHeight / 2;
+      const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
       const dx = cx - tx; const dy = cy - ty;
 
-      const limitX = window.innerWidth * 0.22; const limitY = window.innerHeight * 0.22;
+      const limitX = hero.clientWidth * 0.22; const limitY = hero.clientHeight * 0.22;
       const safeDx = Math.max(-limitX, Math.min(limitX, dx));
       const safeDy = Math.max(-limitY, Math.min(limitY, dy));
 
@@ -533,12 +544,15 @@
     function applyTimeFilter() { if (manualTimeOverride) return; const h = new Date().getHours(); setTimeVisuals((h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso'); }
     document.querySelectorAll('#timeControls button').forEach(btn => btn.onclick = e => { manualTimeOverride = true; setTimeVisuals(e.target.dataset.time); });
 
-    // CARICAMENTO INIT
+    // CARICAMENTO INIT E RESIZE
     const loader = document.getElementById('loader'); const loaderStart = Date.now(); let isLoaderHidden = false;
     function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
     window.onload = tryHideLoader; document.addEventListener('DOMContentLoaded', tryHideLoader);
     
-    setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); window.onresize = setLayers;
+    // Al ridimensionamento della finestra ricalcoliamo il motore e l'interfaccia
+    window.addEventListener('resize', () => { setLayers(); });
+    
+    setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); 
   </script>
 </body>
 </html>
