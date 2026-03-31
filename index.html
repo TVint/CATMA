@@ -261,7 +261,13 @@
   <div id="vignette"></div>
   <div id="film-noise"></div>
 
-  <div id="hero-text-trail"><h2 class="title" id="trail-title"></h2><h1 class="title-big" id="trail-title-big">CATMA BAR</h1></div>
+  <div id="hero-text-trail">
+    <h2 class="title" id="trail-title"></h2>
+    <h1 class="title-big" id="trail-title-big">CATMA BAR</h1>
+    <p class="subtitle" id="trail-subtitle" style="visibility: hidden;"></p>
+    <a href="#" class="hero-cta" id="trail-cta" style="visibility: hidden;">PRENOTA UN TAVOLO</a>
+  </div>
+  
   <div id="hero-text">
     <h2 class="title" id="text-title"></h2><h1 class="title-big" id="text-title-big">CATMA BAR</h1>
     <p class="subtitle" id="text-subtitle"></p>
@@ -434,8 +440,10 @@
       bindMenuEvents(); // Re-bind after rewrite
       
       // Update CTA centrale
+     // Update CTA centrale e CTA Fantasma
       document.querySelector('.hero-cta.i18n-cta').innerText = i18n[currentLang].menu.prenota;
-
+      document.getElementById('trail-cta').innerText = i18n[currentLang].menu.prenota;
+      
       // Update Hotspots Labels
       hotspots.forEach(h => {
         h.innerHTML = iconsMap[h.dataset.key]; 
@@ -478,6 +486,7 @@
       
       titleEl.innerHTML = t.t; titleBigEl.innerHTML = "CATMA BAR"; subtitleEl.innerHTML = t.sub;
       document.getElementById('trail-title').innerHTML = t.t; document.getElementById('trail-title-big').innerHTML = "CATMA BAR"; 
+      document.getElementById('trail-subtitle').innerHTML = t.sub;
 
       if(document.body.classList.contains('app-loaded')) {
         titleEl.style.animation = 'cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) forwards';
