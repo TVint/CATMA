@@ -58,8 +58,7 @@
        ATMOSFERA E FILTRI SCENE (FIXATI)
        ========================================= */
     #vignette { position: absolute; inset: 0; pointer-events: none; z-index: 85; background: radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%); }
-    #film-noise { position: absolute; inset: 0; pointer-events: none; z-index: 86; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-
+    #film-noise { position: absolute; inset: 0; pointer-events: none; z-index: 86; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
     /* FILTRI DELLE SCENE RIPRISTINATI CON TRANSIZIONE FLUIDA */
     #hero-layers { transition: filter 1s ease; }
     body[data-time="giorno"] #hero-layers { filter: brightness(1.1) contrast(1.05) saturate(0.35); }
@@ -508,7 +507,7 @@
     // INIT
     updateUI();
     const loader = document.getElementById('loader'); const loaderStart = Date.now(); let isLoaderHidden = false;
-    function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; setTimeout(() => { document.body.classList.add('app-loaded'); }, 300); }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
+    function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; setTimeout(() => { document.body.classList.add('app-loaded'); applyTimeFilter(); }, 300); }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
     window.onload = tryHideLoader; document.addEventListener('DOMContentLoaded', tryHideLoader); window.addEventListener('resize', () => { setLayers(); }); setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); 
   </script>
 </body>
