@@ -1105,7 +1105,7 @@ hotspots.forEach(h => {
     h.addEventListener('click', (e) => {
       const currentlyActive = label.classList.contains('active');
       document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
-      if(!currentlyActive) label.classList.add('active');
+        if(!currentlyActive) label.classList.add('active');
       zoomTo(h.dataset.key);
       e.stopPropagation();
     });
