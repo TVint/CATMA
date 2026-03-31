@@ -3,18 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catma Bar</title>
+  <title>Catma Bar | Lido di Jesolo</title>
+  <meta name="description" content="Catma Bar a Lido di Jesolo. Vini naturali, birre artigianali, cocktail essenziali ed eventi musicali in un'atmosfera unica.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BarOrPub",
+    "name": "Catma Bar",
+    "image": "https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Via delle Sirene, 13",
+      "addressLocality": "Lido di Jesolo",
+      "addressRegion": "VE",
+      "addressCountry": "IT"
+    },
+    "priceRange": "$$",
+    "servesCuisine": "Cocktails, Vini Naturali, Birre Artigianali"
+  }
+  </script>
+
   <style>
+    /* =========================================
+       VARIABILI CROMATICHE DINAMICHE (JUICINESS)
+       IL ROSSO CAMBIA IN BASE AL MOMENTO DELLA GIORNATA
+       ========================================= */
+    :root {
+      --main-color: #b22222; 
+      --shadow-color: rgba(178,34,34,0.6);
+      --shadow-strong: rgba(178,34,34,0.9);
+    }
+    body[data-time="giorno"] {
+      --main-color: #d83a3a; /* PIU' VIBRANTE DI GIORNO */
+      --shadow-color: rgba(216,58,58,0.6);
+      --shadow-strong: rgba(216,58,58,0.9);
+    }
+    body[data-time="sera"] {
+      --main-color: #b22222; /* ROSSO CLASSICO DI SERA */
+      --shadow-color: rgba(178,34,34,0.6);
+      --shadow-strong: rgba(178,34,34,0.9);
+    }
+    body[data-time="chiuso"] {
+      --main-color: #7a1515; /* ROSSO SCURO A LOCALE CHIUSO */
+      --shadow-color: rgba(122,21,21,0.6);
+      --shadow-strong: rgba(122,21,21,0.9);
+    }
+
     /* =========================================
        RESET E IMPOSTAZIONI GLOBALI
        ========================================= */
-    html, body {
-      margin: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif;
-    }
-    body, body * {
-      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-      cursor: none !important; /* DISABILITA IL CURSORE STANDARD */
-    }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
+    body, body * { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; cursor: none !important; }
 
     /* =========================================
        CURSORE PERSONALIZZATO
@@ -22,143 +62,148 @@
     #custom-cursor {
       position: fixed; top: 0; left: 0; width: 25px; height: 25px; background: black;
       border-radius: 50%; pointer-events: none; transform: translate3d(-50%, -50%, 0);
-      z-index: 99999; transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 0 10px 3px rgba(178,34,34,0.6); /* ROSSO CATMA: #b22222 */
-      will-change: transform, box-shadow;
+      z-index: 99999; transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.3s ease, width 0.1s, height 0.1s;
+      box-shadow: 0 0 10px 3px var(--shadow-color); will-change: transform, box-shadow;
     }
 
     /* =========================================
        SCHERMATA DI CARICAMENTO (LOADER)
        ========================================= */
     #loader {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: #b22222; display: flex; justify-content: center;
-      align-items: center; z-index: 999999; overflow: hidden;
-      transition: transform 0.8s ease;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--main-color); 
+      display: flex; justify-content: center; align-items: center; z-index: 999999; overflow: hidden;
+      transition: transform 0.8s ease, background-color 0.5s ease;
     }
     #loader img { width: 150px; height: auto; animation: rotateLogo 1s linear infinite; }
     #loader.hidden { transform: translateY(-100%); pointer-events: none; }
     @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     /* =========================================
-       LIVELLI IMMAGINE E PARALLASSE
+       LIVELLI IMMAGINE E PARALLASSE (MOTION BLUR ATTIVABILE)
        ========================================= */
     #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
-    #hero-layers {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 10; transition: filter 0.5s ease;
-      will-change: filter;
-    }
+    #hero-layers { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; transition: filter 0.5s ease; will-change: filter; }
     .layer {
-      /* DIMENSIONI AUMENTATE AL 120% PER NASCONDERE I BORDI NERI DURANTE LO ZOOM POTENTE */
-      position: absolute; width: 120%; height: 120%; top: -10%; left: -10%;
-      object-fit: cover; pointer-events: none;
-      transition: opacity 0.5s ease; 
-      will-change: transform; 
+      position: absolute; width: 120%; height: 120%; top: -10%; left: -10%; object-fit: cover; pointer-events: none;
+      transition: opacity 0.5s ease; will-change: transform; 
     }
-    /* TRANSIZIONE MORBIDA DURANTE LO ZOOM AL CLICK */
-    .layer.smooth-zoom {
-      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease !important;
-    }
+    .layer.smooth-zoom { transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease, filter 0.3s ease !important; }
     .layer.overlay-active { opacity: 0.8; }
+    .layer.is-moving { filter: blur(5px) !important; } /* EFFETTO MOTION BLUR */
 
     /* =========================================
-       TESTO CENTRALE LAMPEGGIANTE
+       PARTICELLE DI POLVERE FLUTTUANTI (WEBGL STYLE)
+       ========================================= */
+    #particles-container { position: absolute; width: 120%; height: 120%; top: -10%; left: -10%; pointer-events: none; z-index: 40; overflow: hidden; }
+    .particle { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: floatParticle linear infinite; filter: blur(1px); }
+    @keyframes floatParticle {
+      0% { transform: translate3d(0, 0, 0); opacity: 0; }
+      20% { opacity: 0.5; }
+      80% { opacity: 0.5; }
+      100% { transform: translate3d(20px, -150px, 0); opacity: 0; }
+    }
+
+    /* =========================================
+       TESTO CENTRALE LAMPEGGIANTE E AUDIO TOGGLE
        ========================================= */
     #hero-text {
-      position: absolute; width: 100%; top: 150px; left: 50%;
-      transform: translateX(-50%); text-align: center; color: #fff;
-      z-index: 90; pointer-events: none; text-shadow: 1px 1px 5px #000;
-      transition: opacity 0.25s ease;
+      position: absolute; width: 100%; top: 150px; left: 50%; transform: translateX(-50%); text-align: center; color: #fff;
+      z-index: 90; pointer-events: none; text-shadow: 1px 1px 5px #000; transition: opacity 0.25s ease;
     }
     #hero-text .subtitle { font-size: 1.5vw; margin-top: 25px; opacity: 0.8; }
     #hero-text .title { font-size: 3vw; margin: 5px 0 0 0; font-weight: bold; animation: glowBreath 3s ease-in-out infinite; }
     #hero-text .title-big { font-size: 6vw; margin: 0; font-weight: bold; animation: glowBreath 3s ease-in-out infinite; }
     @keyframes glowBreath {
-      0%, 100% { text-shadow: 0 0 4px rgba(255,255,255,0.7), 0 0 10px rgba(178,34,34,0.5); }
-      50% { text-shadow: 0 0 8px rgba(255,255,255,1), 0 0 20px rgba(178,34,34,0.8); }
+      0%, 100% { text-shadow: 0 0 4px rgba(255,255,255,0.7), 0 0 10px var(--shadow-color); }
+      50% { text-shadow: 0 0 8px rgba(255,255,255,1), 0 0 20px var(--shadow-strong); }
     }
+
+    /* PULSANTE AUDIO IN BASSO A SINISTRA */
+    #audio-toggle {
+      position: fixed; bottom: 80px; left: 20px; z-index: 600; width: 45px; height: 45px; border-radius: 50%; background: rgba(0,0,0,0.6);
+      display: flex; justify-content: center; align-items: center; cursor: pointer; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; transition: all 0.3s ease;
+    }
+    #audio-toggle:hover { transform: scale(1.1); }
+    #audio-toggle.playing { background: var(--main-color); border-color: var(--main-color); }
+    #audio-toggle svg { width: 22px; height: 22px; fill: currentColor; }
+    #audio-toggle .icon-on { display: none; }
+    #audio-toggle.playing .icon-on { display: block; }
+    #audio-toggle.playing .icon-off { display: none; }
 
     /* =========================================
        HOTSPOTS (PUNTINI ROSSI) E PULSANTE PRENOTA
        ========================================= */
     .hotspot {
-      position: absolute; width: 50px; height: 50px; border-radius: 50%;
-      background: #b22222; box-shadow: 0 0 20px rgba(178,34,34,.9);
-      transform: translate3d(-50%,-50%, 0); animation: pulse 2s infinite;
-      cursor: pointer; z-index: 50; transition: opacity 0.3s ease;
+      position: absolute; width: 50px; height: 50px; border-radius: 50%; background: var(--main-color); box-shadow: 0 0 20px var(--shadow-strong);
+      transform: translate3d(-50%,-50%, 0); animation: pulse 2s infinite; cursor: pointer; z-index: 50; transition: opacity 0.3s ease, background-color 0.5s ease;
       will-change: transform, left, top;
     }
     .hotspot.hidden { opacity: 0; pointer-events: none; }
     @keyframes pulse {
-      0% { box-shadow: 0 0 15px rgba(178,34,34,0.6); }
-      50% { box-shadow: 0 0 30px rgba(178,34,34,1); }
-      100% { box-shadow: 0 0 15px rgba(178,34,34,0.6); }
+      0% { box-shadow: 0 0 15px var(--shadow-color); }
+      50% { box-shadow: 0 0 30px var(--shadow-strong); }
+      100% { box-shadow: 0 0 15px var(--shadow-color); }
     }
-    /* BOTTONE PRENOTA ADATTIVO */
     .hotspot[data-key="prenota"] {
       width: auto !important; min-width: 110px; height: 45px; border-radius: 30px !important;
-      padding: 0 15px; display: flex; justify-content: center; align-items: center;
-      font-weight: bold; color: #fff; font-size: 13px;
+      padding: 0 15px; display: flex; justify-content: center; align-items: center; font-weight: bold; color: #fff; font-size: 13px;
     }
 
     /* =========================================
-       ETICHETTE HOTSPOT (EFFETTO GENIO POSIZIONATO AL CENTRO)
+       ETICHETTE HOTSPOT (EFFETTO GENIO)
        ========================================= */
     .hotspot-label {
-      position: absolute; pointer-events: none; background: #b22222; 
-      color: #fff; padding: 8px 16px; border-radius: 12px; font-size: 14px;
-      font-weight: bold; letter-spacing: 1px; white-space: nowrap;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-      
-      /* POSIZIONAMENTO CENTRALE ASSOLUTO RISPETTO AL CERCHIO */
-      top: 50%; left: 50%;
-      transform-origin: 50% 100%; /* L'ANIMAZIONE NASCE DAL BASSO DELL'ETICHETTA (LA PUNTA DELLA FRECCIA) */
-      transform: translate3d(-50%, -20px, 0) scale(0); /* SCALA DA ZERO DA DENTRO IL CERCHIO */
-      
-      opacity: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      position: absolute; pointer-events: none; background: var(--main-color); color: #fff; padding: 8px 16px; border-radius: 12px; font-size: 14px;
+      font-weight: bold; letter-spacing: 1px; white-space: nowrap; box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      top: 50%; left: 50%; transform-origin: 50% 100%; transform: translate3d(-50%, -20px, 0) scale(0);
+      opacity: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease, background-color 0.5s ease;
       z-index: 100; will-change: transform, opacity;
     }
-    /* FRECCINA VERSO IL BASSO */
     .hotspot-label::after {
       content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
-      width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #b22222;
+      width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid var(--main-color);
+      transition: border-top-color 0.5s ease;
     }
-    /* APERTURA: SALTA FUORI ESATTAMENTE SOPRA IL BORDO DELL'HOTSPOT (RAGGIO 25PX + FRECCIA 10PX = 35PX) */
-    .hotspot:hover .hotspot-label, .hotspot-label.active {
-      opacity: 1 !important; transform: translate3d(-50%, calc(-100% - 35px), 0) scale(1) !important;
-    }
+    .hotspot:hover .hotspot-label, .hotspot-label.active { opacity: 1 !important; transform: translate3d(-50%, calc(-100% - 35px), 0) scale(1) !important; }
 
     /* =========================================
-       STILE CONTENUTI POPUP ELEGANTI
+       STILE CONTENUTI POPUP E ANIMAZIONI STAGGER
        ========================================= */
     .elegant-content { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    
+    /* ANIMAZIONE INGRESSO A CASCATA (STAGGER) */
+    .stagger-item { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .elegant-content.show .stagger-item { opacity: 1; transform: translateY(0); }
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+    .stagger-4 { transition-delay: 0.4s; }
+
     .elegant-title { font-size: 2.2rem; letter-spacing: 4px; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 300; text-align: center; }
-    .elegant-divider { width: 50px; height: 2px; background-color: #b22222; margin-bottom: 20px; }
+    .elegant-divider { width: 50px; height: 2px; background-color: var(--main-color); margin-bottom: 20px; transition: background-color 0.5s; }
     .elegant-desc { font-size: 1.1rem; line-height: 1.6; max-width: 400px; font-weight: 300; opacity: 0.9; text-align: center; }
+    .dynamic-badge { display: inline-block; padding: 5px 12px; border: 1px solid var(--main-color); border-radius: 20px; font-size: 0.9rem; margin-top: 15px; font-weight: bold;}
+    
     .cta-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
     .cta-btn {
       border: 2px solid #fff; padding: 12px 25px; border-radius: 30px; text-decoration: none;
-      font-weight: 600; background: rgba(178, 34, 34, 0.9); color: #fff;
-      box-shadow: 0 0 15px rgba(178, 34, 34, 0.6); transition: all 0.25s ease; cursor: none;
+      font-weight: 600; background: rgba(0,0,0,0.5); color: #fff;
+      box-shadow: 0 0 15px rgba(0,0,0, 0.6); transition: all 0.25s ease; cursor: none;
     }
-    .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(178,34,34,0.9); }
+    .cta-btn:hover { background: var(--main-color); border-color: var(--main-color); transform: scale(1.05); box-shadow: 0 0 25px var(--shadow-strong); }
     .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
 
     /* =========================================
        NAVBAR DESKTOP E MENU MOBILE
        ========================================= */
-    #menu {
-      position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
-      width: 90%; display: flex; align-items: center; z-index: 100;
-    }
-    #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; }
+    #menu { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 90%; display: flex; align-items: center; z-index: 100; }
+    #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; transition: color 0.3s;}
+    #menu a:hover { color: var(--main-color); }
     .logo-center { flex: 1; display: flex; justify-content: center; }
     .logo-center img { height: 60px; }
-    
     #mobile-logo { display: none; position: absolute; top: 20px; left: 20px; height: 40px; z-index: 101; }
     
-    /* ICONA HAMBURGER CON EFFETTO "X" */
     #hamburger {
       display: none; position: absolute; top: 25px; right: 25px; width: 30px; height: 22px;
       flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 801;
@@ -168,93 +213,76 @@
     #hamburger.open div:nth-child(2) { opacity: 0; width: 0; }
     #hamburger.open div:nth-child(3) { transform: rotate(-45deg) translate(0px, 2px); }
 
-    /* OVERLAY MENU MOBILE (LUMINOSITA' ABASSATA A 70% + EFFETTO VETRO) */
     #mobile-menu {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,.70); backdrop-filter: blur(8px); display: flex; justify-content: center;
       align-items: center; flex-direction: column; z-index: 800;
-      clip-path: circle(0px at calc(100% - 40px) 35px);
-      transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none;
+      clip-path: circle(0px at calc(100% - 40px) 35px); transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none;
     }
     #mobile-menu.open { clip-path: circle(150% at calc(100% - 40px) 35px); pointer-events: auto; }
     #mobile-menu a { color: #fff; margin: 15px 0; font-size: 1.5rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px;}
 
     /* =========================================
-       OVERLAY POPUP (LUMINOSITA' ABASSATA A 50% + Z-INDEX SUPERIORE ALL'HAMBURGER)
+       OVERLAY POPUP (SFOCATURA E OPACITA' OTTIMIZZATA)
        ========================================= */
     #content-overlay {
-      position: fixed; width: 100%; height: 100%; 
-      background: rgba(0,0,0,.50); /* OPACITA' DIMEZZATA PER VEDERE LA SCENA */
-      justify-content: center; align-items: center; 
-      z-index: 9000; /* ALZATO Z-INDEX PER COPRIRE L'HAMBURGER */
+      position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,.50); 
+      justify-content: center; align-items: center; z-index: 9000; 
       backdrop-filter: blur(8px); display: flex; opacity: 0; visibility: hidden; 
       transition: opacity 0.4s ease, visibility 0.4s ease;
     }
     #content-overlay.active { opacity: 1; visibility: visible; }
     .content-box { color: #fff; text-align: center; transform: scale(0); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     #content-overlay.active .content-box { transform: scale(1); }
-    .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; }
+    .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; transition: color 0.3s;}
+    .close-btn:hover { color: var(--main-color); }
 
     /* =========================================
-       PULSANTI DEBUG E GIROSCOPIO
+       PULSANTI DEBUG TEMPO E GIROSCOPIO
        ========================================= */
-    #timeControls {
-      position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 10px; z-index: 650;
-    }
+    #timeControls { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 650; }
     #timeControls button {
       padding: 6px 12px; border: 1px solid rgba(255,255,255,0.4); border-radius: 15px;
       background: rgba(0,0,0,0.6); color: white; cursor: pointer; font-size: 11px;
       backdrop-filter: blur(4px); transition: all 0.3s ease;
     }
-    #timeControls button:hover, #timeControls button.active-debug { background: #b22222; border-color: #b22222; }
+    #timeControls button:hover, #timeControls button.active-debug { background: var(--main-color); border-color: var(--main-color); }
 
     #gyroBtn {
       position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%);
-      width: 250px; height: 50px; background: #b22222; color: #fff; border: none; border-radius: 150px;
-      z-index: 99999; font-size: 1.2rem; cursor: pointer; box-shadow: 0 0 15px rgba(255,255,255,0.5);
-      animation: pulseBtn 1.5s ease-in-out infinite;
+      width: 250px; height: 50px; background: var(--main-color); color: #fff; border: none; border-radius: 150px;
+      z-index: 99999; font-size: 1.2rem; cursor: pointer; box-shadow: 0 0 15px var(--shadow-color);
+      animation: pulseBtn 1.5s ease-in-out infinite; transition: background-color 0.5s ease;
     }
     #gyroBtn.hidden { opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(0.8); transition: 0.3s; }
     @keyframes pulseBtn {
       0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.05); box-shadow: 0 0 25px rgba(255,255,255,0.6); }
+      50% { transform: translate(-50%, -50%) scale(1.05); box-shadow: 0 0 25px var(--shadow-strong); }
     }
-    #gyroOverlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7); z-index: 99998; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
-    }
+    #gyroOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 99998; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
     #gyroOverlay.active { opacity: 1; pointer-events: auto; }
 
     /* =========================================
        FILTRI TEMPO (PERFEZIONATI E REALISTICI)
        ========================================= */
-    /* GIORNO: Naturale, desaturato, freddo, simulazione luce porte/finestre */
     body[data-time="giorno"] #hero-layers { filter: brightness(1.1) contrast(1.05) saturate(0.65); }
-    /* SERA: Caldo, ambrato, contrastato per luci interne e candele */
     body[data-time="sera"] #hero-layers { filter: brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg); }
-    /* CHIUSO: Luce lunare, freddo ma ora visibile (0.4 invece di 0.25) */
     body[data-time="chiuso"] #hero-layers { filter: brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg); }
 
     /* =========================================
-       FOOTER
+       FOOTER (OTTIMIZZATO E COMPATTO)
        ========================================= */
-    footer {
-      background: #111; color: #ccc; width: 100vw; position: fixed;
-      bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px;
-    }
+    footer { background: #111; color: #ccc; width: 100vw; position: fixed; bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px; }
     .footer-top {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 12px 25px; background: #b22222; color: #fff; gap: 10px; text-align: center;
+      padding: 12px 25px; background: var(--main-color); color: #fff; gap: 10px; text-align: center;
+      transition: background-color 0.5s ease;
     }
     .footer-top-info p { margin: 0; font-weight: bold; letter-spacing: 0.5px;}
     .footer-social { display: flex; gap: 15px; justify-content: center; }
     .footer-social img { width: 22px; height: 22px; filter: brightness(0) invert(1); transition: transform 0.2s; }
     .footer-social a:hover img { transform: scale(1.2); }
-    .footer-bottom {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 10px 25px; background: #000; gap: 8px; text-align: center;
-    }
+    .footer-bottom { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 25px; background: #000; gap: 8px; text-align: center; }
     .footer-links a { color: #888; text-decoration: none; margin: 0 10px; transition: color 0.2s;}
     .footer-links a:hover { color: #fff; }
 
@@ -265,25 +293,23 @@
       #menu { display: none; } #hamburger { display: flex; } #mobile-logo { display: block; }
       #hero-text { top: 20%; } #hero-text .title-big { font-size: 12vw; }
       #hero-text .title { font-size: 6vw; } #hero-text .subtitle { font-size: 3vw; }
+      #audio-toggle { bottom: 70px; left: 15px; width: 40px; height: 40px; }
       
-      /* OTTIMIZZAZIONE FOOTER (1 RIGA ROSSA COMPATTA) */
-      .footer-top {
-        flex-direction: row; justify-content: space-between; 
-        padding: 8px 12px; font-size: 9px; gap: 5px;
-      }
+      .footer-top { flex-direction: row; justify-content: space-between; padding: 8px 12px; font-size: 9px; gap: 5px; }
       .footer-top-info p { letter-spacing: 0; }
       .footer-social { gap: 8px; }
       .footer-social img { width: 16px; height: 16px; }
-      /* 2 RIGHE NERE SOTTO */
-      .footer-bottom {
-        flex-direction: column; padding: 8px 12px; font-size: 9px; gap: 5px;
-      }
+      .footer-bottom { flex-direction: column; padding: 8px 12px; font-size: 9px; gap: 5px; }
     }
     @media (pointer: coarse), (max-width: 768px) { #custom-cursor { display: none !important; } }
     @media (min-width: 769px) { .mobile-layer { display: none; } }
   </style>
 </head>
 <body>
+
+  <audio id="bg-audio" loop src="https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg" preload="none"></audio>
+  <audio id="hover-sfx" src="https://actions.google.com/sounds/v1/ui/button_click.ogg" preload="auto"></audio>
+  <audio id="click-sfx" src="https://actions.google.com/sounds/v1/ui/pop_up_on.ogg" preload="auto"></audio>
 
   <div id="loader"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo"></div>
 
@@ -294,8 +320,8 @@
     <a href="#" data-key="bar">BAR</a>
     <a href="#" data-key="eventi">EVENTI</a>
   </div>
-
   <img id="mobile-logo" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo Mobile">
+  
   <div id="hamburger"><div></div><div></div><div></div></div>
   <div id="mobile-menu">
     <a href="#" data-key="chi">CHI SIAMO</a>
@@ -311,6 +337,11 @@
     <p class="subtitle">Via delle Sirene, 13 - Lido di Jesolo (VE)</p>
   </div>
   
+  <div id="audio-toggle" title="Attiva Suono">
+    <svg class="icon-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+    <svg class="icon-on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+  </div>
+
   <div id="timeControls">
     <button data-time="giorno">Giorno</button>
     <button data-time="sera">Sera</button>
@@ -331,13 +362,15 @@
       <img class="layer mobile-layer background parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
       <img class="layer mobile-layer midground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774917597/Catma-midground-mobile_xvwur8.webp">
       <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
+      
+      <div id="particles-container"></div>
     </div>
 
     <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="15" data-y-mobile="35"></div>
     <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="75"></div>
     <div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
     <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="38" data-x-mobile="85" data-y-mobile="40"></div>
-    <div class="hotspot" data-key="bar" data-x-desktop="90" data-y-desktop="65" data-x-mobile="85" data-y-mobile="70"></div>
+    <div class="hotspot" data-key="bar" data-x-desktop="90" data-y-desktop="55" data-x-mobile="35" data-y-mobile="70"></div>
   </div>
 
   <footer>
@@ -373,15 +406,61 @@
     let currentX = 0, currentY = 0;
     let rafId = null;
 
+    // GESTIONE SOUND DESIGN
+    let soundEnabled = false;
+    const bgAudio = document.getElementById('bg-audio');
+    const hoverSfx = document.getElementById('hover-sfx');
+    const clickSfx = document.getElementById('click-sfx');
+    const audioToggle = document.getElementById('audio-toggle');
+    
+    // REGOLAZIONE VOLUMI
+    bgAudio.volume = 0.2; hoverSfx.volume = 0.3; clickSfx.volume = 0.5;
+
+    function playSfx(audioEl) {
+      if(soundEnabled && audioEl) { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); }
+    }
+    
+    audioToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      if (soundEnabled) {
+        audioToggle.classList.add('playing');
+        bgAudio.play().catch(()=>{});
+      } else {
+        audioToggle.classList.remove('playing');
+        bgAudio.pause();
+      }
+    });
+
     const map = { chi: { label: 'CHI SIAMO' }, mescita: { label: 'MESCITA' }, prenota: { label: 'PRENOTA' }, eventi: { label: 'EVENTI' }, bar: { label: 'BAR' } };
 
+    // MAPPA CONTENUTI CON ANIMAZIONE STAGGER (STAGGER-ITEM E RITARDI) E TAG {{EVENT_STATUS}}
     const contentMap = {
-      chi: `<div class="elegant-content"><h1 class="elegant-title">Chi siamo</h1><div class="elegant-divider"></div><p class="elegant-desc">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
-      mescita: `<div class="elegant-content"><h1 class="elegant-title">Mescita</h1><div class="elegant-divider"></div><p class="elegant-desc">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
-      eventi: `<div class="elegant-content"><h1 class="elegant-title">Eventi</h1><div class="elegant-divider"></div><p class="elegant-desc">Il ritmo della notte prende vita qui. Dj set curati, performance dal vivo e serate speciali ogni settimana, per accompagnare i tuoi momenti di evasione.</p></div>`,
-      bar: `<div class="elegant-content"><h1 class="elegant-title">Il Bar</h1><div class="elegant-divider"></div><p class="elegant-desc">Uno spazio intimo tra luce e ombra, progettato minuziosamente per farti vivere un'esperienza notturna avvolgente, accompagnato da vibrazioni uniche.</p></div>`,
-      prenota: `<div class="elegant-content"><h1 class="elegant-title">Prenota un tavolo</h1><div class="elegant-divider"></div><p class="elegant-desc">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
+      chi: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Chi siamo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
+      mescita: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Mescita</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
+      eventi: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Eventi</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Il ritmo della notte prende vita qui. Dj set curati, performance dal vivo e serate speciali ogni settimana, per accompagnare i tuoi momenti di evasione.<br>{{EVENT_STATUS}}</p></div>`,
+      bar: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Il Bar</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Uno spazio intimo tra luce e ombra, progettato minuziosamente per farti vivere un'esperienza notturna avvolgente, accompagnato da vibrazioni uniche.</p></div>`,
+      prenota: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Prenota un tavolo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group stagger-item stagger-4"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
     };
+
+    // =========================================
+    // CREAZIONE PARTICELLE DI POLVERE (WEBGL VIBE)
+    // =========================================
+    function createParticles() {
+      const container = document.getElementById('particles-container');
+      const numParticles = ('ontouchstart' in window) ? 15 : 40; // Meno su mobile per performance
+      for(let i=0; i<numParticles; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 3 + 1;
+        p.style.width = size + 'px'; p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        p.style.animationDelay = (Math.random() * 5) + 's';
+        container.appendChild(p);
+      }
+    }
+    createParticles();
 
     // =========================================
     // MOTORE PARALLASSE 3D
@@ -438,7 +517,6 @@
         rafId = requestAnimationFrame(parallaxLoop);
       }
     }
-    
     rafId = requestAnimationFrame(parallaxLoop);
 
     hero.addEventListener('mousemove', e => {
@@ -448,30 +526,20 @@
       targetY = (e.clientY - r.top)/r.height - 0.5;
     });
 
-    // =========================================
-    // GIROSCOPIO MOBILE
-    // =========================================
     if('ontouchstart' in window) {
       const gyroOverlay = document.createElement('div');
-      gyroOverlay.id = 'gyroOverlay';
-      document.body.appendChild(gyroOverlay);
-
+      gyroOverlay.id = 'gyroOverlay'; document.body.appendChild(gyroOverlay);
       const gyroBtn = document.createElement('button');
-      gyroBtn.id = 'gyroBtn';
-      gyroBtn.innerText = 'Attiva Visuale 3D';
-      document.body.appendChild(gyroBtn);
+      gyroBtn.id = 'gyroBtn'; gyroBtn.innerText = 'Attiva Visuale 3D'; document.body.appendChild(gyroBtn);
 
       setTimeout(() => gyroOverlay.classList.add('active'), 100);
 
       const enableGyro = () => {
-        gyroBtn.classList.add('hidden');
-        gyroOverlay.classList.remove('active');
+        gyroBtn.classList.add('hidden'); gyroOverlay.classList.remove('active');
         window.addEventListener('deviceorientation', e => {
           if(isZoomed) return;
-          targetX += ((e.gamma || 0) / 20 - targetX) * 0.15;
-          targetY += ((e.beta || 0) / 20 - targetY) * 0.15;
-          targetX = Math.max(-1, Math.min(1, targetX));
-          targetY = Math.max(-1, Math.min(1, targetY));
+          targetX += ((e.gamma || 0) / 20 - targetX) * 0.15; targetY += ((e.beta || 0) / 20 - targetY) * 0.15;
+          targetX = Math.max(-1, Math.min(1, targetX)); targetY = Math.max(-1, Math.min(1, targetY));
         });
       };
 
@@ -486,12 +554,14 @@
     }
 
     // =========================================
-    // LOGICA DI ZOOM SICURO AL CLICK 
+    // LOGICA DI ZOOM SICURO CON MOTION BLUR E STORYTELLING 
     // =========================================
     function zoomTo(key) {
+      playSfx(clickSfx); // SUONO CLICK
+
       if(isZoomed) {
-        contentBox.style.transform = 'scale(0)';
-        setTimeout(() => { contentBox.innerHTML = contentMap[key]; contentBox.style.transform = 'scale(1)'; }, 300);
+        contentBox.querySelector('.elegant-content').classList.remove('show');
+        setTimeout(() => { contentBox.innerHTML = generateDynamicContent(key); contentBox.style.transform = 'scale(1)'; setTimeout(()=> contentBox.querySelector('.elegant-content').classList.add('show'), 50); }, 300);
         return;
       }
       
@@ -499,49 +569,79 @@
       if(!h) return;
 
       isZoomed = true;
-      cancelAnimationFrame(rafId); // FERMA PARALLASSE FLUIDO
+      cancelAnimationFrame(rafId);
 
-      const tx = parseFloat(h.dataset.ox);
-      const ty = parseFloat(h.dataset.oy);
-      const cx = hero.clientWidth / 2;
-      const cy = hero.clientHeight / 2;
-      
-      // DISTANZA ORIGINALE DAL CENTRO
-      const dx = cx - tx;
-      const dy = cy - ty;
+      const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
+      const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
+      const dx = cx - tx; const dy = cy - ty;
 
-      // LIMITATORE DI SPOSTAMENTO (CLAMP): PREVIENE L'APPARIZIONE DEL BORDO NERO
-      // Limita lo spostamento fisico al 18% della larghezza e altezza dello schermo
-      const limitX = hero.clientWidth * 0.18;
-      const limitY = hero.clientHeight * 0.18;
+      // CLAMP: PREVIENE L'APPARIZIONE DEL BORDO NERO LIMITANDO LO SPOSTAMENTO
+      const limitX = hero.clientWidth * 0.18; const limitY = hero.clientHeight * 0.18;
       const safeDx = Math.max(-limitX, Math.min(limitX, dx));
       const safeDy = Math.max(-limitY, Math.min(limitY, dy));
 
-      Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom', 'overlay-active'); });
+      // AGGIUNGI CLASSI PER ZOOM E MOTION BLUR
+      Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom', 'overlay-active', 'is-moving'); });
 
-      // APPLICAZIONE DELLO ZOOM PROFONDO CON COORDINATE SICURE
+      // RIMUOVE IL BLUR QUANDO SI FERMA L'ANIMAZIONE (0.8s)
+      setTimeout(() => { Object.values(layers).forEach(l => { if(l) l.classList.remove('is-moving'); }); }, 800);
+
       setTimeout(() => {
         if(layers.background) layers.background.style.transform = `translate3d(${safeDx*1.2}px,${safeDy*1.2}px, 0) scale(1.3)`;
         if(layers.midground) layers.midground.style.transform = `translate3d(${safeDx*1.6}px,${safeDy*1.6}px, 0) scale(1.7)`;
         if(layers.foreground) layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(2.2)`;
       }, 10);
 
-      contentBox.innerHTML = contentMap[key];
+      contentBox.innerHTML = generateDynamicContent(key);
       overlay.classList.add('active');
-      setTimeout(() => { contentBox.style.transform = 'scale(1)'; }, 150);
+      
+      // MOSTRA I CONTENUTI ED ATTIVA LO STAGGER (ENTRATA A CASCATA)
+      setTimeout(() => { 
+        contentBox.style.transform = 'scale(1)'; 
+        setTimeout(() => contentBox.querySelector('.elegant-content').classList.add('show'), 100);
+      }, 150);
+      
       hotspots.forEach(hot => hot.classList.add('hidden'));
     }
 
+    // FUNZIONE STORYTELLING DINAMICO: CALCOLA ORARI REALI PER GLI EVENTI
+    function generateDynamicContent(key) {
+      let html = contentMap[key];
+      if (key === 'eventi') {
+        const now = new Date();
+        const day = now.getDay(); // 0 = Domenica, 5 = Venerdì, 6 = Sabato
+        const hour = now.getHours();
+        let eventMsg = "";
+        const giorni = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+        
+        if (day === 5 || day === 6) { 
+          if (hour < 22) {
+            let oreMancanti = 22 - hour;
+            eventMsg = `<span class="dynamic-badge">Oggi è ${giorni[day]}, l'evento inizia tra ${oreMancanti} or${oreMancanti === 1 ? 'a' : 'e'}!</span>`;
+          } else {
+            eventMsg = `<span class="dynamic-badge">La serata Eventi è in corso, ti aspettiamo!</span>`;
+          }
+        } else {
+          eventMsg = `<span class="dynamic-badge">Prossimo evento: Venerdì alle 22:00.</span>`;
+        }
+        html = html.replace('{{EVENT_STATUS}}', eventMsg);
+      }
+      return html;
+    }
+
     function resetZoom() {
+      contentBox.querySelector('.elegant-content').classList.remove('show');
       contentBox.style.transform = 'scale(0)';
       setTimeout(() => { overlay.classList.remove('active'); }, 300);
       hotspots.forEach(hot => hot.classList.remove('hidden'));
-      Object.values(layers).forEach(l => { if(l) l.classList.remove('overlay-active'); });
+      
+      // APPLICA IL BLUR ANCHE DURANTE IL RITORNO
+      Object.values(layers).forEach(l => { if(l) { l.classList.remove('overlay-active'); l.classList.add('is-moving'); } });
       
       renderParallax(currentX, currentY);
 
       setTimeout(() => {
-        Object.values(layers).forEach(l => { if(l) l.classList.remove('smooth-zoom'); });
+        Object.values(layers).forEach(l => { if(l) { l.classList.remove('smooth-zoom', 'is-moving'); } });
         isZoomed = false;
         rafId = requestAnimationFrame(parallaxLoop);
       }, 800);
@@ -550,21 +650,19 @@
     // =========================================
     // EVENT LISTENER E HAMBURGER MENU
     // =========================================
-    hotspots.forEach(h => h.addEventListener('click', () => zoomTo(h.dataset.key)));
+    hotspots.forEach(h => {
+      h.addEventListener('click', () => zoomTo(h.dataset.key));
+      h.addEventListener('mouseenter', () => playSfx(hoverSfx)); // SUONO HOVER
+    });
+    
     document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
-      a.addEventListener('click', e => {
-        e.preventDefault(); zoomTo(a.dataset.key);
-        document.getElementById('mobile-menu').classList.remove('open');
-        document.getElementById('hamburger').classList.remove('open');
-      });
+      a.addEventListener('click', e => { e.preventDefault(); zoomTo(a.dataset.key); document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('hamburger').classList.remove('open'); });
+      a.addEventListener('mouseenter', () => playSfx(hoverSfx));
     });
 
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
-    hamburger.onclick = () => {
-      mobileMenu.classList.toggle('open');
-      hamburger.classList.toggle('open');
-    };
+    hamburger.onclick = () => { playSfx(clickSfx); mobileMenu.classList.toggle('open'); hamburger.classList.toggle('open'); };
 
     overlay.querySelector('.close-btn').onclick = resetZoom;
     document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
@@ -575,9 +673,7 @@
     hotspots.forEach(h => {
       if(h.dataset.key !== 'prenota') {
         const label = document.createElement('div');
-        label.className = 'hotspot-label';
-        label.innerText = map[h.dataset.key].label;
-        h.appendChild(label);
+        label.className = 'hotspot-label'; label.innerText = map[h.dataset.key].label; h.appendChild(label);
       }
       if('ontouchstart' in window) {
         h.addEventListener('click', (e) => {
@@ -593,22 +689,17 @@
     });
 
     if('ontouchstart' in window) {
-      document.addEventListener('touchstart', (e) => {
-        if(!e.target.closest('.hotspot')) document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
-      });
+      document.addEventListener('touchstart', (e) => { if(!e.target.closest('.hotspot')) document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active')); });
     }
 
     // =========================================
-    // CURSORE CUSTOM
+    // CURSORE CUSTOM ANIMATO
     // =========================================
     const customCursor = document.createElement('div');
-    customCursor.id = 'custom-cursor';
-    document.body.appendChild(customCursor);
-    document.addEventListener('mousemove', e => { 
-      customCursor.style.transform = `translate3d(calc(-50% + ${e.clientX}px), calc(-50% + ${e.clientY}px), 0)`;
-    });
-    document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
-    document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
+    customCursor.id = 'custom-cursor'; document.body.appendChild(customCursor);
+    document.addEventListener('mousemove', e => { customCursor.style.transform = `translate3d(calc(-50% + ${e.clientX}px), calc(-50% + ${e.clientY}px), 0)`; });
+    document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px var(--shadow-strong)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
+    document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px var(--shadow-color)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
 
     // =========================================
     // GESTIONE FILTRI TEMPO
@@ -616,11 +707,6 @@
     function setTimeVisuals(state) {
       document.body.setAttribute('data-time', state);
       void heroLayers.offsetWidth;
-      requestAnimationFrame(() => {
-        if(state === 'giorno') heroLayers.style.filter = 'brightness(1.1) contrast(1.05) saturate(0.65)';
-        else if(state === 'sera') heroLayers.style.filter = 'brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg)';
-        else heroLayers.style.filter = 'brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg)';
-      });
       const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
       const heroText = document.getElementById('hero-text');
       heroText.style.opacity = 0;
@@ -638,10 +724,7 @@
     }
 
     document.querySelectorAll('#timeControls button').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        manualTimeOverride = true; 
-        setTimeVisuals(e.target.dataset.time);
-      });
+      btn.addEventListener('click', (e) => { manualTimeOverride = true; setTimeVisuals(e.target.dataset.time); });
     });
 
     // =========================================
