@@ -1,12 +1,40 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" id="html-doc">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catma Bar | Lido di Jesolo</title>
-  <meta name="description" content="Catma Bar a Lido di Jesolo. Vini naturali, birre artigianali e Lounge Vibes.">
   
+  <title>Catma Bar | Hi-Fi Bar & Live Music a Jesolo Lido</title>
+  <meta name="description" content="Catma Bar in Piazza Marconi a Jesolo Lido. Hi-Fi Bar, vini naturali, cucina di alto livello, live music e dj-set di nicchia. L'oste Giovanni ti aspetta.">
+  <meta name="keywords" content="bar Jesolo Lido, Hi-Fi bar, live music Jesolo, dj set jazz, vini naturali, cocktail bar Piazza Marconi, Giovanni Catma">
+  
+  <link rel="alternate" hreflang="it" href="https://www.catmabar.it/" />
+  <link rel="alternate" hreflang="en" href="https://www.catmabar.it/en/" />
+  <link rel="alternate" hreflang="de" href="https://www.catmabar.it/de/" />
+  <link rel="alternate" hreflang="x-default" href="https://www.catmabar.it/" />
+
   <link rel="icon" href="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" type="image/png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BarOrPub",
+    "name": "Catma Bar",
+    "image": "https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png",
+    "description": "Hi-Fi Bar elegante a Jesolo Lido. Musica live, dj-set di nicchia, cucina di alto livello e vini naturali.",
+    "address": { 
+      "@type": "PostalAddress", 
+      "streetAddress": "Piazza Marconi, Via delle Sirene 13", 
+      "addressLocality": "Lido di Jesolo", 
+      "addressRegion": "VE", 
+      "postalCode": "30016",
+      "addressCountry": "IT" 
+    },
+    "founder": { "@type": "Person", "name": "Giovanni Catma" },
+    "servesCuisine": "Cucina semplice di alto livello, Vini Naturali, Cocktail",
+    "priceRange": "$$"
+  }
+  </script>
 
   <style>
     /* =========================================
@@ -24,109 +52,83 @@
     * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
     html, body { margin: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
     body, body * { -webkit-user-select: none; user-select: none; cursor: none !important; }
-
-    #hero-layers, #mobile-menu, #content-overlay {
-      -webkit-backface-visibility: hidden; backface-visibility: hidden; transform: translateZ(0);
-    }
+    #hero-layers, #mobile-menu, #content-overlay { -webkit-backface-visibility: hidden; backface-visibility: hidden; transform: translateZ(0); }
 
     /* =========================================
-       ATMOSFERA: VIGNETTATURA E GRANA PELLICOLA
+       ATMOSFERA
        ========================================= */
-    #vignette {
-      position: absolute; inset: 0; pointer-events: none; z-index: 85;
-      background: radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%);
-    }
-    #film-noise {
-      position: absolute; inset: 0; pointer-events: none; z-index: 86; opacity: 0.05;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    }
+    #vignette { position: absolute; inset: 0; pointer-events: none; z-index: 85; background: radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%); }
+    #film-noise { position: absolute; inset: 0; pointer-events: none; z-index: 86; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
 
     /* =========================================
-       BLOCCO ROTAZIONE DISPOSITIVO
+       UI ELEMENTS (Cursore, Lang, Loader)
        ========================================= */
-    #rotate-device {
-      display: none; position: fixed; inset: 0; background: #0c0c0c; z-index: 99999999;
-      color: #fff; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 20px;
-    }
+    #rotate-device { display: none; position: fixed; inset: 0; background: #0c0c0c; z-index: 99999999; color: #fff; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 20px; }
     #rotate-device svg { width: 50px; height: 50px; margin-bottom: 20px; color: var(--main-color); animation: phoneRotate 2.5s infinite ease-in-out; }
-    #rotate-device p { font-size: 1.2rem; letter-spacing: 1px; line-height: 1.5; font-weight: 300; opacity: 0.8;}
     @keyframes phoneRotate { 0%, 15% { transform: rotate(0deg); } 45%, 55% { transform: rotate(-90deg); } 85%, 100% { transform: rotate(0deg); } }
     @media (max-width: 900px) and (orientation: landscape) { #rotate-device { display: flex; } }
 
-    /* =========================================
-       CURSORE E LOADER
-       ========================================= */
-    #custom-cursor {
-      position: fixed; width: 25px; height: 25px; background: black; border-radius: 50%; pointer-events: none; 
-      z-index: 99999; transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 0 10px 3px var(--shadow-color);
-    }
+    #custom-cursor { position: fixed; width: 25px; height: 25px; background: black; border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 0 10px 3px var(--shadow-color); }
     #custom-cursor.pulsing { animation: softPulse 2s cubic-bezier(0.25, 1, 0.5, 1) infinite; transition: none; }
     @keyframes softPulse { 0%, 100% { transform: translate3d(-50%, -50%, 0) scale(1); box-shadow: 0 0 10px 3px var(--shadow-color); } 50% { transform: translate3d(-50%, -50%, 0) scale(1.4); box-shadow: 0 0 20px 5px var(--shadow-strong); } }
 
-    #loader {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--main-color); 
-      display: flex; justify-content: center; align-items: center; z-index: 999999; clip-path: circle(150% at 50% 50%); 
-      transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1); will-change: clip-path;
-    }
+    #loader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--main-color); display: flex; justify-content: center; align-items: center; z-index: 999999; clip-path: circle(150% at 50% 50%); transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1); will-change: clip-path; }
     .logo-wrapper { transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); }
     #loader.hidden .logo-wrapper { transform: scale(0); }
     #loader img { width: 150px; animation: rotateLogo 1.5s linear infinite; }
     @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     #loader.hidden { clip-path: circle(0% at 50% 50%); pointer-events: none; }
 
+    /* Lang Selector */
+    #lang-selector { position: absolute; top: 40px; right: 40px; z-index: 802; display: flex; gap: 10px; }
+    #lang-selector button { background: none; border: none; color: rgba(255,255,255,0.5); font-weight: bold; font-size: 14px; cursor: pointer; transition: color 0.3s; pointer-events: auto; }
+    #lang-selector button:hover { color: #fff; }
+    #lang-selector button.active { color: var(--main-color); }
+
     /* =========================================
        SCENA E LAYERS
        ========================================= */
     #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
     #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; }
-    
     .layer { position: absolute; top: -5%; left: -5%; object-fit: cover; pointer-events: none; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
     .desktop-layer { width: 110%; height: 110%; }
     .mobile-layer { width: 115%; height: 115%; top: -7.5%; left: -7.5%; }
     .mobile-layer.foreground { width: 130%; height: 130%; top: -15%; left: -15%; }
-
     .layer.smooth-zoom { transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease !important; will-change: transform, filter; }
 
     /* =========================================
-       TESTI CENTRALI E CTA
+       TESTI CENTRALI E SCIA
        ========================================= */
-    #hero-text {
-      position: absolute; top: 50%; left: 50%; 
-      transform: translate(-50%, -50%); /* Start position, il JS lo aggiornerà in tempo reale */
-      width: 100%; text-align: center; color: #fff; z-index: 90; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      
-      /* IL FIX CRITICO: Rende il contenitore "fantasma" ai clic, permettendo di cliccare gli hotspot sotto! */
-      pointer-events: none; 
-      will-change: transform;
+    #hero-text-trail, #hero-text {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; will-change: transform;
     }
+    #hero-text-trail { color: var(--main-color); z-index: 89; filter: blur(12px); opacity: 0; mix-blend-mode: screen; }
+    #hero-text { color: #fff; z-index: 90; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
     
-    /* Lettere spaziate staticamente. L'animazione muove solo la SCALA (GPU) e non i margini. */
-    #hero-text .title { font-size: 3vw; margin: 0; font-weight: 300; opacity: 0; letter-spacing: 4px; animation: cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) 0.1s forwards; }
-    #hero-text .title-big { font-size: 7vw; margin: 0; font-weight: bold; opacity: 0; letter-spacing: 8px; animation: cinematicFadeBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards; }
-    #hero-text .subtitle { font-size: 1.2vw; margin-top: 15px; font-weight: 300; opacity: 0; animation: fadeUp 1s ease 1.5s forwards; }
+    #hero-text .title, #hero-text .title-big, #hero-text .subtitle, .hero-cta { opacity: 0; }
+    #hero-text .title, #hero-text-trail .title { font-size: 3vw; margin: 0; font-weight: 300; letter-spacing: 4px; }
+    #hero-text .title-big, #hero-text-trail .title-big { font-size: 7vw; margin: 0; font-weight: bold; letter-spacing: 8px; }
+    #hero-text .subtitle { font-size: 1.2vw; margin-top: 15px; font-weight: 300; text-shadow: 1px 1px 5px #000; }
 
-    /* Animazione Fluida "Cinematic" accelerata dalla GPU (Scala invece di Letter Spacing) */
+    body.app-loaded #hero-text .title { animation: cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+    body.app-loaded #hero-text .title-big { animation: cinematicFadeBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.2s forwards; }
+    body.app-loaded #hero-text .subtitle { animation: fadeUp 1s ease 0.6s forwards; }
+    body.app-loaded .hero-cta { animation: fadeUp 1s ease 1s forwards; }
+    body.app-loaded #hero-text-trail { animation: fadeInTrail 3s ease 0.5s forwards; }
+
     @keyframes cinematicFade { 0% { opacity: 0; filter: blur(10px); transform: scale(0.9); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
     @keyframes cinematicFadeBig { 0% { opacity: 0; filter: blur(15px); transform: scale(0.9); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 0.8; transform: translateY(0); } }
+    @keyframes fadeInTrail { to { opacity: 0.6; } }
 
-    .hero-cta {
-      margin-top: 40px; padding: 16px 45px; border-radius: 40px; text-decoration: none; color: #fff; font-size: 1.1rem;
-      font-weight: bold; letter-spacing: 2px; text-transform: uppercase;
-      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-      opacity: 0; animation: fadeUp 1s ease 2s forwards; cursor: pointer; 
-      
-      /* Il bottone torna cliccabile nonostante il genitore sia "fantasma" */
-      pointer-events: auto; 
-    }
+    .hero-cta { margin-top: 40px; padding: 16px 45px; border-radius: 40px; text-decoration: none; color: #fff; font-size: 1.1rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; pointer-events: auto; }
     .hero-cta:hover { background: rgba(178, 34, 34, 0.6); border-color: rgba(255, 255, 255, 0.6); transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(178, 34, 34, 0.5); }
 
-    #audio-toggle {
-      position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 600; background: #000; 
-      border: 1px solid rgba(255,255,255,0.3); border-radius: 40px; padding: 8px 16px; color: #fff; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
+    /* =========================================
+       AUDIO, HOTSPOTS E MENU
+       ========================================= */
+    #audio-toggle { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; z-index: 600; background: #000; border: 1px solid rgba(255,255,255,0.3); border-radius: 40px; padding: 8px 16px; color: #fff; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     #audio-toggle:hover { transform: translateX(-50%) scale(1.05); }
     #audio-toggle.playing { background: var(--main-color); border-color: var(--main-color); }
     .switch-track { width: 36px; height: 20px; background: rgba(255,255,255,0.2); border-radius: 20px; position: relative; transition: background 0.3s; }
@@ -134,93 +136,60 @@
     #audio-toggle.playing .switch-track { background: rgba(0,0,0,0.3); }
     #audio-toggle.playing .switch-knob { transform: translateX(16px); }
 
-    /* =========================================
-       HOTSPOTS
-       ========================================= */
-    .hotspot {
-      position: absolute; left: 0; top: 0; width: 45px; height: 45px; border-radius: 50%; background: var(--main-color);
-      box-shadow: 0 0 20px var(--shadow-strong); animation: pulse 2s infinite; display: flex; justify-content: center; align-items: center;
-      z-index: 50; cursor: pointer; transition: opacity 0.5s ease, visibility 0.5s ease; color: #fff;
-    }
+    .hotspot { position: absolute; left: 0; top: 0; width: 45px; height: 45px; border-radius: 50%; background: var(--main-color); box-shadow: 0 0 20px var(--shadow-strong); animation: pulse 2s infinite; display: flex; justify-content: center; align-items: center; z-index: 50; cursor: pointer; transition: opacity 0.5s ease, visibility 0.5s ease; color: #fff; }
     .hotspot svg { width: 22px; height: 22px; pointer-events: none; }
     .hotspot.hidden { opacity: 0; visibility: hidden; }
     @keyframes pulse { 0%, 100% { transform: translate3d(-50%,-50%, 0) scale(1); box-shadow: 0 0 15px var(--shadow-color); } 50% { transform: translate3d(-50%,-50%, 0) scale(1.1); box-shadow: 0 0 30px var(--shadow-strong); } }
-
-    .hotspot-label {
-      position: absolute; background: var(--main-color); color: #fff; padding: 6px 14px; border-radius: 12px;
-      font-weight: bold; font-size: 13px; white-space: nowrap; top: 0; left: 50%; transform: translate3d(-50%, -35px, 0) scale(0); opacity: 0;
-      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; z-index: 100;
-    }
+    .hotspot-label { position: absolute; background: var(--main-color); color: #fff; padding: 6px 14px; border-radius: 12px; font-weight: bold; font-size: 13px; white-space: nowrap; top: 0; left: 50%; transform: translate3d(-50%, -35px, 0) scale(0); opacity: 0; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; z-index: 100; }
     .hotspot-label::after { content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid var(--main-color); }
     .hotspot:hover .hotspot-label { opacity: 1 !important; transform: translate3d(-50%, -45px, 0) scale(1) !important; }
 
-    @media (max-width: 768px) { .hotspot-label { display: none !important; } }
-
-    /* =========================================
-       POPUP ANIMATO
-       ========================================= */
-    #content-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.85); display: flex; justify-content: center; align-items: center; z-index: 9000; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.5s ease;
-    }
-    #content-overlay.active { opacity: 1; visibility: visible; }
-    .content-box { color: #fff; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
-    #content-overlay.active .content-box { transform: scale(1); opacity: 1; }
-    .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3.5rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; transition: color 0.3s; padding: 20px; line-height: 0.5; }
-    .close-btn:hover { color: var(--main-color); }
-
-    .elegant-content { padding: 20px; display: flex; flex-direction: column; align-items: center; }
-    .stagger-item { opacity: 0; transform: translateY(20px); transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
-    .elegant-content.show .stagger-item { opacity: 1; transform: translateY(0); }
-    .popup-icon svg { width: 45px; height: 45px; margin-bottom: 15px; color: var(--main-color); filter: drop-shadow(0px 0px 8px var(--shadow-color));}
-    .stagger-0 { transition-delay: 0.05s; } .stagger-1 { transition-delay: 0.15s; } .stagger-2 { transition-delay: 0.25s; } .stagger-3 { transition-delay: 0.35s; } .stagger-4 { transition-delay: 0.45s; }
-
-    .elegant-title { font-size: 2.2rem; letter-spacing: 4px; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 300; }
-    .elegant-divider { width: 50px; height: 2px; background-color: var(--main-color); margin-bottom: 20px; }
-    .elegant-desc { font-size: 1.1rem; line-height: 1.6; max-width: 400px; font-weight: 300; opacity: 0.9; }
-    .dynamic-badge { display: inline-block; padding: 5px 12px; border: 1px solid var(--main-color); border-radius: 20px; font-size: 0.9rem; margin-top: 15px; font-weight: bold;}
-    
-    .cta-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
-    .cta-btn { border: 2px solid #fff; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: 600; background: rgba(0,0,0,0.5); color: #fff; transition: all 0.25s ease; cursor: none; pointer-events: auto;}
-    .cta-btn:hover { background: var(--main-color); border-color: var(--main-color); transform: scale(1.05); box-shadow: 0 0 25px var(--shadow-strong); }
-    .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
-
-    /* =========================================
-       NAVBAR E MENU MOBILE
-       ========================================= */
-    #menu { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 90%; display: flex; align-items: center; z-index: 100; }
+    #menu { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 80%; display: flex; align-items: center; z-index: 100; }
     #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; transition: color 0.3s;}
     #menu a:hover { color: var(--main-color); }
     .logo-center { flex: 1; display: flex; justify-content: center; align-items: center; }
-    .logo-center img { height: 60px; transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; }
+    .logo-center img { height: 60px; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; }
+    .logo-center img:hover { filter: brightness(0) saturate(100%) invert(18%) sepia(55%) saturate(5451%) hue-rotate(345deg) brightness(93%) contrast(100%); transform: scale(1.08); }
     
     #mobile-logo { display: none; position: absolute; top: 20px; left: 20px; height: 50px; z-index: 101; }
-    
     #hamburger { display: none; position: absolute; top: 15px; right: 15px; width: 35px; height: 26px; padding: 15px; box-sizing: content-box; flex-direction: column; justify-content: space-between; align-items: center; cursor: pointer; z-index: 801; }
     #hamburger div { height: 3px; width: 100%; background: #fff; transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s; transform-origin: left center; }
     #hamburger.open div:nth-child(1) { transform: rotate(45deg) translate(0px, -2px); }
     #hamburger.open div:nth-child(2) { opacity: 0; transform: scaleX(0); }
     #hamburger.open div:nth-child(3) { transform: rotate(-45deg) translate(0px, 2px); }
 
-    #mobile-menu {
-      position: fixed; inset: 0; background: rgba(12, 12, 12, 0.98); display: flex; justify-content: center; align-items: center; flex-direction: column; 
-      z-index: 800; clip-path: circle(0px at calc(100% - 40px) 40px); transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none;
-    }
+    #mobile-menu { position: fixed; inset: 0; background: rgba(12, 12, 12, 0.98); display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 800; clip-path: circle(0px at calc(100% - 40px) 40px); transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none; }
     #mobile-menu.open { clip-path: circle(150% at calc(100% - 40px) 40px); pointer-events: auto; }
     #mobile-menu a { display: flex; align-items: center; gap: 15px; color: #fff; margin: 15px 0; font-size: 1.3rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; }
     #mobile-menu a svg { width: 24px; height: 24px; }
     #mobile-menu a.cta { margin-top: 30px; border: 2px solid var(--main-color); border-radius: 40px; padding: 12px 30px; justify-content: center; font-weight: bold; background: rgba(178,34,34,0.1); }
 
-    /* =========================================
-       FILTRI TEMPO E FOOTER
-       ========================================= */
+    /* POPUP */
+    #content-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: flex; justify-content: center; align-items: center; z-index: 9000; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.5s ease; }
+    #content-overlay.active { opacity: 1; visibility: visible; }
+    .content-box { color: #fff; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+    #content-overlay.active .content-box { transform: scale(1); opacity: 1; }
+    .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3.5rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; transition: color 0.3s; padding: 20px; line-height: 0.5; }
+    .close-btn:hover { color: var(--main-color); }
+    .elegant-content { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .stagger-item { opacity: 0; transform: translateY(20px); transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+    .elegant-content.show .stagger-item { opacity: 1; transform: translateY(0); }
+    .popup-icon svg { width: 45px; height: 45px; margin-bottom: 15px; color: var(--main-color); filter: drop-shadow(0px 0px 8px var(--shadow-color));}
+    .stagger-0 { transition-delay: 0.05s; } .stagger-1 { transition-delay: 0.15s; } .stagger-2 { transition-delay: 0.25s; } .stagger-3 { transition-delay: 0.35s; } .stagger-4 { transition-delay: 0.45s; }
+    .elegant-title { font-size: 2.2rem; letter-spacing: 4px; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 300; }
+    .elegant-divider { width: 50px; height: 2px; background-color: var(--main-color); margin-bottom: 20px; }
+    .elegant-desc { font-size: 1.1rem; line-height: 1.6; max-width: 500px; font-weight: 300; opacity: 0.9; }
+    .dynamic-badge { display: inline-block; padding: 5px 12px; border: 1px solid var(--main-color); border-radius: 20px; font-size: 0.9rem; margin-top: 15px; font-weight: bold;}
+    .cta-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
+    .cta-btn { border: 2px solid #fff; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: 600; background: rgba(0,0,0,0.5); color: #fff; transition: all 0.25s ease; cursor: none; pointer-events: auto;}
+    .cta-btn:hover { background: var(--main-color); border-color: var(--main-color); transform: scale(1.05); box-shadow: 0 0 25px var(--shadow-strong); }
+    .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
+
+    /* FILTRI TEMPO E FOOTER */
     #timeControls { position: fixed; top: 115px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 650; }
     #timeControls button { padding: 6px 12px; border: 1px solid rgba(255,255,255,0.4); border-radius: 15px; background: rgba(0,0,0,0.6); color: white; cursor: pointer; font-size: 11px; backdrop-filter: blur(4px); transition: all 0.3s ease; }
     #timeControls button:hover, #timeControls button.active-debug { background: var(--main-color); border-color: var(--main-color); }
     
-    body[data-time="giorno"] #hero-layers { filter: brightness(1.1) contrast(1.05) saturate(0.35); }
-    body[data-time="sera"] #hero-layers { filter: brightness(0.85) contrast(1.2) sepia(0.3) saturate(1.3) hue-rotate(-10deg); }
-    body[data-time="chiuso"] #hero-layers { filter: brightness(0.4) contrast(1.2) saturate(0.4) sepia(0.5) hue-rotate(180deg); }
-
     footer { background: #111; color: #ccc; width: 100vw; position: fixed; bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px; }
     .footer-top { display: flex; flex-direction: row; align-items: center; justify-content: center; padding: 10px 25px; background: var(--main-color); color: #fff; gap: 20px; transition: background-color 0.5s ease; }
     .footer-top-info p { margin: 0; font-weight: bold; letter-spacing: 0.5px; }
@@ -236,39 +205,15 @@
     #gyro-overlay:not(.active) { opacity: 0; pointer-events: none; }
     #gyro-btn { background: var(--main-color); color: #fff; border: none; padding: 18px 35px; font-size: 1.2rem; border-radius: 40px; font-weight: bold; box-shadow: 0 0 20px var(--shadow-strong); animation: pulseBtn 2s infinite; cursor: none;}
     
-    @media (min-width: 769px) { #gyro-overlay { display: none !important; } }
-
-    /* =========================================
-       MEDIA QUERIES (MOBILE)
-       ========================================= */
-    @media (max-width: 768px) {
-      #menu { display: none; } #hamburger { display: flex; } #mobile-logo { display: block; }
-      
-      #hero-text { width: 90%; }
-      #hero-text .title { font-size: 6vw; } 
-      #hero-text .title-big { font-size: 12vw; } 
-      #hero-text .subtitle { font-size: 3vw; }
-      .hero-cta { font-size: 1rem; padding: 12px 30px; margin-top: 25px; }
-
-      #audio-toggle { bottom: 110px; padding: 6px 14px; gap: 8px; }
-      
-      .footer-top { padding: 8px 10px; gap: 10px; font-size: 10px; justify-content: center; }
-      .footer-top-info p { letter-spacing: 0; }
-      .footer-social { gap: 10px; }
-      .footer-social img { width: 18px; height: 18px; }
-      .footer-bottom { padding: 8px 10px; font-size: 10px; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    }
+    @media (max-width: 768px) { .hotspot-label { display: none !important; } #lang-selector { top: 25px; right: 70px; } #menu { display: none; } #hamburger { display: flex; } #mobile-logo { display: block; } #hero-text, #hero-text-trail { width: 90%; } #hero-text .title, #hero-text-trail .title { font-size: 6vw; } #hero-text .title-big, #hero-text-trail .title-big { font-size: 12vw; } #hero-text .subtitle { font-size: 3vw; } .hero-cta { font-size: 1rem; padding: 12px 30px; margin-top: 25px; } #audio-toggle { bottom: 110px; padding: 6px 14px; gap: 8px; } .footer-top { padding: 8px 10px; gap: 10px; font-size: 10px; justify-content: center; } .footer-top-info p { letter-spacing: 0; } .footer-social { gap: 10px; } .footer-social img { width: 18px; height: 18px; } .footer-bottom { padding: 8px 10px; font-size: 10px; gap: 10px; justify-content: center; flex-wrap: wrap; } }
     @media (pointer: coarse), (max-width: 768px) { #custom-cursor { display: none !important; } }
-    @media (min-width: 769px) { .mobile-layer { display: none; } }
+    @media (min-width: 769px) { .mobile-layer { display: none; } #gyro-overlay { display: none !important; } }
   </style>
 </head>
 <body data-time="sera">
 
   <div id="rotate-device">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-      <line x1="12" y1="18" x2="12.01" y2="18"></line>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
     <p>Per un'esperienza ottimale,<br>ruota il dispositivo in verticale.</p>
   </div>
 
@@ -276,24 +221,22 @@
   <audio id="hover-sfx" src="https://actions.google.com/sounds/v1/ui/button_click.ogg" preload="auto"></audio>
   <audio id="click-sfx" src="https://actions.google.com/sounds/v1/ui/pop_up_on.ogg" preload="auto"></audio>
 
-  <div id="loader">
-    <div class="logo-wrapper">
-      <img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo">
-    </div>
-  </div>
-  
+  <div id="loader"><div class="logo-wrapper"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo"></div></div>
   <div id="gyro-overlay" class="active"><button id="gyro-btn">Esplora in 3D</button></div>
-
   <div id="custom-cursor" class="pulsing" style="top: 50%; left: 50%;"></div>
 
+  <div id="lang-selector">
+    <button class="active" data-lang="it">IT</button>
+    <button data-lang="en">EN</button>
+    <button data-lang="de">DE</button>
+  </div>
+
   <div id="menu">
-    <a href="#" data-key="chi">CHI SIAMO</a>
-    <a href="#" data-key="mescita">MESCITA</a>
-    <div class="logo-center">
-      <img id="desktop-logo" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo">
-    </div>
-    <a href="#" data-key="bar">BAR</a>
-    <a href="#" data-key="eventi">EVENTI</a>
+    <a href="#" data-key="chi" class="i18n-menu" data-i18n="chi">CHI SIAMO</a>
+    <a href="#" data-key="mescita" class="i18n-menu" data-i18n="mescita">MESCITA</a>
+    <div class="logo-center"><img id="desktop-logo" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo"></div>
+    <a href="#" data-key="bar" class="i18n-menu" data-i18n="bar">HI-FI BAR</a>
+    <a href="#" data-key="eventi" class="i18n-menu" data-i18n="eventi">EVENTI</a>
   </div>
   <img id="mobile-logo" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo Mobile">
   
@@ -303,24 +246,15 @@
   <div id="vignette"></div>
   <div id="film-noise"></div>
 
+  <div id="hero-text-trail"><h2 class="title" id="trail-title"></h2><h1 class="title-big" id="trail-title-big">CATMA BAR</h1></div>
   <div id="hero-text">
-    <h2 class="title" id="text-title">BENVENUTI AL</h2>
-    <h1 class="title-big" id="text-title-big">CATMA BAR</h1>
-    <p class="subtitle" id="text-subtitle">Via delle Sirene, 13 - Lido di Jesolo (VE)</p>
-    <a href="#" class="hero-cta" data-key="prenota">Prenota un Tavolo</a>
+    <h2 class="title" id="text-title"></h2><h1 class="title-big" id="text-title-big">CATMA BAR</h1>
+    <p class="subtitle" id="text-subtitle"></p>
+    <a href="#" class="hero-cta i18n-cta" data-key="prenota">PRENOTA UN TAVOLO</a>
   </div>
   
-  <div id="audio-toggle" title="Attiva Lounge Bar">
-    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-    <div class="switch-track"><div class="switch-knob"></div></div>
-  </div>
-
-  <div id="timeControls">
-    <button data-time="giorno">Giorno</button>
-    <button data-time="sera">Sera</button>
-    <button data-time="chiuso">Chiuso</button>
-  </div>
-
+  <div id="audio-toggle" title="Attiva Lounge Bar"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg><div class="switch-track"><div class="switch-knob"></div></div></div>
+  <div id="timeControls"><button data-time="giorno">Giorno</button><button data-time="sera">Sera</button><button data-time="chiuso">Chiuso</button></div>
   <div id="content-overlay"><div class="close-btn">&times;</div><div class="content-box"></div></div>
   
   <div id="hero">
@@ -328,7 +262,6 @@
       <img class="layer desktop-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp">
       <img class="layer desktop-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774821283/Catma-midground_zjbznb.webp">
       <img class="layer desktop-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp">
-
       <img class="layer mobile-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
       <img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774917597/Catma-midground-mobile_xvwur8.webp">
       <img class="layer mobile-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
@@ -342,11 +275,8 @@
 
   <footer>
     <div class="footer-top">
-      <div class="footer-top-info"><p>Via delle Sirene 13, Lido di Jesolo (VE) | P.IVA: 01234567890</p></div>
-      <div class="footer-social">
-        <a href="https://www.instagram.com/" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-01_n8pedz.png" alt="Instagram"></a>
-        <a href="https://www.facebook.com/" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-02_qpgtp7.png" alt="Facebook"></a>
-      </div>
+      <div class="footer-top-info"><p>Piazza Marconi, Via delle Sirene 13, Lido di Jesolo (VE) | P.IVA: 01234567890</p></div>
+      <div class="footer-social"><a href="#" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-01_n8pedz.png" alt="Insta"></a><a href="#" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-02_qpgtp7.png" alt="FB"></a></div>
     </div>
     <div class="footer-bottom">
       <div>&copy; <span id="year"></span> Catma Bar. Tutti i diritti riservati.</div>
@@ -357,268 +287,202 @@
   <script>
     document.getElementById('year').innerText = new Date().getFullYear();
     
-    const hero = document.getElementById('hero');
-    const heroLayers = document.getElementById('hero-layers');
-    const heroTextContainer = document.getElementById('hero-text');
-    let layers = {};
-    const hotspots = document.querySelectorAll('.hotspot');
-    const overlay = document.getElementById('content-overlay');
-    const contentBox = overlay.querySelector('.content-box');
-    
-    let targetX = 0, targetY = 0, currentX = 0, currentY = 0, rafId = null;
-    let isZoomed = false, manualTimeOverride = false, soundEnabled = false;
+    // =========================================
+    // I18N - DIZIONARIO MULTILINGUA CMS-READY
+    // =========================================
+    let currentLang = 'it';
+    const i18n = {
+      it: {
+        menu: { chi: "CHI SIAMO", mescita: "MESCITA", bar: "HI-FI BAR", eventi: "LIVE MUSIC", prenota: "PRENOTA UN TAVOLO" },
+        hero: {
+          giorno: { t: "BUONGIORNO DA", sub: "Cucina di alto livello e Vini Naturali a Jesolo Lido" },
+          sera: { t: "BENVENUTI AL", sub: "L'Hi-Fi Bar di Piazza Marconi. Dj-set di nicchia e Live Music." },
+          chiuso: { t: "IL CATMA È<br>CHIUSO", sub: "Giovanni ti aspetta domani. Friendly vibes e classe al Catma." }
+        },
+        popups: {
+          chi: { title: "Chi siamo", desc: "Guidati dall'oste Giovanni Catma, siamo un Hi-Fi Bar nel cuore di Jesolo Lido (Piazza Marconi). Un rifugio per anime notturne, dove la ricerca musicale incontra la cultura del bere di qualità, creando connessioni umane in un ambiente friendly ma di classe." },
+          mescita: { title: "Mescita & Cucina", desc: "Non solo cocktail: offriamo una cucina semplice ma di altissimo livello. Ad accompagnare i piatti, una selezione rigorosa di vini naturali che raccontano il territorio e birre artigianali di carattere." },
+          eventi: { title: "Live Music & DJ", desc: "Il ritmo della notte prende vita qui. Proponiamo esibizioni di Live Music e DJ-Set curati, con selezioni eleganti e non banali: dal Jazz al Retro, dalla World Music al Funk e alla Disco di nicchia." },
+          bar: { title: "Hi-Fi Bar", desc: "Uno spazio intimo progettato per l'eccellenza sonora. Un ambiente avvolgente e raffinato dove ogni brano musicale viene riprodotto con la massima fedeltà per farti vivere un'esperienza sensoriale completa." },
+          prenota: { title: "Prenota un tavolo", desc: "Assicurati il tuo spazio esclusivo al Catma Bar. Scrivici su WhatsApp o chiamaci per riservare.", ctaW: "WhatsApp", ctaC: "Chiama" }
+        }
+      },
+      en: {
+        menu: { chi: "ABOUT US", mescita: "FOOD & WINE", bar: "HI-FI BAR", eventi: "LIVE MUSIC", prenota: "BOOK A TABLE" },
+        hero: {
+          giorno: { t: "GOOD MORNING", sub: "High-level cuisine and Natural Wines in Jesolo Lido" },
+          sera: { t: "WELCOME TO", sub: "The Hi-Fi Bar in Piazza Marconi. Niche Dj-sets and Live Music." },
+          chiuso: { t: "CATMA IS<br>CLOSED", sub: "Giovanni awaits you tomorrow. Friendly vibes and class." }
+        },
+        popups: {
+          chi: { title: "About Us", desc: "Hosted by Giovanni Catma, we are an Hi-Fi Bar in the heart of Jesolo Lido (Piazza Marconi). A classy yet friendly haven where musical research meets the culture of quality drinking." },
+          mescita: { title: "Food & Wine", desc: "Not just cocktails: we offer simple but top-tier cuisine. Paired with a rigorous selection of natural wines that tell the story of the land, and bold craft beers." },
+          eventi: { title: "Live Music & DJ", desc: "The rhythm of the night comes alive here. We host Live Music and curated DJ-Sets featuring elegant, niche selections: from Jazz to Retro, World Music, Funk, and Disco." },
+          bar: { title: "Hi-Fi Bar", desc: "An intimate space designed for sonic excellence. An enveloping and refined environment where every track is played with maximum fidelity." },
+          prenota: { title: "Book a Table", desc: "Secure your exclusive spot at Catma Bar. Text us on WhatsApp or call to reserve.", ctaW: "WhatsApp", ctaC: "Call" }
+        }
+      },
+      de: {
+        menu: { chi: "ÜBER UNS", mescita: "ESSEN & WEIN", bar: "HI-FI BAR", eventi: "LIVE MUSIC", prenota: "TISCH RESERVIEREN" },
+        hero: {
+          giorno: { t: "GUTEN MORGEN", sub: "Gehobene Küche und Naturweine in Jesolo Lido" },
+          sera: { t: "WILLKOMMEN IM", sub: "Die Hi-Fi Bar an der Piazza Marconi. Nischen-DJ-Sets & Live Music." },
+          chiuso: { t: "CATMA IST<br>GESCHLOSSEN", sub: "Giovanni erwartet Sie morgen. Freundliche Vibes und Klasse." }
+        },
+        popups: {
+          chi: { title: "Über Uns", desc: "Unter der Leitung von Gastgeber Giovanni Catma sind wir eine Hi-Fi-Bar im Herzen von Jesolo Lido. Ein stilvoller, aber freundlicher Zufluchtsort für nächtliche Seelen." },
+          mescita: { title: "Essen & Wein", desc: "Nicht nur Cocktails: Wir bieten eine einfache, aber erstklassige Küche. Dazu eine strenge Auswahl an Naturweinen und charakterstarken Craft-Bieren." },
+          eventi: { title: "Live Music & DJ", desc: "Hier erwacht der Rhythmus der Nacht. Wir bieten Live-Musik und kuratierte DJ-Sets mit eleganten Nischen-Auswahlen: von Jazz über Retro, World Music, Funk bis Disco." },
+          bar: { title: "Hi-Fi Bar", desc: "Ein intimer Raum, entworfen für klangliche Exzellenz. Eine umhüllende Umgebung, in der jeder Titel mit höchster Wiedergabetreue abgespielt wird." },
+          prenota: { title: "Tisch Reservieren", desc: "Sichern Sie sich Ihren exklusiven Platz in der Catma Bar. Schreiben Sie uns auf WhatsApp oder rufen Sie uns an.", ctaW: "WhatsApp", ctaC: "Anrufen" }
+        }
+      }
+    };
 
-    // ICONE SVG E CONTENUTI
     const iconsMap = {
       chi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
       mescita: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"></path><path d="M12 15v7"></path><path d="M7 3h10v3a5 5 0 0 1-5 5v0a5 5 0 0 1-5-5V3z"></path></svg>`,
       bar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 11h1a3 3 0 0 1 0 6h-1"></path><path d="M9 12v6"></path><path d="M13 12v6"></path><path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 5 0c.81 0 1.5-.5 2.5-.5a2.5 2.5 0 0 1 5 0c.81 0 1.5-.5 2.5-.5z"></path><path d="M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path></svg>`,
       eventi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`
     };
-    const labelsMap = { chi: 'CHI SIAMO', mescita: 'MESCITA', eventi: 'EVENTI', bar: 'BAR' };
 
-    const mobileMenuObj = document.getElementById('mobile-menu');
-    mobileMenuObj.innerHTML = `
-      <a href="#" data-key="chi">${iconsMap.chi} CHI SIAMO</a>
-      <a href="#" data-key="mescita">${iconsMap.mescita} MESCITA</a>
-      <a href="#" data-key="bar">${iconsMap.bar} BAR</a>
-      <a href="#" data-key="eventi">${iconsMap.eventi} EVENTI</a>
-      <a href="#" class="cta" data-key="prenota">PRENOTA</a>
-    `;
+    const hero = document.getElementById('hero'); const heroLayers = document.getElementById('hero-layers'); const heroTextContainer = document.getElementById('hero-text'); const heroTextTrail = document.getElementById('hero-text-trail');
+    let layers = {}; const hotspots = document.querySelectorAll('.hotspot'); const overlay = document.getElementById('content-overlay'); const contentBox = overlay.querySelector('.content-box');
+    let targetX = 0, targetY = 0, currentX = 0, currentY = 0, trailX = 0, trailY = 0, rafId = null; let isZoomed = false, manualTimeOverride = false, soundEnabled = false;
 
-    const contentMap = {
-      chi: `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap.chi}</div><h1 class="elegant-title stagger-item stagger-1">Chi siamo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
-      mescita: `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap.mescita}</div><h1 class="elegant-title stagger-item stagger-1">Mescita</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
-      eventi: `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap.eventi}</div><h1 class="elegant-title stagger-item stagger-1">Eventi</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Il ritmo della notte prende vita qui. Dj set curati, performance dal vivo e serate speciali ogni settimana, per accompagnare i tuoi momenti di evasione.<br>{{EVENT_STATUS}}</p></div>`,
-      bar: `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap.bar}</div><h1 class="elegant-title stagger-item stagger-1">Il Bar</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Uno spazio intimo tra luce e ombra, progettato minuziosamente per farti vivere un'esperienza notturna avvolgente, accompagnato da vibrazioni uniche.</p></div>`,
-      prenota: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Prenota un tavolo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group stagger-item stagger-4"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
-    };
-
+    // AUDIO
     const bgAudio = document.getElementById('bg-audio'); const hoverSfx = document.getElementById('hover-sfx'); const clickSfx = document.getElementById('click-sfx'); const audioToggle = document.getElementById('audio-toggle');
     bgAudio.volume = 0.7; hoverSfx.volume = 0.3; clickSfx.volume = 0.5;
-
     function playSfx(audioEl) { if(soundEnabled && audioEl) { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); } }
     audioToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } else { audioToggle.classList.remove('playing'); bgAudio.pause(); } });
 
-    // =========================================
-    // CURSORE INTELLIGENTE FIXATO
-    // =========================================
-    const customCursor = document.getElementById('custom-cursor');
-    let isCursorInit = false;
-    document.addEventListener('mousemove', e => { 
-      if(!isCursorInit) { 
-        customCursor.classList.remove('pulsing'); 
-        customCursor.style.top = '0px'; 
-        customCursor.style.left = '0px';
-        isCursorInit = true; 
-      }
-      customCursor.style.transform = `translate3d(calc(-50% + ${e.clientX}px), calc(-50% + ${e.clientY}px), 0)`; 
-    });
+    // CURSORE
+    const customCursor = document.getElementById('custom-cursor'); let isCursorInit = false;
+    document.addEventListener('mousemove', e => { if(!isCursorInit) { customCursor.classList.remove('pulsing'); customCursor.style.top = '0px'; customCursor.style.left = '0px'; isCursorInit = true; } customCursor.style.transform = `translate3d(calc(-50% + ${e.clientX}px), calc(-50% + ${e.clientY}px), 0)`; });
     document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px var(--shadow-strong)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
     document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px var(--shadow-color)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
 
-    // =========================================
-    // LOGO MAGNETICO (DESKTOP)
-    // =========================================
-    const desktopLogo = document.getElementById('desktop-logo');
-    desktopLogo.addEventListener('mousemove', e => {
-      const rect = desktopLogo.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      desktopLogo.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-    });
-    desktopLogo.addEventListener('mouseleave', () => { desktopLogo.style.transform = `translate(0px, 0px)`; });
-
-    if('ontouchstart' in window) {
-      const gyroOverlay = document.getElementById('gyro-overlay'); const gyroBtn = document.getElementById('gyro-btn');
-      gyroBtn.onclick = () => {
-        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-          DeviceOrientationEvent.requestPermission().then(state => { if (state === 'granted') { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); } else { gyroOverlay.classList.remove('active'); } }).catch(console.error);
-        } else { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); }
-      };
-    } else { document.getElementById('gyro-overlay').classList.remove('active'); }
-
+    // GIROSCOPIO
+    if('ontouchstart' in window) { const gyroOverlay = document.getElementById('gyro-overlay'); const gyroBtn = document.getElementById('gyro-btn'); gyroBtn.onclick = () => { if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') { DeviceOrientationEvent.requestPermission().then(state => { if (state === 'granted') { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); } else { gyroOverlay.classList.remove('active'); } }).catch(console.error); } else { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); } }; } else { document.getElementById('gyro-overlay').classList.remove('active'); }
     function handleGyro(e) { if(isZoomed) return; targetX = Math.max(-0.8, Math.min(0.8, (e.gamma || 0) / 30)); targetY = Math.max(-0.8, Math.min(0.8, (e.beta || 0) / 30)); }
 
-    function setLayers() {
-      const isMobile = window.innerWidth <= 768;
-      layers = isMobile ? { background: heroLayers.querySelector('.mobile-layer.background'), midground: heroLayers.querySelector('.mobile-layer.midground'), foreground: heroLayers.querySelector('.mobile-layer.foreground') } 
-      : { background: heroLayers.querySelector('.desktop-layer.background'), midground: heroLayers.querySelector('.desktop-layer.midground'), foreground: heroLayers.querySelector('.desktop-layer.foreground') };
-      updateHotspots();
+    // PARALLASSE
+    function setLayers() { const isMobile = window.innerWidth <= 768; layers = isMobile ? { background: heroLayers.querySelector('.mobile-layer.background'), midground: heroLayers.querySelector('.mobile-layer.midground'), foreground: heroLayers.querySelector('.mobile-layer.foreground') } : { background: heroLayers.querySelector('.desktop-layer.background'), midground: heroLayers.querySelector('.desktop-layer.midground'), foreground: heroLayers.querySelector('.desktop-layer.foreground') }; updateHotspots(); }
+    function updateHotspots() { const isMobile = window.innerWidth <= 768; hotspots.forEach(h => { const ox = isMobile ? (parseFloat(h.dataset.xMobile)/100 * hero.clientWidth) : (parseFloat(h.dataset.xDesktop)/100 * hero.clientWidth); const oy = isMobile ? (parseFloat(h.dataset.yMobile)/100 * hero.clientHeight) : (parseFloat(h.dataset.yDesktop)/100 * hero.clientHeight); h.dataset.ox = ox; h.dataset.oy = oy; }); renderParallax(targetX, targetY); }
+    function renderParallax(x, y, tx, ty) {
+      const isMobile = window.innerWidth <= 768; const maxOffset = isMobile ? {x:15,y:8, mx:15,my:8, fx:40,fy:20} : {x:15,y:7, mx:30,my:15, fx:45,fy:22};
+      if(layers.background) layers.background.style.transform = `translate3d(${x*maxOffset.x}px, ${y*maxOffset.y}px, 0)`; if(layers.midground) layers.midground.style.transform = `translate3d(${x*maxOffset.mx}px, ${y*maxOffset.my}px, 0)`; if(layers.foreground) layers.foreground.style.transform = `translate3d(${x*maxOffset.fx}px, ${y*maxOffset.fy}px, 0)`;
+      const textOffX = -x * 100; const textOffY = -y * 80; heroTextContainer.style.transform = `translate(-50%, -50%) translate3d(${textOffX}px, ${textOffY}px, 0)`;
+      const trailOffX = -tx * 100; const trailOffY = -ty * 80; heroTextTrail.style.transform = `translate(-50%, -50%) translate3d(${trailOffX}px, ${trailOffY}px, 0)`;
+      const refX = x * maxOffset.mx; const refY = y * maxOffset.my; hotspots.forEach(h => { if(h.classList.contains('hidden')) return; h.style.left = `${parseFloat(h.dataset.ox) + refX}px`; h.style.top = `${parseFloat(h.dataset.oy) + refY}px`; });
     }
-
-    function updateHotspots() {
-      const isMobile = window.innerWidth <= 768;
-      hotspots.forEach(h => {
-        const ox = isMobile ? (parseFloat(h.dataset.xMobile)/100 * hero.clientWidth) : (parseFloat(h.dataset.xDesktop)/100 * hero.clientWidth);
-        const oy = isMobile ? (parseFloat(h.dataset.yMobile)/100 * hero.clientHeight) : (parseFloat(h.dataset.yDesktop)/100 * hero.clientHeight);
-        h.dataset.ox = ox; h.dataset.oy = oy;
-      });
-      renderParallax(targetX, targetY);
-    }
-
-    function renderParallax(x, y) {
-      const isMobile = window.innerWidth <= 768;
-      const maxOffset = isMobile ? {x:15,y:8, mx:15,my:8, fx:40,fy:20} : {x:15,y:7, mx:30,my:15, fx:45,fy:22};
-      
-      if(layers.background) layers.background.style.transform = `translate3d(${x*maxOffset.x}px, ${y*maxOffset.y}px, 0)`;
-      if(layers.midground) layers.midground.style.transform = `translate3d(${x*maxOffset.mx}px, ${y*maxOffset.my}px, 0)`;
-      if(layers.foreground) layers.foreground.style.transform = `translate3d(${x*maxOffset.fx}px, ${y*maxOffset.fy}px, 0)`;
-
-      // TESTO GALLEGGIANTE FLUIDO: Potenziato per essere ben visibile
-      // Usiamo moltiplicatori alti (-100, -80) ma fluidi
-      const textOffX = -x * 100; 
-      const textOffY = -y * 80;
-      heroTextContainer.style.transform = `translate(-50%, -50%) translate3d(${textOffX}px, ${textOffY}px, 0)`;
-
-      const refX = x * maxOffset.mx; const refY = y * maxOffset.my;
-      hotspots.forEach(h => {
-        if(h.classList.contains('hidden')) return;
-        h.style.left = `${parseFloat(h.dataset.ox) + refX}px`; h.style.top = `${parseFloat(h.dataset.oy) + refY}px`;
-      });
-    }
-
-    function parallaxLoop() {
-      if (!isZoomed) { 
-        currentX += (targetX - currentX) * 0.15; currentY += (targetY - currentY) * 0.15; 
-        renderParallax(currentX, currentY); rafId = requestAnimationFrame(parallaxLoop); 
-      }
-    }
+    function parallaxLoop() { if (!isZoomed) { currentX += (targetX - currentX) * 0.15; currentY += (targetY - currentY) * 0.15; trailX += (targetX - trailX) * 0.05; trailY += (targetY - trailY) * 0.05; renderParallax(currentX, currentY, trailX, trailY); rafId = requestAnimationFrame(parallaxLoop); } }
     rafId = requestAnimationFrame(parallaxLoop);
-
     hero.addEventListener('mousemove', e => { if('ontouchstart' in window) return; targetX = (e.clientX / window.innerWidth) - 0.5; targetY = (e.clientY / window.innerHeight) - 0.5; });
+
+    // ZOOM E POPUP DINAMICI (CMS Ready)
+    function generateDynamicContent(key) {
+      const t = i18n[currentLang].popups[key];
+      if(key === 'prenota') {
+        return `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">${t.title}</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">${t.desc}</p><div class="cta-group stagger-item stagger-4"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">${t.ctaW}</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">${t.ctaC}</a></div></div>`;
+      }
+      return `<div class="elegant-content"><div class="popup-icon stagger-item stagger-0">${iconsMap[key]}</div><h1 class="elegant-title stagger-item stagger-1">${t.title}</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">${t.desc}</p></div>`;
+    }
 
     function zoomTo(key) {
       playSfx(clickSfx);
-      if(isZoomed) {
-        contentBox.style.opacity = 0; contentBox.style.transform = 'scale(0.9)';
-        setTimeout(() => { contentBox.innerHTML = generateDynamicContent(key); contentBox.style.transform = 'scale(1)'; contentBox.style.opacity = 1; setTimeout(()=> contentBox.querySelector('.elegant-content').classList.add('show'), 50); }, 300);
-        return;
-      }
+      if(isZoomed) { contentBox.style.opacity = 0; contentBox.style.transform = 'scale(0.9)'; setTimeout(() => { contentBox.innerHTML = generateDynamicContent(key); contentBox.style.transform = 'scale(1)'; contentBox.style.opacity = 1; setTimeout(()=> contentBox.querySelector('.elegant-content').classList.add('show'), 50); }, 300); return; }
       
-      const isMobile = window.innerWidth <= 768;
-      const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2;
-      let safeDx = 0, safeDy = 0;
-      let scaleBg = 1.2, scaleMid = 1.5, scaleFg = 2.2;
-
-      if (key !== 'prenota' && !isMobile) {
-        const h = Array.from(hotspots).find(el => el.dataset.key === key); 
-        if(h) {
-            const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
-            const dx = cx - tx; const dy = cy - ty;
-            const limitX = hero.clientWidth * 0.12; const limitY = hero.clientHeight * 0.12;
-            safeDx = Math.max(-limitX, Math.min(limitX, dx)); safeDy = Math.max(-limitY, Math.min(limitY, dy));
-        }
-      } else if (isMobile) {
-        scaleBg = 1.05; scaleMid = 1.1; scaleFg = 1.15;
-      }
-
-      isZoomed = true; cancelAnimationFrame(rafId);
-      Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom'); });
+      const isMobile = window.innerWidth <= 768; const cx = hero.clientWidth / 2; const cy = hero.clientHeight / 2; let safeDx = 0, safeDy = 0; let scaleBg = 1.2, scaleMid = 1.5, scaleFg = 2.2;
+      if (key !== 'prenota' && !isMobile) { const h = Array.from(hotspots).find(el => el.dataset.key === key); if(h) { const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy); const dx = cx - tx; const dy = cy - ty; const limitX = hero.clientWidth * 0.12; const limitY = hero.clientHeight * 0.12; safeDx = Math.max(-limitX, Math.min(limitX, dx)); safeDy = Math.max(-limitY, Math.min(limitY, dy)); } } else if (isMobile) { scaleBg = 1.05; scaleMid = 1.1; scaleFg = 1.15; }
       
-      setTimeout(() => {
-        if(layers.background) { layers.background.style.transform = `translate3d(${safeDx*1.1}px,${safeDy*1.1}px, 0) scale(${scaleBg})`; layers.background.style.filter = 'blur(5px) brightness(0.7)'; }
-        if(layers.midground) { layers.midground.style.transform = `translate3d(${safeDx*1.5}px,${safeDy*1.5}px, 0) scale(${scaleMid})`; layers.midground.style.filter = 'blur(5px) brightness(0.7)'; }
-        if(layers.foreground) { layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(${scaleFg})`; layers.foreground.style.filter = 'blur(5px) brightness(0.7)'; }
-      }, 10);
-
-      contentBox.innerHTML = generateDynamicContent(key); overlay.classList.add('active');
-      setTimeout(() => { contentBox.style.transform = 'scale(1)'; contentBox.style.opacity = 1; setTimeout(() => contentBox.querySelector('.elegant-content').classList.add('show'), 100); }, 150);
-      hotspots.forEach(hot => hot.classList.add('hidden'));
-    }
-
-    function generateDynamicContent(key) {
-      let html = contentMap[key];
-      if (key === 'eventi') {
-        const now = new Date(); const day = now.getDay(); const hour = now.getHours(); let eventMsg = `<span class="dynamic-badge">Prossimo evento: Venerdì alle 22:00.</span>`;
-        if (day === 5 || day === 6) { if (hour < 22) { let o = 22 - hour; eventMsg = `<span class="dynamic-badge">Oggi è ${day===5?'Venerdì':'Sabato'}, l'evento inizia tra ${o} or${o===1?'a':'e'}!</span>`; } else { eventMsg = `<span class="dynamic-badge">La serata Eventi è in corso, ti aspettiamo!</span>`; } }
-        html = html.replace('{{EVENT_STATUS}}', eventMsg);
-      } return html;
+      isZoomed = true; cancelAnimationFrame(rafId); Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom'); });
+      heroTextContainer.style.opacity = 0; heroTextTrail.style.opacity = 0;
+      setTimeout(() => { if(layers.background) { layers.background.style.transform = `translate3d(${safeDx*1.1}px,${safeDy*1.1}px, 0) scale(${scaleBg})`; layers.background.style.filter = 'blur(5px) brightness(0.7)'; } if(layers.midground) { layers.midground.style.transform = `translate3d(${safeDx*1.5}px,${safeDy*1.5}px, 0) scale(${scaleMid})`; layers.midground.style.filter = 'blur(5px) brightness(0.7)'; } if(layers.foreground) { layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(${scaleFg})`; layers.foreground.style.filter = 'blur(5px) brightness(0.7)'; } }, 10);
+      contentBox.innerHTML = generateDynamicContent(key); overlay.classList.add('active'); setTimeout(() => { contentBox.style.transform = 'scale(1)'; contentBox.style.opacity = 1; setTimeout(() => contentBox.querySelector('.elegant-content').classList.add('show'), 100); }, 150); hotspots.forEach(hot => hot.classList.add('hidden'));
     }
 
     function resetZoom() {
-      const elegantContent = contentBox.querySelector('.elegant-content');
-      if (elegantContent) elegantContent.classList.remove('show');
+      const elegantContent = contentBox.querySelector('.elegant-content'); if (elegantContent) elegantContent.classList.remove('show');
       contentBox.style.transform = 'scale(0.9)'; contentBox.style.opacity = 0;
-      
-      setTimeout(() => { 
-        overlay.classList.remove('active');
-        hotspots.forEach(hot => hot.classList.remove('hidden'));
-        
-        Object.values(layers).forEach(l => { if(l) { l.classList.add('smooth-zoom'); l.style.filter = 'none'; } });
-        renderParallax(currentX, currentY);
-
-        setTimeout(() => { 
-          Object.values(layers).forEach(l => { if(l) l.classList.remove('smooth-zoom'); }); 
-          isZoomed = false; 
-          rafId = requestAnimationFrame(parallaxLoop); 
-        }, 800);
-      }, 300);
+      setTimeout(() => { overlay.classList.remove('active'); hotspots.forEach(hot => hot.classList.remove('hidden')); Object.values(layers).forEach(l => { if(l) { l.classList.add('smooth-zoom'); l.style.filter = 'none'; } }); renderParallax(currentX, currentY, trailX, trailY); heroTextContainer.style.opacity = 1; heroTextTrail.style.opacity = 1; setTimeout(() => { Object.values(layers).forEach(l => { if(l) l.classList.remove('smooth-zoom'); }); isZoomed = false; rafId = requestAnimationFrame(parallaxLoop); }, 800); }, 300);
     }
 
-    hotspots.forEach(h => { 
-      h.onmouseenter = () => playSfx(hoverSfx);
-      h.innerHTML = iconsMap[h.dataset.key]; 
-      const label = document.createElement('div'); label.className = 'hotspot-label'; label.innerText = labelsMap[h.dataset.key]; h.appendChild(label);
-      h.addEventListener('click', (e) => { e.stopPropagation(); zoomTo(h.dataset.key); });
+    // MULTILINGUA UI UPDATE
+    function updateUI() {
+      document.documentElement.lang = currentLang;
+      // Update Menu (Desktop)
+      document.querySelectorAll('#menu .i18n-menu').forEach(el => el.innerText = i18n[currentLang].menu[el.dataset.i18n]);
+      // Update Mobile Menu
+      const mobMenu = document.getElementById('mobile-menu');
+      mobMenu.innerHTML = `<a href="#" data-key="chi">${iconsMap.chi} ${i18n[currentLang].menu.chi}</a><a href="#" data-key="mescita">${iconsMap.mescita} ${i18n[currentLang].menu.mescita}</a><a href="#" data-key="bar">${iconsMap.bar} ${i18n[currentLang].menu.bar}</a><a href="#" data-key="eventi">${iconsMap.eventi} ${i18n[currentLang].menu.eventi}</a><a href="#" class="cta" data-key="prenota">${i18n[currentLang].menu.prenota}</a>`;
+      bindMenuEvents(); // Re-bind after rewrite
+      
+      // Update CTA centrale
+      document.querySelector('.hero-cta.i18n-cta').innerText = i18n[currentLang].menu.prenota;
+
+      // Update Hotspots Labels
+      hotspots.forEach(h => {
+        h.innerHTML = iconsMap[h.dataset.key]; 
+        const labelText = i18n[currentLang].menu[h.dataset.key];
+        const label = document.createElement('div'); label.className = 'hotspot-label'; label.innerText = labelText; h.appendChild(label);
+      });
+      
+      // Update Time Visuals
+      const state = document.body.getAttribute('data-time') || 'sera';
+      setTimeVisuals(state);
+      
+      // Update Popup if open
+      if(isZoomed) { const activeKey = Array.from(hotspots).find(h => h.classList.contains('hidden'))?.dataset.key || 'prenota'; contentBox.innerHTML = generateDynamicContent(activeKey); contentBox.querySelector('.elegant-content').classList.add('show');}
+    }
+
+    document.querySelectorAll('#lang-selector button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('#lang-selector button').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentLang = e.target.dataset.lang;
+        updateUI();
+      });
     });
 
-    document.querySelectorAll('#menu a, #mobile-menu a, .hero-cta').forEach(a => {
-      a.onclick = e => { e.preventDefault(); zoomTo(a.dataset.key); document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('hamburger').classList.remove('open'); };
-      a.onmouseenter = () => playSfx(hoverSfx);
-    });
-
+    // EVENTI
+    function bindMenuEvents() {
+      document.querySelectorAll('#menu a, #mobile-menu a, .hero-cta').forEach(a => { a.onclick = e => { e.preventDefault(); zoomTo(a.dataset.key); document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('hamburger').classList.remove('open'); }; a.onmouseenter = () => playSfx(hoverSfx); });
+    }
+    hotspots.forEach(h => { h.onmouseenter = () => playSfx(hoverSfx); h.addEventListener('click', (e) => { e.stopPropagation(); zoomTo(h.dataset.key); }); });
     const hamburger = document.getElementById('hamburger'); const mobileMenu = document.getElementById('mobile-menu');
     hamburger.onclick = () => { playSfx(clickSfx); mobileMenu.classList.toggle('open'); hamburger.classList.toggle('open'); };
-    overlay.querySelector('.close-btn').onclick = resetZoom; document.addEventListener('keydown', e => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
-    overlay.onclick = e => { if(!contentBox.contains(e.target)) resetZoom(); }; overlay.querySelector('.close-btn').onclick = e => { e.stopPropagation(); resetZoom(); };
+    overlay.querySelector('.close-btn').onclick = resetZoom; document.addEventListener('keydown', e => { if(e.key === 'Escape' && isZoomed) resetZoom(); }); overlay.onclick = e => { if(!contentBox.contains(e.target)) resetZoom(); }; overlay.querySelector('.close-btn').onclick = e => { e.stopPropagation(); resetZoom(); };
 
     function setTimeVisuals(state) {
       document.body.setAttribute('data-time', state); void heroLayers.offsetWidth;
+      const t = i18n[currentLang].hero[state];
       
-      const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
+      const titleEl = document.getElementById('text-title'); const titleBigEl = document.getElementById('text-title-big'); const subtitleEl = document.getElementById('text-subtitle');
+      titleEl.style.animation = 'none'; titleBigEl.style.animation = 'none'; subtitleEl.style.animation = 'none'; titleEl.offsetHeight; 
       
-      const titleEl = document.getElementById('text-title');
-      const titleBigEl = document.getElementById('text-title-big');
-      const subtitleEl = document.getElementById('text-subtitle');
+      titleEl.innerHTML = t.t; titleBigEl.innerHTML = "CATMA BAR"; subtitleEl.innerHTML = t.sub;
+      document.getElementById('trail-title').innerHTML = t.t; document.getElementById('trail-title-big').innerHTML = "CATMA BAR"; 
 
-      titleEl.style.animation = 'none'; titleBigEl.style.animation = 'none'; subtitleEl.style.animation = 'none';
-      titleEl.offsetHeight; 
-      
-      titleEl.innerHTML = t.title; titleBigEl.innerHTML = t.titleBig; subtitleEl.innerHTML = t.subtitle;
-      
-      titleEl.style.animation = 'cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) 0.1s forwards';
-      titleBigEl.style.animation = 'cinematicFadeBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards';
-      subtitleEl.style.animation = 'fadeUp 1s ease 0.8s forwards';
-
-      document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug')); 
-      document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
-
-      const audioTracks = {
-        giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3",
-        sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3",
-        chiuso: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Night%20Cave.mp3"
-      };
-
-      const newTrack = audioTracks[state];
-      if (bgAudio.getAttribute('src') !== newTrack) {
-        bgAudio.src = newTrack;
-        bgAudio.load(); 
-        if (soundEnabled) bgAudio.play().catch(()=>{});
+      if(document.body.classList.contains('app-loaded')) {
+        titleEl.style.animation = 'cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) forwards';
+        titleBigEl.style.animation = 'cinematicFadeBig 2.5s cubic-bezier(0.25, 1, 0.5, 1) 0.2s forwards';
+        subtitleEl.style.animation = 'fadeUp 1s ease 0.6s forwards';
       }
+
+      document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug')); document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
+      const audioTracks = { giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3", sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3", chiuso: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Night%20Cave.mp3" };
+      const newTrack = audioTracks[state]; if (bgAudio.getAttribute('src') !== newTrack) { bgAudio.src = newTrack; bgAudio.load(); if (soundEnabled) bgAudio.play().catch(()=>{}); }
     }
 
     function applyTimeFilter() { if (manualTimeOverride) return; const h = new Date().getHours(); setTimeVisuals((h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso'); }
     document.querySelectorAll('#timeControls button').forEach(btn => btn.onclick = e => { manualTimeOverride = true; setTimeVisuals(e.target.dataset.time); });
 
+    // INIT
+    updateUI();
     const loader = document.getElementById('loader'); const loaderStart = Date.now(); let isLoaderHidden = false;
-    function tryHideLoader() { 
-      if (isLoaderHidden) return; 
-      setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; }, Math.max(2000 - (Date.now() - loaderStart), 0)); 
-    }
-    window.onload = tryHideLoader; document.addEventListener('DOMContentLoaded', tryHideLoader);
-    window.addEventListener('resize', () => { setLayers(); });
-    setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); 
+    function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; setTimeout(() => { document.body.classList.add('app-loaded'); }, 300); }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
+    window.onload = tryHideLoader; document.addEventListener('DOMContentLoaded', tryHideLoader); window.addEventListener('resize', () => { setLayers(); }); setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); 
   </script>
 </body>
 </html>
