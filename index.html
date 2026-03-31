@@ -574,14 +574,18 @@
       const audioTracks = {
         giorno: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bossa%20Antigua.mp3",
         sera: "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Faster%20Does%20It.mp3",
-        chiuso: "https://actions.google.com/sounds/v1/nature/night_crickets_loop.ogg"
+        chiuso: "https://res.cloudinary.com/dkni7ncod/video/upload/v1774975672/night_usk05i.mp3"
       };
 
       const newTrack = audioTracks[state];
       if (bgAudio.getAttribute('src') !== newTrack) {
         bgAudio.src = newTrack;
+        
+        // LA MAGIA E' QUI: Questo comando forza il browser a scaricare il nuovo file
+        bgAudio.load(); 
+
         if (soundEnabled) {
-          bgAudio.play().catch(()=>{});
+          bgAudio.play().catch(e => console.log("Errore audio:", e));
         }
       }
     }
