@@ -14,13 +14,12 @@
       font-family: sans-serif;
     }
 
-    /* Disabilita selezione testo e highlight */
     body, body * {
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
-      cursor: none !important; /* Nasconde cursore standard */
+      cursor: none !important;
     }
 
     /* --- CURSORE CUSTOM --- */
@@ -41,77 +40,50 @@
 
     /* --- LOADER --- */
     #loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #b22222;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999999;
-      overflow: hidden;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: #b22222; display: flex; justify-content: center;
+      align-items: center; z-index: 999999; overflow: hidden;
       transition: transform 0.8s ease;
     }
-    #loader img {
-      width: 150px;
-      height: auto;
-      animation: rotateLogo 1s linear infinite;
-    }
-    #loader.hidden {
-      transform: translateY(-100%);
-      pointer-events: none;
-    }
-    @keyframes rotateLogo {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+    #loader img { width: 150px; height: auto; animation: rotateLogo 1s linear infinite; }
+    #loader.hidden { transform: translateY(-100%); pointer-events: none; }
+    @keyframes rotateLogo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     /* --- HERO & LAYERS --- */
     #hero {
-      width: 100%;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
+      width: 100%; height: 100vh; position: relative; overflow: hidden;
     }
     #hero-layers {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10;
-      transition: filter 0.5s ease;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 10; transition: filter 0.5s ease;
     }
     .layer {
       position: absolute;
-      width: 130%; /* Aumentato per permettere un parallasse più ampio */
-      height: 130%; /* Aumentato per permettere un parallasse più ampio */
-      top: -15%;
-      left: -15%;
+      /* Ridotto a 115% per allargare la scena ed evitare bordi neri */
+      width: 115%; 
+      height: 115%; 
+      top: -7.5%; 
+      left: -7.5%;
       object-fit: cover;
       pointer-events: none;
-      /* Tolto transform dal transition css per renderlo gestibile dal JS (lerp) fluido */
+      /* Di base non c'è transition sul transform per il parallasse fluido */
       transition: opacity 0.5s ease; 
     }
+    
+    /* Classe aggiunta dinamicamente dal JS per ripristinare l'effetto zoom */
+    .layer.smooth-zoom {
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease !important;
+    }
+
     .layer.overlay-active {
       opacity: 0.8;
-      /* Lo scale verrà gestito dal JS al click per non conflittare con il parallasse fluido */
     }
 
     /* --- HERO TESTO CENTRALE --- */
     #hero-text {
-      position: absolute;
-      width: 100%;
-      top: 150px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      color: #fff;
-      z-index: 90;
-      pointer-events: none;
-      text-shadow: 1px 1px 5px #000;
+      position: absolute; width: 100%; top: 150px; left: 50%;
+      transform: translateX(-50%); text-align: center; color: #fff;
+      z-index: 90; pointer-events: none; text-shadow: 1px 1px 5px #000;
       transition: opacity 0.25s ease;
     }
     #hero-text .subtitle { font-size: 1.5vw; margin-top: 25px; opacity: 0.8; }
@@ -125,125 +97,58 @@
 
     /* --- HOTSPOTS --- */
     .hotspot {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: #b22222;
-      box-shadow: 0 0 20px rgba(178,34,34,.9);
-      transform: translate(-50%,-50%);
-      animation: pulse 2s infinite;
-      cursor: pointer;
-      z-index: 50;
-      transition: opacity 0.3s ease;
+      position: absolute; width: 50px; height: 50px; border-radius: 50%;
+      background: #b22222; box-shadow: 0 0 20px rgba(178,34,34,.9);
+      transform: translate(-50%,-50%); animation: pulse 2s infinite;
+      cursor: pointer; z-index: 50; transition: opacity 0.3s ease;
     }
-    .hotspot.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .hotspot.hidden { opacity: 0; pointer-events: none; }
     @keyframes pulse {
       0% { box-shadow: 0 0 15px rgba(178,34,34,0.6); }
       50% { box-shadow: 0 0 30px rgba(178,34,34,1); }
       100% { box-shadow: 0 0 15px rgba(178,34,34,0.6); }
     }
 
-    /* FIX: Pulsante PRENOTA adattivo */
+    /* Pulsante PRENOTA adattivo */
     .hotspot[data-key="prenota"] {
-      width: auto !important;
-      min-width: 140px;
-      border-radius: 30px !important;
-      padding: 0 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      color: #fff;
+      width: auto !important; min-width: 140px; border-radius: 30px !important;
+      padding: 0 25px; display: flex; justify-content: center; align-items: center;
+      font-weight: bold; color: #fff;
     }
 
-    /* EFFETTO GENIO macOS per le Labels */
+    /* LABELS - Effetto Genio macOS */
     .hotspot-label {
-      position: absolute;
-      pointer-events: none;
-      background: rgba(0,0,0,0.8);
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      white-space: nowrap;
-      
-      /* Partenza Genio */
-      transform-origin: bottom center;
-      transform: translate(-50%, 0px) scale(0);
-      opacity: 0;
-      /* Animazione elastica */
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      position: absolute; pointer-events: none; background: rgba(0,0,0,0.8);
+      color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 14px;
+      font-weight: 600; letter-spacing: 1px; white-space: nowrap;
+      transform-origin: bottom center; transform: translate(-50%, 0px) scale(0);
+      opacity: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       z-index: 100;
     }
-
-    .hotspot:hover .hotspot-label,
-    .hotspot-label.active {
-      opacity: 1 !important;
-      /* Arrivo Genio */
-      transform: translate(-50%, -45px) scale(1) !important;
+    .hotspot:hover .hotspot-label, .hotspot-label.active {
+      opacity: 1 !important; transform: translate(-50%, -45px) scale(1) !important;
     }
 
     /* --- STILE CONTENUTI POPUP ELEGANTI --- */
-    .elegant-content {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .elegant-title {
-      font-size: 2.2rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      margin: 0 0 10px 0;
-      font-weight: 300;
-    }
-    .elegant-divider {
-      width: 50px;
-      height: 2px;
-      background-color: #b22222;
-      margin-bottom: 20px;
-    }
-    .elegant-desc {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      max-width: 400px;
-      font-weight: 300;
-      opacity: 0.9;
-    }
+    .elegant-content { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .elegant-title { font-size: 2.2rem; letter-spacing: 4px; text-transform: uppercase; margin: 0 0 10px 0; font-weight: 300; text-align: center; }
+    .elegant-divider { width: 50px; height: 2px; background-color: #b22222; margin-bottom: 20px; }
+    .elegant-desc { font-size: 1.1rem; line-height: 1.6; max-width: 400px; font-weight: 300; opacity: 0.9; text-align: center; }
 
-    /* --- CTA E PULSANTI INTERNI AL POPUP --- */
+    /* CTA POPUP */
     .cta-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
     .cta-btn {
-      border: 2px solid #fff;
-      padding: 12px 25px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: 600;
-      background: rgba(178, 34, 34, 0.9);
-      color: #fff;
-      box-shadow: 0 0 15px rgba(178, 34, 34, 0.6);
-      transition: all 0.25s ease;
-      cursor: none; /* per usare il nostro custom */
+      border: 2px solid #fff; padding: 12px 25px; border-radius: 30px; text-decoration: none;
+      font-weight: 600; background: rgba(178, 34, 34, 0.9); color: #fff;
+      box-shadow: 0 0 15px rgba(178, 34, 34, 0.6); transition: all 0.25s ease; cursor: none;
     }
     .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(178,34,34,0.9); }
     .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.4); }
 
     /* --- NAVBAR DESKTOP --- */
     #menu {
-      position: absolute;
-      top: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      display: flex;
-      align-items: center;
-      z-index: 100;
+      position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+      width: 90%; display: flex; align-items: center; z-index: 100;
     }
     #menu a { flex: 1; text-align: center; color: #fff; text-decoration: none; font-weight: bold; letter-spacing: 1px; }
     .logo-center { flex: 1; display: flex; justify-content: center; }
@@ -252,41 +157,19 @@
     /* --- MOBILE MENU & HAMBURGER --- */
     #mobile-logo { display: none; position: absolute; top: 20px; left: 20px; height: 40px; z-index: 101; }
     #hamburger {
-      display: none;
-      position: absolute;
-      top: 25px;
-      right: 25px;
-      width: 30px;
-      height: 20px;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-      z-index: 801; /* Sopra al menu per poterlo chiudere */
+      display: none; position: absolute; top: 25px; right: 25px; width: 30px; height: 20px;
+      flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 801;
     }
     #hamburger div { height: 3px; background: #fff; transition: all 0.3s ease; }
-
-    /* Menu a comparsa circolare dall'hamburger */
     #mobile-menu {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,.95);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 800;
-      /* Animazione a cerchio posizionato sull'hamburger (top right) */
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,.95); display: flex; justify-content: center;
+      align-items: center; flex-direction: column; z-index: 800;
       clip-path: circle(0px at calc(100% - 40px) 35px);
-      transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.175, 1);
-      pointer-events: none; /* Evita click accidentali da chiuso */
+      transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none;
     }
-    #mobile-menu.open {
-      clip-path: circle(150% at calc(100% - 40px) 35px);
-      pointer-events: auto;
-    }
+    #mobile-menu.open { clip-path: circle(150% at calc(100% - 40px) 35px); pointer-events: auto; }
     #mobile-menu a { color: #fff; margin: 15px 0; font-size: 1.5rem; text-decoration: none; text-transform: uppercase; letter-spacing: 2px;}
-    #mobile-menu .cta { border: 2px solid #fff; padding: 12px 25px; border-radius: 30px; margin-top: 20px; }
-    #mobile-menu img { height: 60px; margin-bottom: 20px; }
 
     /* --- OVERLAY POPUP --- */
     #content-overlay {
@@ -297,7 +180,6 @@
     #content-overlay.active { opacity: 1; visibility: visible; }
     .content-box { color: #fff; text-align: center; transform: scale(0); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     #content-overlay.active .content-box { transform: scale(1); }
-    
     .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 999; }
 
     /* --- GIROSCOPIO BTN --- */
@@ -323,87 +205,48 @@
     body[data-time="sera"] #hero-layers { filter: brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2); }
     body[data-time="chiuso"] #hero-layers { filter: brightness(0.2) saturate(0.5); }
     
-    /* Disabilitiamo per ora i bottoni di test, decommentali se ti servono */
-    #timeControls { display: none; }
-
-    /* --- FOOTER RIPROGETTATO --- */
+    /* --- FOOTER CENTRATO --- */
     footer {
-      background: #111;
-      color: #ccc;
-      width: 100vw;
-      position: fixed;
-      bottom: 0; left: 0;
-      z-index: 500;
-      display: flex;
-      flex-direction: column;
-      font-size: 13px;
+      background: #111; color: #ccc; width: 100vw; position: fixed;
+      bottom: 0; left: 0; z-index: 500; display: flex; flex-direction: column; font-size: 13px;
     }
     .footer-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 25px;
-      background: #b22222;
-      color: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 12px 25px; background: #b22222; color: #fff; gap: 10px; text-align: center;
     }
     .footer-top-info p { margin: 0; font-weight: bold; letter-spacing: 0.5px;}
-    .footer-social { display: flex; gap: 15px; }
+    .footer-social { display: flex; gap: 15px; justify-content: center; }
     .footer-social img { width: 22px; height: 22px; filter: brightness(0) invert(1); transition: transform 0.2s; }
     .footer-social a:hover img { transform: scale(1.2); }
     
     .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 25px;
-      background: #000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 10px 25px; background: #000; gap: 8px; text-align: center;
     }
-    .footer-links a { color: #888; text-decoration: none; margin-left: 15px; transition: color 0.2s;}
+    .footer-links a { color: #888; text-decoration: none; margin: 0 10px; transition: color 0.2s;}
     .footer-links a:hover { color: #fff; }
 
     /* --- MEDIA QUERIES --- */
     @media (max-width: 768px) {
-      #menu { display: none; }
-      #hamburger { display: flex; }
-      #mobile-logo { display: block; }
-      
-      /* Alza l'hero text per non coprire il PRENOTA */
-      #hero-text { top: 20%; } 
-      #hero-text .title-big { font-size: 12vw; }
-      #hero-text .title { font-size: 6vw; }
-      #hero-text .subtitle { font-size: 3vw; }
-
-      /* Modifiche Hotspot prenota mobile */
+      #menu { display: none; } #hamburger { display: flex; } #mobile-logo { display: block; }
+      #hero-text { top: 20%; } #hero-text .title-big { font-size: 12vw; }
+      #hero-text .title { font-size: 6vw; } #hero-text .subtitle { font-size: 3vw; }
       .hotspot[data-key="prenota"] { min-width: 110px; height: 45px; font-size: 13px; padding: 0 15px;}
       .hotspot { width: 40px; height: 40px; }
-
-      /* Footer stacked su mobile */
-      .footer-top { flex-direction: column; text-align: center; gap: 10px; padding: 15px; }
-      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; font-size: 11px;}
-      .footer-links { margin-top: 5px; }
-      .footer-links a { margin: 0 5px; }
+      .footer-bottom { font-size: 11px; }
     }
-
-    @media (pointer: coarse), (max-width: 768px) {
-      #custom-cursor { display: none !important; }
-    }
-    @media (min-width: 769px) {
-      .mobile-layer { display: none; }
-    }
+    @media (pointer: coarse), (max-width: 768px) { #custom-cursor { display: none !important; } }
+    @media (min-width: 769px) { .mobile-layer { display: none; } }
   </style>
 </head>
 <body>
 
-  <div id="loader">
-    <img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo">
-  </div>
+  <div id="loader"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="CATMA Logo"></div>
 
   <div id="menu">
     <a href="#" data-key="chi">CHI SIAMO</a>
     <a href="#" data-key="mescita">MESCITA</a>
-    <div class="logo-center">
-      <img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo">
-    </div>
+    <div class="logo-center"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774792905/Logo-Catma_dvrs0m.png" alt="Logo"></div>
     <a href="#" data-key="bar">BAR</a>
     <a href="#" data-key="eventi">EVENTI</a>
   </div>
@@ -441,18 +284,16 @@
       <img class="layer mobile-layer foreground parallax-target" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
     </div>
 
-    <div class="hotspot" data-key="chi" data-x-desktop="10" data-y-desktop="40" data-x-mobile="5" data-y-mobile="45"></div>
-    <div class="hotspot" data-key="mescita" data-x-desktop="27" data-y-desktop="68" data-x-mobile="5" data-y-mobile="60"></div>
+    <div class="hotspot" data-key="chi" data-x-desktop="18" data-y-desktop="35" data-x-mobile="15" data-y-mobile="35"></div>
+    <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="80" data-x-mobile="20" data-y-mobile="75"></div>
     <div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
-    <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="45" data-x-mobile="95" data-y-mobile="50"></div>
-    <div class="hotspot" data-key="bar" data-x-desktop="85" data-y-desktop="65" data-x-mobile="90" data-y-mobile="65"></div>
+    <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="38" data-x-mobile="85" data-y-mobile="40"></div>
+    <div class="hotspot" data-key="bar" data-x-desktop="38" data-y-desktop="75" data-x-mobile="35" data-y-mobile="70"></div>
   </div>
 
   <footer>
     <div class="footer-top">
-      <div class="footer-top-info">
-        <p>Via delle Sirene 13, Lido di Jesolo (VE) | P.IVA: 01234567890</p>
-      </div>
+      <div class="footer-top-info"><p>Via delle Sirene 13, Lido di Jesolo (VE) | P.IVA: 01234567890</p></div>
       <div class="footer-social">
         <a href="https://www.instagram.com/" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-01_n8pedz.png" alt="Instagram"></a>
         <a href="https://www.facebook.com/" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-02_qpgtp7.png" alt="Facebook"></a>
@@ -460,17 +301,14 @@
     </div>
     <div class="footer-bottom">
       <div>&copy; <span id="year"></span> Catma Bar. Tutti i diritti riservati.</div>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Cookie Policy</a>
-      </div>
+      <div class="footer-links"><a href="#">Privacy Policy</a> | <a href="#">Cookie Policy</a></div>
     </div>
   </footer>
 
   <script>
     document.getElementById('year').innerText = new Date().getFullYear();
     
-    // --- VARIABILI GLOBALI E SETUP ---
+    // Variabili Globali
     const hero = document.getElementById('hero');
     const heroLayers = document.getElementById('hero-layers');
     let layers = {};
@@ -479,16 +317,15 @@
     const contentBox = overlay.querySelector('.content-box');
     let isZoomed = false;
 
-    // --- LOGICA LERP PARALLASSE FLUIDO ---
-    let targetX = 0, targetY = 0;   // Coordinate di destinazione (dal mouse o giroscopio)
-    let currentX = 0, currentY = 0; // Coordinate attuali per l'interpolazione
+    // Logica Lerp per Parallasse
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
 
     const map = {
       chi: { label: 'CHI SIAMO' }, mescita: { label: 'MESCITA' },
       prenota: { label: 'PRENOTA' }, eventi: { label: 'EVENTI' }, bar: { label: 'BAR' }
     };
 
-    // Modelli dei Contenuti Eleganti
     const contentMap = {
       chi: `<div class="elegant-content"><h1 class="elegant-title">Chi siamo</h1><div class="elegant-divider"></div><p class="elegant-desc">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
       mescita: `<div class="elegant-content"><h1 class="elegant-title">Mescita</h1><div class="elegant-divider"></div><p class="elegant-desc">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
@@ -497,7 +334,6 @@
       prenota: `<div class="elegant-content"><h1 class="elegant-title">Prenota un tavolo</h1><div class="elegant-divider"></div><p class="elegant-desc">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
     };
 
-    // --- SETUP LAYER ---
     function setLayers() {
       const isMobile = 'ontouchstart' in window;
       layers = isMobile ? {
@@ -519,19 +355,18 @@
         const oy = isMobile ? h.dataset.yMobile/100 * hero.clientHeight : h.dataset.yDesktop/100 * hero.clientHeight;
         h.dataset.ox = ox; h.dataset.oy = oy;
       });
-      // Aggiorna posizione istantanea
       renderParallax(targetX, targetY);
     }
 
-    // --- MOTORE PARALLASSE ---
     function renderParallax(x, y) {
-      // Offset aumentati per rendere l'effetto più visibile
-      const maxOffset = { background:{x:60,y:30}, midground:{x:90,y:45}, foreground:{x:130,y:60} };
-      const scaleFix = ('ontouchstart' in window) ? 1.1 : 1.05;
+      // Valori abbassati per impedire lo scavalcamento del bordo (essendo la scena a 115%)
+      const maxOffset = { background:{x:30,y:15}, midground:{x:60,y:30}, foreground:{x:90,y:45} };
+      // Base scale leggero
+      const baseScale = ('ontouchstart' in window) ? 1.05 : 1;
 
-      if(layers.background) layers.background.style.transform = `translate(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px) scale(${scaleFix})`;
-      if(layers.midground) layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px, ${y*maxOffset.midground.y}px) scale(${scaleFix})`;
-      if(layers.foreground) layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px, ${y*maxOffset.foreground.y}px) scale(${scaleFix})`;
+      if(layers.background) layers.background.style.transform = `translate(${x*maxOffset.background.x}px, ${y*maxOffset.background.y}px) scale(${baseScale})`;
+      if(layers.midground) layers.midground.style.transform = `translate(${x*maxOffset.midground.x}px, ${y*maxOffset.midground.y}px) scale(${baseScale})`;
+      if(layers.foreground) layers.foreground.style.transform = `translate(${x*maxOffset.foreground.x}px, ${y*maxOffset.foreground.y}px) scale(${baseScale})`;
 
       const refX = x * maxOffset.midground.x;
       const refY = y * maxOffset.midground.y;
@@ -545,28 +380,24 @@
       });
     }
 
-    // Animazione a loop per fluidità (Lerp)
     function parallaxLoop() {
       if (!isZoomed) {
-        // Avvicina gradualmente currentX a targetX (0.08 è la velocità della fluidità)
         currentX += (targetX - currentX) * 0.08;
         currentY += (targetY - currentY) * 0.08;
         renderParallax(currentX, currentY);
       }
       requestAnimationFrame(parallaxLoop);
     }
-    requestAnimationFrame(parallaxLoop); // Avvia il loop
+    requestAnimationFrame(parallaxLoop);
 
-    // Cattura mouse Desktop
     hero.addEventListener('mousemove', e => {
       if('ontouchstart' in window) return;
       const r = hero.getBoundingClientRect();
-      // Mappa il mouse da -1 a 1
       targetX = (e.clientX - r.left)/r.width - 0.5;
       targetY = (e.clientY - r.top)/r.height - 0.5;
     });
 
-    // --- GYRO MOBILE FIX (Con Permessi iOS) ---
+    // Giroscopio
     if('ontouchstart' in window) {
       const gyroOverlay = document.createElement('div');
       gyroOverlay.id = 'gyroOverlay';
@@ -584,39 +415,31 @@
         gyroOverlay.classList.remove('active');
         window.addEventListener('deviceorientation', e => {
           if(isZoomed) return;
-          // Usa target per il Lerp invece che aggiornare direttamente
           targetX += ((e.gamma || 0) / 40 - targetX) * 0.15;
           targetY += ((e.beta || 0) / 40 - targetY) * 0.15;
-          // Limita tra -1 e 1
           targetX = Math.max(-1, Math.min(1, targetX));
           targetY = Math.max(-1, Math.min(1, targetY));
         });
       };
 
       gyroBtn.addEventListener('click', () => {
-        // Controllo specifico per iOS 13+ che richiede permessi espliciti
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-          DeviceOrientationEvent.requestPermission()
-            .then(permissionState => {
+          DeviceOrientationEvent.requestPermission().then(permissionState => {
               if (permissionState === 'granted') { enableGyro(); }
-              else { alert("L'accesso al giroscopio è stato negato. L'esperienza sarà statica."); gyroBtn.classList.add('hidden'); gyroOverlay.classList.remove('active'); }
-            })
-            .catch(console.error);
-        } else {
-          // Android e iOS vecchi non richiedono permessi
-          enableGyro();
-        }
+              else { alert("Accesso al giroscopio negato. Esperienza statica attivata."); gyroBtn.classList.add('hidden'); gyroOverlay.classList.remove('active'); }
+          }).catch(console.error);
+        } else { enableGyro(); }
       });
     }
 
-    // --- ZOOM LOGIC (Apertura Dettaglio) ---
+    // --- LOGICA ZOOM AL CLICK ---
     function zoomTo(key) {
       if(isZoomed) {
         contentBox.style.transform = 'scale(0)';
         setTimeout(() => {
           contentBox.innerHTML = contentMap[key];
           contentBox.style.transform = 'scale(1)';
-        }, 300); // Sincronizzato con il cubic-bezier
+        }, 300);
         return;
       }
       
@@ -630,66 +453,62 @@
       const dx = cx - tx;
       const dy = cy - ty;
 
-      // Anima verso il centro
-      if(layers.background) layers.background.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.1)`;
-      if(layers.midground) layers.midground.style.transform = `translate(${dx*0.6}px,${dy*0.6}px) scale(1.25)`;
-      if(layers.foreground) layers.foreground.style.transform = `translate(${dx}px,${dy}px) scale(1.5)`;
-
-      Object.values(layers).forEach(l => { if(l) l.classList.add('overlay-active'); });
-
+      // Sospende il loop e abilita transizione CSS per l'effetto zoom visivo
       isZoomed = true;
+      Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom', 'overlay-active'); });
+
+      // Anima verso il punto, compensando con uno scale superiore per non far vedere i bordi
+      setTimeout(() => {
+        if(layers.background) layers.background.style.transform = `translate(${dx*0.1}px,${dy*0.1}px) scale(1.15)`;
+        if(layers.midground) layers.midground.style.transform = `translate(${dx*0.3}px,${dy*0.3}px) scale(1.25)`;
+        if(layers.foreground) layers.foreground.style.transform = `translate(${dx*0.5}px,${dy*0.5}px) scale(1.4)`;
+      }, 10);
+
       contentBox.innerHTML = contentMap[key];
       overlay.classList.add('active');
-      
-      // Delay per animazione pop out fluida
       setTimeout(() => { contentBox.style.transform = 'scale(1)'; }, 150);
-      hotspots.forEach(h => h.classList.add('hidden'));
+      hotspots.forEach(hot => hot.classList.add('hidden'));
     }
 
     function resetZoom() {
-      isZoomed = false;
       contentBox.style.transform = 'scale(0)';
       setTimeout(() => { overlay.classList.remove('active'); }, 300);
-      hotspots.forEach(h => h.classList.remove('hidden'));
+      hotspots.forEach(hot => hot.classList.remove('hidden'));
       Object.values(layers).forEach(l => { if(l) l.classList.remove('overlay-active'); });
-      // Ripristina la posizione al corrente X/Y del Lerp
+      
+      // Torna alla posizione corrente del mouse/giroscopio usando ancora l'effetto smooth
       renderParallax(currentX, currentY);
+
+      // Rimuove la transizione CSS alla fine dell'animazione per restituire controllo al JS Lerp
+      setTimeout(() => {
+        Object.values(layers).forEach(l => { if(l) l.classList.remove('smooth-zoom'); });
+        isZoomed = false; // Riattiva il Loop
+      }, 800);
     }
 
-    // --- GESTIONE MENU & CLICK ---
+    // --- GESTIONE CLICK E MENU ---
     hotspots.forEach(h => h.addEventListener('click', () => zoomTo(h.dataset.key)));
-    
     document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
       a.addEventListener('click', e => {
-        e.preventDefault();
-        zoomTo(a.dataset.key);
+        e.preventDefault(); zoomTo(a.dataset.key);
         document.getElementById('mobile-menu').classList.remove('open');
-        document.getElementById('hamburger').classList.remove('active'); // Se volessimo animare l'hamburger
       });
     });
 
-    // Toggle menu con clip-path
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    hamburger.onclick = () => {
-      mobileMenu.classList.toggle('open');
-    };
-
+    document.getElementById('hamburger').onclick = () => document.getElementById('mobile-menu').classList.toggle('open');
     overlay.querySelector('.close-btn').onclick = resetZoom;
     document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
     overlay.addEventListener('click', (e) => { if(!contentBox.contains(e.target)) resetZoom(); });
     overlay.querySelector('.close-btn').addEventListener('click', (e) => { e.stopPropagation(); resetZoom(); });
 
-    // --- HOTSPOT LABELS E MOBILE TAP ---
+    // Creazione Labels
     hotspots.forEach(h => {
-      // Non creiamo la label "PRENOTA" perché è già il testo del bottone stesso
       if(h.dataset.key !== 'prenota') {
         const label = document.createElement('div');
         label.className = 'hotspot-label';
         label.innerText = map[h.dataset.key].label;
         h.appendChild(label);
       }
-
       if('ontouchstart' in window) {
         h.addEventListener('click', (e) => {
           const label = h.querySelector('.hotspot-label');
@@ -698,99 +517,55 @@
             document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
             if(!currentlyActive) label.classList.add('active');
           }
-          zoomTo(h.dataset.key);
-          e.stopPropagation();
+          zoomTo(h.dataset.key); e.stopPropagation();
         });
       }
     });
 
     if('ontouchstart' in window) {
       document.addEventListener('touchstart', (e) => {
-        if(!e.target.closest('.hotspot')) {
-          document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
-        }
+        if(!e.target.closest('.hotspot')) document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active'));
       });
     }
 
-    // --- CURSOR CUSTOM ---
+    // Cursore Custom
     const customCursor = document.createElement('div');
     customCursor.id = 'custom-cursor';
     document.body.appendChild(customCursor);
-
-    document.addEventListener('mousemove', e => {
-      customCursor.style.top = e.clientY + 'px';
-      customCursor.style.left = e.clientX + 'px';
-    });
-    document.addEventListener('mousedown', () => {
-      customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-      customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)';
-    });
-    document.addEventListener('mouseup', () => {
-      customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-      customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)';
-    });
+    document.addEventListener('mousemove', e => { customCursor.style.top = e.clientY + 'px'; customCursor.style.left = e.clientX + 'px'; });
+    document.addEventListener('mousedown', () => { customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)'; customCursor.style.boxShadow = '0 0 15px 5px rgba(178,34,34,0.8)'; });
+    document.addEventListener('mouseup', () => { customCursor.style.transform = 'translate(-50%, -50%) scale(1)'; customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; });
     document.querySelectorAll('.hotspot, a, button, .close-btn').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        customCursor.style.transform = 'translate(-50%, -50%) scale(2)';
-        customCursor.style.boxShadow = '0 0 20px 6px rgba(178,34,34,0.9)';
-      });
-      el.addEventListener('mouseleave', () => {
-        customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-        customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)';
-      });
+      el.addEventListener('mouseenter', () => { customCursor.style.transform = 'translate(-50%, -50%) scale(2)'; customCursor.style.boxShadow = '0 0 20px 6px rgba(178,34,34,0.9)'; });
+      el.addEventListener('mouseleave', () => { customCursor.style.transform = 'translate(-50%, -50%) scale(1)'; customCursor.style.boxShadow = '0 0 10px 3px rgba(178,34,34,0.6)'; });
     });
 
-    // --- FILTRI TEMPO ---
-    const filters = {
-      giorno: 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)',
-      sera: 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)',
-      chiuso: 'brightness(0.2) saturate(0.5)'
-    };
-    const heroTexts = {
-      giorno: { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" },
-      sera: { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" },
-      chiuso: { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" }
-    };
-
+    // Filtri Tempo
     function applyTimeFilter() {
       const hour = new Date().getHours();
       let state = (hour >= 9 && hour < 18) ? 'giorno' : (hour >= 18 || hour < 2) ? 'sera' : 'chiuso';
-      
       document.body.setAttribute('data-time', state);
       void heroLayers.offsetWidth;
-      requestAnimationFrame(() => { heroLayers.style.filter = filters[state]; });
-
+      requestAnimationFrame(() => {
+        heroLayers.style.filter = state === 'giorno' ? 'brightness(1.2) saturate(0.35) hue-rotate(-5deg)' : state === 'sera' ? 'brightness(0.95) contrast(1.1) sepia(0.3) saturate(1.2)' : 'brightness(0.2) saturate(0.5)';
+      });
+      const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
       const heroText = document.getElementById('hero-text');
       heroText.style.opacity = 0;
-      setTimeout(() => {
-        const t = heroTexts[state];
-        heroText.innerHTML = `<h2 class="title">${t.title}</h2><h1 class="title-big">${t.titleBig}</h1><p class="subtitle">${t.subtitle}</p>`;
-        heroText.style.opacity = 1;
-      }, 250);
+      setTimeout(() => { heroText.innerHTML = `<h2 class="title">${t.title}</h2><h1 class="title-big">${t.titleBig}</h1><p class="subtitle">${t.subtitle}</p>`; heroText.style.opacity = 1; }, 250);
     }
 
-    // --- LOADER E INIT ---
+    // Init
     const loader = document.getElementById('loader');
-    const minLoaderTime = 2000;
     const loaderStart = Date.now();
     let isLoaderHidden = false;
-
     function tryHideLoader() {
       if (isLoaderHidden) return;
-      const elapsed = Date.now() - loaderStart;
-      setTimeout(() => {
-        loader.classList.add('hidden');
-        isLoaderHidden = true;
-      }, Math.max(minLoaderTime - elapsed, 0));
+      setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; }, Math.max(2000 - (Date.now() - loaderStart), 0));
     }
-
     window.addEventListener('load', tryHideLoader);
     document.addEventListener('DOMContentLoaded', tryHideLoader);
-
-    setLayers();
-    applyTimeFilter();
-    setInterval(applyTimeFilter, 60*60*1000);
-    window.addEventListener('resize', setLayers);
+    setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); window.addEventListener('resize', setLayers);
   </script>
 </body>
 </html>
