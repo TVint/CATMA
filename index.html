@@ -58,8 +58,8 @@
        ATMOSFERA E FILTRI SCENE (FIXATI)
        ========================================= */
     #vignette { position: absolute; inset: 0; pointer-events: none; z-index: 85; background: radial-gradient(circle at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%); }
-    #film-noise { position: absolute; inset: 0; pointer-events: none; z-index: 86; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-
+    #film-noise { position: absolute; inset: 0; pointer-events: none; z-index: 86; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+    
     /* FILTRI DELLE SCENE RIPRISTINATI CON TRANSIZIONE FLUIDA */
     #hero-layers { transition: filter 1s ease; }
     body[data-time="giorno"] #hero-layers { filter: brightness(1.1) contrast(1.05) saturate(0.35); }
@@ -160,7 +160,7 @@
     /* Cross-fade Logo per evitare il Viola */
     .logo-center { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; height: 60px; cursor: pointer; }
     .logo-center img { position: absolute; height: 100%; transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
-    .logo-red { opacity: 0; filter: brightness(0) saturate(100%) invert(18%) sepia(55%) saturate(5451%) hue-rotate(345deg) brightness(93%) contrast(100%); }
+    .logo-red { opacity: 0; filter: brightness(0) saturate(90%) invert(16%) sepia(91%) saturate(3200%) hue-rotate(345deg) brightness(80%) contrast(95%); }
     .logo-center:hover .logo-white { opacity: 0; transform: scale(1.08); }
     .logo-center:hover .logo-red { opacity: 1; transform: scale(1.08); }
     
@@ -182,8 +182,28 @@
     #content-overlay.active { opacity: 1; visibility: visible; }
     .content-box { color: #fff; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
     #content-overlay.active .content-box { transform: scale(1); opacity: 1; }
-    .close-btn { position: absolute; top: 30px; right: 30px; font-size: 3.5rem; color: #fff; cursor: pointer; pointer-events: auto; z-index: 9001; transition: color 0.3s; padding: 20px; line-height: 0.5; }
-    .close-btn:hover { color: var(--main-color); }
+    .close-btn { 
+      position: absolute; 
+      top: auto; /* Annulla il vecchio posizionamento in alto */
+      bottom: 50px; /* Lo posiziona nella parte bassa dello schermo */
+      right: auto; /* Annulla il vecchio posizionamento a destra */
+      left: 50%; /* Lo spinge esattamente a metà... */
+      transform: translateX(-50%); /* ...e lo bilancia al millimetro sul suo asse */
+      font-size: 3.5rem; 
+      color: #fff; 
+      cursor: pointer; 
+      pointer-events: auto; 
+      z-index: 9001; 
+      transition: all 0.3s ease; 
+      padding: 20px; 
+      line-height: 0.5; 
+    }
+    
+    /* Piccolo tocco di classe sull'hover: si colora e si ingrandisce leggermente */
+    .close-btn:hover { 
+      color: var(--main-color); 
+      transform: translateX(-50%) scale(1.2); 
+    }
     .elegant-content { padding: 20px; display: flex; flex-direction: column; align-items: center; }
     .stagger-item { opacity: 0; transform: translateY(20px); transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
     .elegant-content.show .stagger-item { opacity: 1; transform: translateY(0); }
@@ -262,7 +282,12 @@
   <div id="vignette"></div>
   <div id="film-noise"></div>
 
-  <div id="hero-text-trail"><h2 class="title" id="trail-title"></h2><h1 class="title-big" id="trail-title-big">CATMA BAR</h1></div>
+  <div id="hero-text-trail">
+    <h2 class="title" id="trail-title"></h2>
+    <h1 class="title-big" id="trail-title-big">CATMA BAR</h1>
+    <p class="subtitle" id="trail-subtitle" style="visibility: hidden;"></p>
+    <a href="#" class="hero-cta" id="trail-cta" style="visibility: hidden;">PRENOTA UN TAVOLO</a>
+  </div>
   <div id="hero-text">
     <h2 class="title" id="text-title"></h2><h1 class="title-big" id="text-title-big">CATMA BAR</h1>
     <p class="subtitle" id="text-subtitle"></p>
@@ -434,8 +459,9 @@
       mobMenu.innerHTML = `<a href="#" data-key="chi">${iconsMap.chi} ${i18n[currentLang].menu.chi}</a><a href="#" data-key="mescita">${iconsMap.mescita} ${i18n[currentLang].menu.mescita}</a><a href="#" data-key="bar">${iconsMap.bar} ${i18n[currentLang].menu.bar}</a><a href="#" data-key="eventi">${iconsMap.eventi} ${i18n[currentLang].menu.eventi}</a><a href="#" class="cta" data-key="prenota">${i18n[currentLang].menu.prenota}</a>`;
       bindMenuEvents(); // Re-bind after rewrite
       
-      // Update CTA centrale
+     // Update CTA centrale e CTA Fantasma
       document.querySelector('.hero-cta.i18n-cta').innerText = i18n[currentLang].menu.prenota;
+      document.getElementById('trail-cta').innerText = i18n[currentLang].menu.prenota;
 
       // Update Hotspots Labels
       hotspots.forEach(h => {
@@ -478,7 +504,7 @@
       titleEl.style.animation = 'none'; titleBigEl.style.animation = 'none'; subtitleEl.style.animation = 'none'; titleEl.offsetHeight; 
       
       titleEl.innerHTML = t.t; titleBigEl.innerHTML = "CATMA BAR"; subtitleEl.innerHTML = t.sub;
-      document.getElementById('trail-title').innerHTML = t.t; document.getElementById('trail-title-big').innerHTML = "CATMA BAR"; 
+      document.getElementById('trail-title').innerHTML = t.t; document.getElementById('trail-title-big').innerHTML = "CATMA BAR"; document.getElementById('trail-subtitle').innerHTML = t.sub; 
 
       if(document.body.classList.contains('app-loaded')) {
         titleEl.style.animation = 'cinematicFade 2s cubic-bezier(0.25, 1, 0.5, 1) forwards';
@@ -511,7 +537,7 @@
     // INIT
     updateUI();
     const loader = document.getElementById('loader'); const loaderStart = Date.now(); let isLoaderHidden = false;
-    function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; setTimeout(() => { document.body.classList.add('app-loaded'); }, 300); }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
+    function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; setTimeout(() => { document.body.classList.add('app-loaded'); applyTimeFilter(); }, 300); }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
     window.onload = tryHideLoader; document.addEventListener('DOMContentLoaded', tryHideLoader); window.addEventListener('resize', () => { setLayers(); }); setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); 
   </script>
 </body>
