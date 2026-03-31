@@ -253,4 +253,266 @@
     <a href="#" data-key="chi">CHI SIAMO</a>
     <a href="#" data-key="mescita">MESCITA</a>
     <a href="#" data-key="bar">BAR</a>
-    <a href="#" data-key="eventi">
+    <a href="#" data-key="eventi">EVENTI</a>
+    <a href="#" class="cta" data-key="prenota">PRENOTA</a>
+  </div>
+
+  <div id="hero-text">
+    <h2 class="title">BENVENUTI AL</h2>
+    <h1 class="title-big">CATMA BAR</h1>
+    <p class="subtitle">Via delle Sirene, 13 - Lido di Jesolo (VE)</p>
+  </div>
+  
+  <div id="audio-toggle" title="Attiva Musica Jazz">
+    <svg class="icon-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+    <svg class="icon-on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+  </div>
+
+  <div id="timeControls">
+    <button data-time="giorno">Giorno</button>
+    <button data-time="sera">Sera</button>
+    <button data-time="chiuso">Chiuso</button>
+  </div>
+
+  <div id="content-overlay"><div class="close-btn">&times;</div><div class="content-box"></div></div>
+  
+  <div id="hero">
+    <div id="hero-layers">
+      <img class="layer desktop-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774788111/Catma-background_eogx6v.webp">
+      <img class="layer desktop-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774821283/Catma-midground_zjbznb.webp">
+      <img class="layer desktop-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774789061/Catma-foreground_o2hzoy.webp">
+
+      <img class="layer mobile-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
+      <img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774917597/Catma-midground-mobile_xvwur8.webp">
+      <img class="layer mobile-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
+      
+      <div id="particles-container"></div>
+    </div>
+
+    <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="15" data-y-mobile="35"></div>
+    <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="75"></div>
+    <div class="hotspot" data-key="prenota" data-x-desktop="50" data-y-desktop="55" data-x-mobile="50" data-y-mobile="50">PRENOTA</div>
+    <div class="hotspot" data-key="eventi" data-x-desktop="85" data-y-desktop="38" data-x-mobile="85" data-y-mobile="40"></div>
+    <div class="hotspot" data-key="bar" data-x-desktop="90" data-y-desktop="65" data-x-mobile="85" data-y-mobile="70"></div>
+  </div>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-top-info"><p>Via delle Sirene 13, Lido di Jesolo (VE) | P.IVA: 01234567890</p></div>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-01_n8pedz.png" alt="Instagram"></a>
+        <a href="https://www.facebook.com/" target="_blank"><img src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802166/ico-02_qpgtp7.png" alt="Facebook"></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; <span id="year"></span> Catma Bar. Tutti i diritti riservati.</div>
+      <div class="footer-links"><a href="#">Privacy Policy</a> | <a href="#">Cookie Policy</a></div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').innerText = new Date().getFullYear();
+    
+    const hero = document.getElementById('hero');
+    const heroLayers = document.getElementById('hero-layers');
+    const hotspots = document.querySelectorAll('.hotspot');
+    const overlay = document.getElementById('content-overlay');
+    const contentBox = overlay.querySelector('.content-box');
+    
+    // GESTIONE AUDIO
+    let isZoomed = false;
+    let soundEnabled = false;
+    const bgAudio = document.getElementById('bg-audio');
+    const hoverSfx = document.getElementById('hover-sfx');
+    const clickSfx = document.getElementById('click-sfx');
+    const audioToggle = document.getElementById('audio-toggle');
+    bgAudio.volume = 0.25; hoverSfx.volume = 0.3; clickSfx.volume = 0.5;
+
+    function playSfx(audioEl) { if(soundEnabled && audioEl) { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); } }
+    
+    audioToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } 
+      else { audioToggle.classList.remove('playing'); bgAudio.pause(); }
+    });
+
+    const map = { chi: { label: 'CHI SIAMO' }, mescita: { label: 'MESCITA' }, prenota: { label: 'PRENOTA' }, eventi: { label: 'EVENTI' }, bar: { label: 'BAR' } };
+
+    const contentMap = {
+      chi: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Chi siamo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">CATMA BAR è un punto di riferimento al Lido di Jesolo. Un rifugio per anime notturne, dove la ricerca musicale incontra la profonda cultura del bere di qualità, creando connessioni umane autentiche.</p></div>`,
+      mescita: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Mescita</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Una selezione rigorosa e appassionata di vini naturali che raccontano il territorio, birre artigianali di carattere e cocktail essenziali creati con materie prime d'eccellenza.</p></div>`,
+      eventi: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Eventi</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Il ritmo della notte prende vita qui. Dj set curati, performance dal vivo e serate speciali ogni settimana, per accompagnare i tuoi momenti di evasione.<br>{{EVENT_STATUS}}</p></div>`,
+      bar: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Il Bar</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Uno spazio intimo tra luce e ombra, progettato minuziosamente per farti vivere un'esperienza notturna avvolgente, accompagnato da vibrazioni uniche.</p></div>`,
+      prenota: `<div class="elegant-content"><h1 class="elegant-title stagger-item stagger-1">Prenota un tavolo</h1><div class="elegant-divider stagger-item stagger-2"></div><p class="elegant-desc stagger-item stagger-3">Assicurati il tuo spazio esclusivo al Catma. Scrivici comodamente su WhatsApp oppure chiamaci direttamente per riservare un tavolo.</p><div class="cta-group stagger-item stagger-4"><a href="https://wa.me/393XXXXXXXXX?text=Ciao" target="_blank" class="cta-btn">WhatsApp</a><a href="tel:+393XXXXXXXXX" class="cta-btn secondary">Chiama</a></div></div>`
+    };
+
+    // PARTICELLE POTENZIATE
+    function createParticles() {
+      const container = document.getElementById('particles-container');
+      const count = window.innerWidth < 768 ? 25 : 60;
+      for(let i=0; i<count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 4 + 2;
+        p.style.width = size + 'px'; p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
+        p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+        p.style.animationDelay = (Math.random() * 5) + 's';
+        container.appendChild(p);
+      }
+    }
+    createParticles();
+
+    // PARALLASSE INIT
+    let targetX = 0, targetY = 0, currentX = 0, currentY = 0, rafId = null;
+    hero.addEventListener('mousemove', e => {
+      if('ontouchstart' in window) return;
+      targetX = (e.clientX / window.innerWidth) - 0.5; targetY = (e.clientY / window.innerHeight) - 0.5;
+    });
+
+    function loop() {
+      if(!isZoomed) {
+        currentX += (targetX - currentX) * 0.08; currentY += (targetY - currentY) * 0.08;
+        const layers = document.querySelectorAll('.layer');
+        if(layers.length >= 3) {
+          layers[0].style.transform = `translate3d(${currentX*30}px, ${currentY*15}px, 0) scale(1.05)`;
+          layers[1].style.transform = `translate3d(${currentX*60}px, ${currentY*30}px, 0) scale(1.05)`;
+          layers[2].style.transform = `translate3d(${currentX*90}px, ${currentY*45}px, 0) scale(1.05)`;
+        }
+        hotspots.forEach(h => {
+          const ox = (window.innerWidth < 768 ? h.dataset.xMobile : h.dataset.xDesktop) / 100 * window.innerWidth;
+          const oy = (window.innerWidth < 768 ? h.dataset.yMobile : h.dataset.yDesktop) / 100 * window.innerHeight;
+          h.dataset.ox = ox; h.dataset.oy = oy;
+          h.style.transform = `translate3d(calc(-50% + ${ox + currentX*60}px), calc(-50% + ${oy + currentY*30}px), 0)`;
+        });
+      }
+      rafId = requestAnimationFrame(loop);
+    }
+    loop();
+
+    // ZOOM LOGICA SICURA AL CLICK
+    function zoomTo(key) {
+      playSfx(clickSfx);
+      if(isZoomed) {
+        contentBox.querySelector('.elegant-content').classList.remove('show');
+        setTimeout(() => { contentBox.innerHTML = generateDynamicContent(key); contentBox.style.transform = 'scale(1)'; setTimeout(()=> contentBox.querySelector('.elegant-content').classList.add('show'), 50); }, 300);
+        return;
+      }
+      const h = Array.from(hotspots).find(el => el.dataset.key === key);
+      if(!h) return;
+
+      isZoomed = true; cancelAnimationFrame(rafId);
+      const tx = parseFloat(h.dataset.ox); const ty = parseFloat(h.dataset.oy);
+      const cx = window.innerWidth / 2; const cy = window.innerHeight / 2;
+      const dx = cx - tx; const dy = cy - ty;
+
+      // CLAMP OTTIMIZZATO (Ora l'immagine è 125%, possiamo muoverci di più)
+      const limitX = window.innerWidth * 0.22; const limitY = window.innerHeight * 0.22;
+      const safeDx = Math.max(-limitX, Math.min(limitX, dx));
+      const safeDy = Math.max(-limitY, Math.min(limitY, dy));
+
+      const layers = document.querySelectorAll('.layer');
+      layers.forEach(l => l.classList.add('smooth-zoom', 'overlay-active', 'is-moving'));
+      setTimeout(() => layers.forEach(l => l.classList.remove('is-moving')), 800);
+
+      setTimeout(() => {
+        if(layers.length >= 3) {
+          layers[0].style.transform = `translate3d(${safeDx*1.1}px,${safeDy*1.1}px, 0) scale(1.2)`;
+          layers[1].style.transform = `translate3d(${safeDx*1.5}px,${safeDy*1.5}px, 0) scale(1.5)`;
+          layers[2].style.transform = `translate3d(${safeDx*2.0}px,${safeDy*2.0}px, 0) scale(2.0)`;
+        }
+      }, 10);
+
+      contentBox.innerHTML = generateDynamicContent(key);
+      overlay.classList.add('active');
+      setTimeout(() => { contentBox.style.transform = 'scale(1)'; setTimeout(() => contentBox.querySelector('.elegant-content').classList.add('show'), 100); }, 150);
+      hotspots.forEach(hot => hot.classList.add('hidden'));
+    }
+
+    function generateDynamicContent(key) {
+      let html = contentMap[key];
+      if (key === 'eventi') {
+        const now = new Date(); const day = now.getDay(); const hour = now.getHours();
+        let eventMsg = `<span class="dynamic-badge">Prossimo evento: Venerdì alle 22:00.</span>`;
+        if (day === 5 || day === 6) { 
+          if (hour < 22) { let o = 22 - hour; eventMsg = `<span class="dynamic-badge">Oggi è ${day===5?'Venerdì':'Sabato'}, l'evento inizia tra ${o} or${o===1?'a':'e'}!</span>`; } 
+          else { eventMsg = `<span class="dynamic-badge">La serata Eventi è in corso, ti aspettiamo!</span>`; }
+        }
+        html = html.replace('{{EVENT_STATUS}}', eventMsg);
+      }
+      return html;
+    }
+
+    function resetZoom() {
+      contentBox.querySelector('.elegant-content').classList.remove('show');
+      contentBox.style.transform = 'scale(0)';
+      setTimeout(() => overlay.classList.remove('active'), 300);
+      hotspots.forEach(hot => hot.classList.remove('hidden'));
+      
+      const layers = document.querySelectorAll('.layer');
+      layers.forEach(l => { l.classList.remove('overlay-active'); l.classList.add('is-moving'); });
+      
+      layers[0].style.transform = `translate3d(${currentX*30}px, ${currentY*15}px, 0) scale(1.05)`;
+      layers[1].style.transform = `translate3d(${currentX*60}px, ${currentY*30}px, 0) scale(1.05)`;
+      layers[2].style.transform = `translate3d(${currentX*90}px, ${currentY*45}px, 0) scale(1.05)`;
+
+      setTimeout(() => { layers.forEach(l => l.classList.remove('smooth-zoom', 'is-moving')); isZoomed = false; loop(); }, 800);
+    }
+
+    // EVENT LISTENER
+    hotspots.forEach(h => { h.onclick = () => zoomTo(h.dataset.key); h.onmouseenter = () => playSfx(hoverSfx); });
+    document.querySelectorAll('#menu a, #mobile-menu a').forEach(a => {
+      a.onclick = e => { e.preventDefault(); zoomTo(a.dataset.key); document.getElementById('mobile-menu').classList.remove('open'); document.getElementById('hamburger').classList.remove('open'); };
+      a.onmouseenter = () => playSfx(hoverSfx);
+    });
+
+    const hamburger = document.getElementById('hamburger'); const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.onclick = () => { playSfx(clickSfx); mobileMenu.classList.toggle('open'); hamburger.classList.toggle('open'); };
+    overlay.querySelector('.close-btn').onclick = resetZoom;
+    document.addEventListener('keydown', e => { if(e.key === 'Escape' && isZoomed) resetZoom(); });
+    overlay.onclick = e => { if(!contentBox.contains(e.target)) resetZoom(); };
+    overlay.querySelector('.close-btn').onclick = e => { e.stopPropagation(); resetZoom(); };
+
+    // LABELS
+    hotspots.forEach(h => {
+      if(h.dataset.key !== 'prenota') {
+        const label = document.createElement('div'); label.className = 'hotspot-label'; label.innerText = map[h.dataset.key].label; h.appendChild(label);
+      }
+      if('ontouchstart' in window) {
+        h.onclick = e => {
+          const l = h.querySelector('.hotspot-label');
+          if(l) { const a = l.classList.contains('active'); document.querySelectorAll('.hotspot-label').forEach(x => x.classList.remove('active')); if(!a) l.classList.add('active'); }
+          zoomTo(h.dataset.key); e.stopPropagation();
+        };
+      }
+    });
+    if('ontouchstart' in window) document.addEventListener('touchstart', e => { if(!e.target.closest('.hotspot')) document.querySelectorAll('.hotspot-label').forEach(l => l.classList.remove('active')); });
+
+    // CURSORE
+    const customCursor = document.createElement('div'); customCursor.id = 'custom-cursor'; document.body.appendChild(customCursor);
+    document.addEventListener('mousemove', e => customCursor.style.transform = `translate3d(calc(-50% + ${e.clientX}px), calc(-50% + ${e.clientY}px), 0)`);
+    document.addEventListener('mousedown', () => { customCursor.style.boxShadow = '0 0 15px 5px var(--shadow-strong)'; customCursor.style.width = '35px'; customCursor.style.height = '35px';});
+    document.addEventListener('mouseup', () => { customCursor.style.boxShadow = '0 0 10px 3px var(--shadow-color)'; customCursor.style.width = '25px'; customCursor.style.height = '25px'; });
+
+    // TIME VISUALS E DEBUG
+    let manualTimeOverride = false;
+    function setTimeVisuals(state) {
+      document.body.setAttribute('data-time', state); void heroLayers.offsetWidth;
+      const t = state === 'giorno' ? { title: "BUONGIORNO DA", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : state === 'sera' ? { title: "BENVENUTI AL", titleBig: "CATMA BAR", subtitle: "Via delle Sirene, 13 - Lido di Jesolo (VE)" } : { title: "SEMBRA CHE <br> IL CATMA SIA", titleBig: "CHIUSO", subtitle: "Torna domani per bere un'altra ombra!" };
+      const heroText = document.getElementById('hero-text'); heroText.style.opacity = 0;
+      setTimeout(() => { heroText.innerHTML = `<h2 class="title">${t.title}</h2><h1 class="title-big">${t.titleBig}</h1><p class="subtitle">${t.subtitle}</p>`; heroText.style.opacity = 1; }, 250);
+      document.querySelectorAll('#timeControls button').forEach(btn => btn.classList.remove('active-debug'));
+      document.querySelector(`#timeControls button[data-time="${state}"]`).classList.add('active-debug');
+    }
+    function applyTimeFilter() { if (manualTimeOverride) return; const h = new Date().getHours(); setTimeVisuals((h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso'); }
+    document.querySelectorAll('#timeControls button').forEach(btn => btn.onclick = e => { manualTimeOverride = true; setTimeVisuals(e.target.dataset.time); });
+
+    // CARICAMENTO
+    const loader = document.getElementById('loader'); const loaderStart = Date.now(); let isLoaderHidden = false;
+    function tryHideLoader() { if (isLoaderHidden) return; setTimeout(() => { loader.classList.add('hidden'); isLoaderHidden = true; }, Math.max(2000 - (Date.now() - loaderStart), 0)); }
+    window.onload = tryHideLoader; document.addEventListener('DOMContentLoaded', tryHideLoader);
+    
+    setLayers(); applyTimeFilter(); setInterval(applyTimeFilter, 60*60*1000); window.onresize = setLayers;
+  </script>
+</body>
+</html>
