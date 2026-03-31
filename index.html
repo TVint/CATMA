@@ -36,19 +36,11 @@
     html, body { margin: 0; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
     body, body * { -webkit-user-select: none; user-select: none; cursor: none !important; }
 
-    /* =========================================
-       OTTIMIZZAZIONE HARDWARE ESTREMA (GPU FORCING)
-       ========================================= */
-    #hero-layers {
-      transform-style: preserve-3d;
-      perspective: 1000px;
-    }
-    
-    .layer, #mobile-menu, .content-box, #hamburger, .particle {
+    /* Forziamo accelerazione hardware sui macro-contenitori */
+    #hero-layers, #mobile-menu, #content-overlay {
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
-      transform: translateZ(0); /* Obbliga l'uso della memoria video dedicata */
-      will-change: transform;
+      transform: translateZ(0);
     }
 
     /* =========================================
@@ -58,7 +50,7 @@
       position: fixed; top: 0; left: 0; width: 25px; height: 25px; background: black;
       border-radius: 50%; pointer-events: none; transform: translate3d(-50%, -50%, 0);
       z-index: 99999; transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 0 10px 3px var(--shadow-color); will-change: transform;
+      box-shadow: 0 0 10px 3px var(--shadow-color);
     }
 
     #loader {
@@ -76,24 +68,20 @@
        SCENA E LAYERS
        ========================================= */
     #hero { width: 100%; height: 100vh; position: relative; overflow: hidden; }
-    #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; transition: filter 0.5s ease; }
+    #hero-layers { position: absolute; width: 100%; height: 100%; z-index: 10; }
     
     .layer {
       position: absolute; width: 110%; height: 110%; top: -5%; left: -5%; object-fit: cover;
-      pointer-events: none; transition: opacity 0.5s ease; 
+      pointer-events: none;
+      /* Fix specifico per flicker durante il blur su Android */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
-    .layer.smooth-zoom { transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s ease !important; }
-
-    /* =========================================
-       PARTICELLE
-       ========================================= */
-    #particles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 40; overflow: hidden; }
-    .particle { position: absolute; background: #fff; border-radius: 50%; opacity: 0; animation: floatParticle linear infinite; filter: blur(1.5px); }
-    @keyframes floatParticle {
-      0% { transform: translate3d(0, 0, 0); opacity: 0; }
-      20% { opacity: 0.8; }
-      80% { opacity: 0.8; }
-      100% { transform: translate3d(30px, -150px, 0); opacity: 0; }
+    
+    .layer.smooth-zoom { 
+        /* RIPRISTINATO IL BLUR E IL BRIGHTNESS NELLA TRANSIZIONE */
+        transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease !important; 
+        will-change: transform, filter;
     }
 
     /* =========================================
@@ -302,8 +290,7 @@
       <img class="layer mobile-layer background" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774791189/Catma-background-mobile_oqmkn0.webp">
       <img class="layer mobile-layer midground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774917597/Catma-midground-mobile_xvwur8.webp">
       <img class="layer mobile-layer foreground" src="https://res.cloudinary.com/dkni7ncod/image/upload/v1774802973/Catma-foreground-mobile_wpnzl9.webp">
-      <div id="particles-container"></div>
-    </div>
+      </div>
 
     <div class="hotspot" data-key="chi" data-x-desktop="7" data-y-desktop="40" data-x-mobile="15" data-y-mobile="35"></div>
     <div class="hotspot" data-key="mescita" data-x-desktop="25" data-y-desktop="60" data-x-mobile="20" data-y-mobile="75"></div>
@@ -372,15 +359,7 @@
     function playSfx(audioEl) { if(soundEnabled && audioEl) { audioEl.currentTime = 0; audioEl.play().catch(()=>{}); } }
     audioToggle.addEventListener('click', () => { soundEnabled = !soundEnabled; if (soundEnabled) { audioToggle.classList.add('playing'); bgAudio.play().catch(()=>{}); } else { audioToggle.classList.remove('playing'); bgAudio.pause(); } });
 
-    function createParticles() {
-      const container = document.getElementById('particles-container'); const count = window.innerWidth <= 768 ? 20 : 50; // Leggermente ridotto per performance mobile
-      for(let i=0; i<count; i++) {
-        const p = document.createElement('div'); p.className = 'particle'; const size = Math.random() * 3 + 1.5;
-        p.style.width = size + 'px'; p.style.height = size + 'px'; p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
-        p.style.animationDuration = (Math.random() * 15 + 10) + 's'; p.style.animationDelay = (Math.random() * 5) + 's'; container.appendChild(p);
-      }
-    }
-    createParticles();
+    // RIMOSSA LA FUNZIONE createParticles()
 
     // =========================================
     // GIROSCOPIO E PARALLASSE (FIX BORDI NERI)
@@ -429,7 +408,6 @@
 
     function parallaxLoop() {
       if (!isZoomed) { 
-        // Aumentato a 0.15 per eliminare il lag del giroscopio!
         currentX += (targetX - currentX) * 0.15; 
         currentY += (targetY - currentY) * 0.15; 
         renderParallax(currentX, currentY); 
@@ -466,9 +444,10 @@
       Object.values(layers).forEach(l => { if(l) l.classList.add('smooth-zoom'); });
       
       setTimeout(() => {
-        if(layers.background) layers.background.style.transform = `translate3d(${safeDx*1.1}px,${safeDy*1.1}px, 0) scale(1.2)`;
-        if(layers.midground) layers.midground.style.transform = `translate3d(${safeDx*1.5}px,${safeDy*1.5}px, 0) scale(1.5)`;
-        if(layers.foreground) layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(2.2)`;
+        // Riapplica blur e luminosità ridotta
+        if(layers.background) { layers.background.style.transform = `translate3d(${safeDx*1.1}px,${safeDy*1.1}px, 0) scale(1.2)`; layers.background.style.filter = 'blur(5px) brightness(0.7)'; }
+        if(layers.midground) { layers.midground.style.transform = `translate3d(${safeDx*1.5}px,${safeDy*1.5}px, 0) scale(1.5)`; layers.midground.style.filter = 'blur(5px) brightness(0.7)'; }
+        if(layers.foreground) { layers.foreground.style.transform = `translate3d(${safeDx*2.2}px,${safeDy*2.2}px, 0) scale(2.2)`; layers.foreground.style.filter = 'blur(5px) brightness(0.7)'; }
       }, 10);
 
       contentBox.innerHTML = generateDynamicContent(key); overlay.classList.add('active');
@@ -494,7 +473,7 @@
         overlay.classList.remove('active');
         hotspots.forEach(hot => hot.classList.remove('hidden'));
         
-        Object.values(layers).forEach(l => { if(l) { l.classList.add('smooth-zoom'); } });
+        Object.values(layers).forEach(l => { if(l) { l.classList.add('smooth-zoom'); l.style.filter = 'none'; } }); // Rimuove blur al reset
         renderParallax(currentX, currentY);
 
         setTimeout(() => { 
@@ -541,7 +520,7 @@
     function applyTimeFilter() { if (manualTimeOverride) return; const h = new Date().getHours(); setTimeVisuals((h >= 9 && h < 18) ? 'giorno' : (h >= 18 || h < 2) ? 'sera' : 'chiuso'); }
     document.querySelectorAll('#timeControls button').forEach(btn => btn.onclick = e => { manualTimeOverride = true; setTimeVisuals(e.target.dataset.time); });
 
-    // CARICAMENTO INIT: IL LOADER SCOMPARE CON EFFETTO IRIS DOPO IL TIMEOUT
+    // CARICAMENTO INIT
     const loader = document.getElementById('loader'); const loaderStart = Date.now(); let isLoaderHidden = false;
     function tryHideLoader() { 
       if (isLoaderHidden) return; 
