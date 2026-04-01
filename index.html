@@ -184,11 +184,11 @@
     #content-overlay.active .content-box { transform: scale(1); opacity: 1; }
     .close-btn { 
       position: absolute; 
-      top: auto; /* Annulla il vecchio posizionamento in alto */
-      top: 50px; /* Lo posiziona nella parte bassa dello schermo */
-      right: auto; /* Annulla il vecchio posizionamento a destra */
-      left: 50%; /* Lo spinge esattamente a metà... */
-      transform: translateX(-50%); /* ...e lo bilancia al millimetro sul suo asse */
+      top: auto; 
+      bottom: 50px; 
+      right: auto; 
+      left: 50%; 
+      transform: translateX(-50%); 
       font-size: 3.5rem; 
       color: #fff; 
       cursor: pointer; 
@@ -199,7 +199,6 @@
       line-height: 0.5; 
     }
     
-    /* Piccolo tocco di classe sull'hover: si colora e si ingrandisce leggermente */
     .close-btn:hover { 
       color: var(--main-color); 
       transform: translateX(-50%) scale(1.2); 
@@ -238,7 +237,22 @@
     #gyro-overlay:not(.active) { opacity: 0; pointer-events: none; }
     #gyro-btn { background: var(--main-color); color: #fff; border: none; padding: 18px 35px; font-size: 1.2rem; border-radius: 40px; font-weight: bold; box-shadow: 0 0 20px var(--shadow-strong); animation: pulseBtn 2s infinite; cursor: none;}
     
-    @media (max-width: 768px) { .hotspot-label { display: none !important; } #lang-selector { top: 25px; right: 70px; } #menu { display: none; } #hamburger { display: flex; } #mobile-logo { display: block; } #hero-text, #hero-text-trail { width: 90%; } #hero-text .title, #hero-text-trail .title { font-size: 6vw; } #hero-text .title-big, #hero-text-trail .title-big { font-size: 12vw; } #hero-text .subtitle { font-size: 3vw; } .hero-cta { font-size: 1rem; padding: 12px 30px; margin-top: 25px; } #audio-toggle { bottom: 110px; padding: 6px 14px; gap: 8px; } .footer-top { padding: 8px 10px; gap: 10px; font-size: 10px; justify-content: center; } .footer-top-info p { letter-spacing: 0; } .footer-social { gap: 10px; } .footer-social img { width: 18px; height: 18px; } .footer-bottom { padding: 8px 10px; font-size: 10px; gap: 10px; justify-content: center; flex-wrap: wrap; } }
+    @media (max-width: 768px) { 
+        .hotspot-label { display: none !important; } 
+        /* Menu lingue centrato */
+        #lang-selector { top: 25px; left: 50%; right: auto; transform: translateX(-50%); width: fit-content; justify-content: center; } 
+        #menu { display: none; } #hamburger { display: flex; } #mobile-logo { display: block; } 
+        #hero-text, #hero-text-trail { width: 90%; } 
+        #hero-text .title, #hero-text-trail .title { font-size: 6vw; } 
+        #hero-text .title-big, #hero-text-trail .title-big { font-size: 12vw; } 
+        #hero-text .subtitle { font-size: 3vw; } 
+        .hero-cta { font-size: 1rem; padding: 12px 30px; margin-top: 25px; } 
+        #audio-toggle { bottom: 110px; padding: 6px 14px; gap: 8px; } 
+        .footer-top { padding: 8px 10px; gap: 10px; font-size: 10px; justify-content: center; } 
+        .footer-top-info p { letter-spacing: 0; } .footer-social { gap: 10px; } 
+        .footer-social img { width: 18px; height: 18px; } 
+        .footer-bottom { padding: 8px 10px; font-size: 10px; gap: 10px; justify-content: center; flex-wrap: wrap; } 
+    }
     @media (pointer: coarse), (max-width: 768px) { #custom-cursor { display: none !important; } }
     @media (min-width: 769px) { .mobile-layer { display: none; } #gyro-overlay { display: none !important; } }
   </style>
@@ -407,16 +421,26 @@
     if('ontouchstart' in window) { const gyroOverlay = document.getElementById('gyro-overlay'); const gyroBtn = document.getElementById('gyro-btn'); gyroBtn.onclick = () => { if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') { DeviceOrientationEvent.requestPermission().then(state => { if (state === 'granted') { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); } else { gyroOverlay.classList.remove('active'); } }).catch(console.error); } else { window.addEventListener('deviceorientation', handleGyro); gyroOverlay.classList.remove('active'); } }; } else { document.getElementById('gyro-overlay').classList.remove('active'); }
     function handleGyro(e) { if(isZoomed) return; targetX = Math.max(-0.8, Math.min(0.8, (e.gamma || 0) / 30)); targetY = Math.max(-0.8, Math.min(0.8, (e.beta || 0) / 30)); }
 
-    // PARALLASSE
+    // PARALLASSE (FIXATO TEXT-HERO SU MOBILE)
     function setLayers() { const isMobile = window.innerWidth <= 768; layers = isMobile ? { background: heroLayers.querySelector('.mobile-layer.background'), midground: heroLayers.querySelector('.mobile-layer.midground'), foreground: heroLayers.querySelector('.mobile-layer.foreground') } : { background: heroLayers.querySelector('.desktop-layer.background'), midground: heroLayers.querySelector('.desktop-layer.midground'), foreground: heroLayers.querySelector('.desktop-layer.foreground') }; updateHotspots(); }
     function updateHotspots() { const isMobile = window.innerWidth <= 768; hotspots.forEach(h => { const ox = isMobile ? (parseFloat(h.dataset.xMobile)/100 * hero.clientWidth) : (parseFloat(h.dataset.xDesktop)/100 * hero.clientWidth); const oy = isMobile ? (parseFloat(h.dataset.yMobile)/100 * hero.clientHeight) : (parseFloat(h.dataset.yDesktop)/100 * hero.clientHeight); h.dataset.ox = ox; h.dataset.oy = oy; }); renderParallax(targetX, targetY); }
+    
     function renderParallax(x, y, tx, ty) {
       const isMobile = window.innerWidth <= 768; const maxOffset = isMobile ? {x:15,y:8, mx:15,my:8, fx:40,fy:20} : {x:15,y:7, mx:30,my:15, fx:45,fy:22};
       if(layers.background) layers.background.style.transform = `translate3d(${x*maxOffset.x}px, ${y*maxOffset.y}px, 0)`; if(layers.midground) layers.midground.style.transform = `translate3d(${x*maxOffset.mx}px, ${y*maxOffset.my}px, 0)`; if(layers.foreground) layers.foreground.style.transform = `translate3d(${x*maxOffset.fx}px, ${y*maxOffset.fy}px, 0)`;
-      const textOffX = -x * 100; const textOffY = -y * 80; heroTextContainer.style.transform = `translate(-50%, -50%) translate3d(${textOffX}px, ${textOffY}px, 0)`;
-      const trailOffX = -tx * 100; const trailOffY = -ty * 80; heroTextTrail.style.transform = `translate(-50%, -50%) translate3d(${trailOffX}px, ${trailOffY}px, 0)`;
+      
+      /* SOLO SE È DESKTOP SPOSTO I TESTI. SU MOBILE LI LASCIO FERMI AL CENTRO */
+      if (!isMobile) {
+        const textOffX = -x * 100; const textOffY = -y * 80; heroTextContainer.style.transform = `translate(-50%, -50%) translate3d(${textOffX}px, ${textOffY}px, 0)`;
+        const trailOffX = -tx * 100; const trailOffY = -ty * 80; heroTextTrail.style.transform = `translate(-50%, -50%) translate3d(${trailOffX}px, ${trailOffY}px, 0)`;
+      } else {
+        heroTextContainer.style.transform = `translate(-50%, -50%) translate3d(0, 0, 0)`;
+        heroTextTrail.style.transform = `translate(-50%, -50%) translate3d(0, 0, 0)`;
+      }
+
       const refX = x * maxOffset.mx; const refY = y * maxOffset.my; hotspots.forEach(h => { if(h.classList.contains('hidden')) return; h.style.left = `${parseFloat(h.dataset.ox) + refX}px`; h.style.top = `${parseFloat(h.dataset.oy) + refY}px`; });
     }
+
     function parallaxLoop() { if (!isZoomed) { currentX += (targetX - currentX) * 0.15; currentY += (targetY - currentY) * 0.15; trailX += (targetX - trailX) * 0.05; trailY += (targetY - trailY) * 0.05; renderParallax(currentX, currentY, trailX, trailY); rafId = requestAnimationFrame(parallaxLoop); } }
     rafId = requestAnimationFrame(parallaxLoop);
     hero.addEventListener('mousemove', e => { if('ontouchstart' in window) return; targetX = (e.clientX / window.innerWidth) - 0.5; targetY = (e.clientY / window.innerHeight) - 0.5; });
